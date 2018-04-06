@@ -1,0 +1,4 @@
+libyuv-anrdroid
+=================
+
+includes libyuv.
