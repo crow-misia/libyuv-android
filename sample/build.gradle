@@ -1,0 +1,31 @@
+apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
+
+repositories {
+    google()
+    jcenter()
+    maven { url "https://dl.bintray.com/zncmn/maven" }
+}
+android {
+    compileSdkVersion versions.compileSdk
+
+    defaultConfig {
+        applicationId 'com.example.libyuv'
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.compileSdk
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    lintOptions {
+        textReport true
+        textOutput 'stdout'
+        ignore 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation deps.kotlin
+
+    implementation(project(path: ":core", configuration: "default"))
+}

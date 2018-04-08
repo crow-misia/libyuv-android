@@ -1,0 +1,56 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.versions = [
+        'minSdk': 9,
+        'compileSdk': 27,
+        'kotlin': '1.2.31',
+        'androidPlugin': '3.1.0',
+        'bintrayPlugin': '1.8.0',
+        'mavenPlugin': '2.1',
+        'dokkaPlugin': '0.9.16',
+    ]
+
+    ext.deps = [
+        androidPlugin: "com.android.tools.build:gradle:${versions.androidPlugin}",
+        kotlinPlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+        kotlin: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
+        bintrayPlugin: "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions.bintrayPlugin}",
+        mavenPlugin: "com.github.dcendents:android-maven-gradle-plugin:${versions.mavenPlugin}",
+        dokkaPlugin: "org.jetbrains.dokka:dokka-android-gradle-plugin:${versions.dokkaPlugin}",
+    ]
+
+    ext.maven = [
+        groupId: "io.github.zncmn.libyuv",
+        artifactId: "core",
+        version: "0.0.1",
+        name: "libyuv-android",
+        desc: "LibYuv for Android",
+        licenses: [ "Apache-2.0" ],
+        siteUrl: "https://github.com/zncmn/libyuv-android",
+        issueTrackerUrl: "https://github.com/zncmn/libyuv-android/issues",
+        gitUrl: "https://github.com/zncmn/libyuv-android.git",
+        githubRepo: "zncmn/libyuv-android",
+        labels: [ "android", "libyuv" ],
+    ]
+
+    repositories {
+        gradlePluginPortal()
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath deps.androidPlugin
+        classpath deps.kotlinPlugin
+        classpath deps.bintrayPlugin
+        classpath deps.mavenPlugin
+        classpath deps.dokkaPlugin
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
