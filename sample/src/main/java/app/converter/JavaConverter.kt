@@ -1,7 +1,5 @@
 package app.converter
 
-import kotlin.experimental.and
-
 class JavaConverter : Converter {
     override fun getName() = "java"
 
@@ -11,9 +9,9 @@ class JavaConverter : Converter {
         var uvIndex = width * height
         for (j in 0 until height) {
             for (i in 0 until width) {
-                val r = argb[rgbIndex].toInt() and 0xFF
-                val g = argb[rgbIndex + 1].toInt() and 0xFF
-                val b = argb[rgbIndex + 2].toInt() and 0xFF
+                val r = (argb[rgbIndex].toInt() and 0xFF).toDouble()
+                val g = (argb[rgbIndex + 1].toInt() and 0xFF).toDouble()
+                val b = (argb[rgbIndex + 2].toInt() and 0xFF).toDouble()
 
                 val y = (0.257 * r + 0.504 * g + 0.098 * b + 16.0).toInt()
                 val u = (-0.148 * r - 0.291 * g + 0.439 * b + 128.0).toInt()
