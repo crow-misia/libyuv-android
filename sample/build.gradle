@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android'
 repositories {
     google()
     jcenter()
-    maven { url "https://dl.bintray.com/zncmn/maven" }
 }
 android {
     compileSdkVersion versions.compileSdk

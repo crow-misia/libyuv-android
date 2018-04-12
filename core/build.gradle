@@ -72,7 +72,7 @@ artifacts {
 install {
     repositories.mavenInstaller {
         pom.project {
-            name maven.artifactId // pom.project.name must be same as bintray.pkg.name
+            name maven.name
             packaging 'aar'
             groupId maven.groupId
             artifactId maven.artifactId

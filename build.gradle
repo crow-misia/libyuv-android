@@ -5,7 +5,7 @@ buildscript {
         'minSdk': 9,
         'compileSdk': 27,
         'kotlin': '1.2.31',
-        'androidPlugin': '3.1.0',
+        'androidPlugin': '3.1.1',
         'bintrayPlugin': '1.8.0',
         'mavenPlugin': '2.1',
         'dokkaPlugin': '0.9.16',
@@ -23,7 +23,7 @@ buildscript {
     ext.maven = [
         groupId: "io.github.zncmn.libyuv",
         artifactId: "core",
-        version: "0.0.1",
+        version: "0.0.2",
         name: "libyuv-android",
         desc: "LibYuv for Android",
         licenses: [ "Apache-2.0" ],
@@ -31,7 +31,7 @@ buildscript {
         issueTrackerUrl: "https://github.com/zncmn/libyuv-android/issues",
         gitUrl: "https://github.com/zncmn/libyuv-android.git",
         githubRepo: "zncmn/libyuv-android",
-        labels: [ "android", "libyuv" ],
+        labels: [ "android", "libyuv", "kotlin" ],
     ]
 
     repositories {
