@@ -4,11 +4,11 @@ buildscript {
     ext.versions = [
         'minSdk': 9,
         'compileSdk': 27,
-        'kotlin': '1.2.31',
-        'androidPlugin': '3.1.1',
+        'kotlin': '1.2.41',
+        'androidPlugin': '3.1.2',
         'bintrayPlugin': '1.8.0',
         'mavenPlugin': '2.1',
-        'dokkaPlugin': '0.9.16',
+        'benManesPlugin': '0.17.0'
     ]
 
     ext.deps = [
@@ -17,7 +17,7 @@ buildscript {
         kotlin: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
         bintrayPlugin: "com.jfrog.bintray.gradle:gradle-bintray-plugin:${versions.bintrayPlugin}",
         mavenPlugin: "com.github.dcendents:android-maven-gradle-plugin:${versions.mavenPlugin}",
-        dokkaPlugin: "org.jetbrains.dokka:dokka-android-gradle-plugin:${versions.dokkaPlugin}",
+        annotations: 'org.jetbrains:annotations:16.0.2'
     ]
 
     ext.maven = [
@@ -31,7 +31,7 @@ buildscript {
         issueTrackerUrl: "https://github.com/zncmn/libyuv-android/issues",
         gitUrl: "https://github.com/zncmn/libyuv-android.git",
         githubRepo: "zncmn/libyuv-android",
-        labels: [ "android", "libyuv", "kotlin" ],
+        labels: [ "android", "libyuv" ]
     ]
 
     repositories {
@@ -44,7 +44,6 @@ buildscript {
         classpath deps.kotlinPlugin
         classpath deps.bintrayPlugin
         classpath deps.mavenPlugin
-        classpath deps.dokkaPlugin
     }
 }
 
@@ -52,5 +51,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
     }
 }

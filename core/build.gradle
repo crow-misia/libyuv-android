@@ -1,6 +1,4 @@
 apply plugin: "com.android.library"
-apply plugin: 'kotlin-android'
-apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
@@ -12,6 +10,7 @@ android {
 
     defaultConfig {
         minSdkVersion versions.minSdk
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
 
     lintOptions {
@@ -43,30 +42,43 @@ android {
             ignore = true
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
 }
 
 dependencies {
-    compileOnly deps.kotlin
+    implementation deps.annotations
 }
 
-task sourcesJar(type: Jar) {
+task androidSourcesJar(type: Jar) {
     classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
+    from android.sourceSets.main.java.sourceFiles
 }
 
-task javadocJar(type: Jar, dependsOn: dokka) {
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+    }
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
     classifier = 'javadoc'
-    from destinationDir
-}
-
-dokka {
-    outputFormat = 'html'
-    outputDirectory "$buildDir/javadoc"
+    from androidJavadocs.destinationDir
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+    archives androidSourcesJar
+    archives androidJavadocsJar
 }
 
 install {
