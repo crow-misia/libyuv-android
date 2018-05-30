@@ -8,8 +8,8 @@ extern "C" {
 
 JNIEXPORT void JNICALL
 Java_io_github_zncmn_libyuv_Yuv_abgrToArgb(JNIEnv *env, jobject,
-                                           jbyteArray srcArray, jint width, jint height,
-                                           jbyteArray destArray) {
+                                           jbyteArray srcArray, jbyteArray destArray,
+                                           jint width, jint height) {
     jbyte *src = env->GetByteArrayElements(srcArray, NULL);
     jbyte *dest = env->GetByteArrayElements(destArray, NULL);
 
@@ -21,8 +21,8 @@ Java_io_github_zncmn_libyuv_Yuv_abgrToArgb(JNIEnv *env, jobject,
 
 JNIEXPORT void JNICALL
 Java_io_github_zncmn_libyuv_Yuv_argbToNv21(JNIEnv *env, jobject,
-                                           jbyteArray srcArray, jint width, jint height,
-                                           jbyteArray destArray) {
+                                           jbyteArray srcArray, jbyteArray destArray,
+                                           jint width, jint height) {
     jbyte *src = env->GetByteArrayElements(srcArray, NULL);
     jbyte *dest = env->GetByteArrayElements(destArray, NULL);
 
@@ -35,8 +35,8 @@ Java_io_github_zncmn_libyuv_Yuv_argbToNv21(JNIEnv *env, jobject,
 
 JNIEXPORT void JNICALL
 Java_io_github_zncmn_libyuv_Yuv_nv21ToAbgr(JNIEnv *env, jobject,
-                                           jbyteArray srcArray, jint width, jint height,
-                                           jbyteArray destArray) {
+                                           jbyteArray srcArray, jbyteArray destArray,
+                                           jint width, jint height) {
     jbyte *src = env->GetByteArrayElements(srcArray, NULL);
     jbyte *dest = env->GetByteArrayElements(destArray, NULL);
 
@@ -48,35 +48,59 @@ Java_io_github_zncmn_libyuv_Yuv_nv21ToAbgr(JNIEnv *env, jobject,
 }
 
 JNIEXPORT void JNICALL
-Java_io_github_zncmn_libyuv_Yuv_i420ToNv21(JNIEnv *env, jobject,
-                                           jbyteArray srcArray, jint width, jint height,
-                                           jbyteArray destArray) {
+Java_io_github_zncmn_libyuv_Yuv_nv21Rotate(JNIEnv *env, jobject,
+                                           jbyteArray srcArray, jbyteArray destArray,
+                                           jint width, jint height, jint degrees) {
     jbyte *src = env->GetByteArrayElements(srcArray, NULL);
     jbyte *dest = env->GetByteArrayElements(destArray, NULL);
 
-    const int size = width * height;
-    const uint8* src_u = (uint8*) src + size;
-    const uint8* src_v = (uint8*) src + (size << 1);
-    uint8* dest_uv = (uint8*) dest + size;
-    I420ToNV21((uint8*) src, width, src_u, width, src_v, width, (uint8*) dest, width, dest_uv, width, width, height);
-
-    env->ReleaseByteArrayElements(destArray, dest, 0);
-    env->ReleaseByteArrayElements(srcArray, src, 0);
-}
-
-JNIEXPORT void JNICALL
-Java_io_github_zncmn_libyuv_Yuv_nv21ToI420Rotate(JNIEnv *env, jobject,
-                                                 jbyteArray srcArray, jint srcStride,
-                                                 jbyteArray destArray, jint destStride,
-                                                 jint width, jint height, jint degrees) {
-    jbyte *src = env->GetByteArrayElements(srcArray, NULL);
-    jbyte *dest = env->GetByteArrayElements(destArray, NULL);
+    const int half_width = (width + 1) >> 1;
+    const int half_height = (height + 1) >> 1;
 
     const int size = width * height;
+    const int uvSize = half_width * half_height;
+
+    // create temporary buffer.
+    align_buffer_64(dest_i420_uv, uvSize * 2);
+
     const uint8* src_uv = (uint8*) src + size;
-    uint8* dest_u = (uint8*) dest + (size << 1);
-    uint8* dest_v = (uint8*) dest + size;
-    NV12ToI420Rotate((uint8*) src, srcStride, src_uv, srcStride, (uint8*) dest, destStride, dest_u, destStride, dest_v, destStride, width, height, (RotationMode) degrees);
+    uint8* dest_uv = (uint8*) dest + size;
+    uint8* dest_i420_u = dest_i420_uv + uvSize;
+    uint8* dest_i420_v = dest_i420_uv;
+
+    const int src_stride = (width + 1) & ~1;
+    int dest_stride, dest_i420_stride;
+
+    switch (degrees) {
+        default:
+            break;
+        case 90:
+            dest_stride = (height + 1) & ~1;
+            dest_i420_stride = (height + 1) >> 1;
+
+            RotatePlane((uint8*) src, src_stride, (uint8*) dest, dest_stride, width, height, (RotationMode) degrees);
+            RotateUV90(src_uv, src_stride, dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, half_width, half_height);
+            MergeUVPlane(dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, dest_uv, dest_stride, half_height, half_width);
+            break;
+        case 180:
+            dest_stride = (width + 1) & ~1;
+            dest_i420_stride = (width + 1) >> 1;
+
+            RotatePlane((uint8*) src, src_stride, (uint8*) dest, dest_stride, width, height, (RotationMode) degrees);
+            RotateUV180(src_uv, src_stride, dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, half_width, half_height);
+            MergeUVPlane(dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, dest_uv, dest_stride, half_width, half_height);
+            break;
+        case 270:
+            dest_stride = (height + 1) & ~1;
+            dest_i420_stride = (height + 1) >> 1;
+
+            RotatePlane((uint8*) src, src_stride, (uint8*) dest, dest_stride, width, height, (RotationMode) degrees);
+            RotateUV270(src_uv, src_stride, dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, half_width, half_height);
+            MergeUVPlane(dest_i420_u, dest_i420_stride, dest_i420_v, dest_i420_stride, dest_uv, dest_stride, half_height, half_width);
+            break;
+    }
+
+    free_aligned_buffer_64(dest_i420_uv);
 
     env->ReleaseByteArrayElements(destArray, dest, 0);
     env->ReleaseByteArrayElements(srcArray, src, 0);

@@ -12,7 +12,7 @@ class RotateExecutor {
             appendln(" - 90")
 //            for (i in 0 until 10) {
                 append(measureTimeMillis {
-                    rotator.rotate(src, width, height, dest, RotationMode.ROTATE_270)
+                    rotator.rotate(src, width, height, dest, RotationMode.ROTATE_90)
                     callback.invoke(height, width)
                 })
                 appendln(" ms")

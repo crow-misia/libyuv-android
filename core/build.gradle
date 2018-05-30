@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation deps.annotations
+    api deps.annotations
 }
 
 task androidSourcesJar(type: Jar) {

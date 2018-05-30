@@ -41,7 +41,7 @@ class MainActivity : Activity() {
         val height = bitmap.height
         val size = width * height
         val rgbBufferSize = bitmap.rowBytes * height
-        val yuvBufferSize = size * 3
+        val yuvBufferSize = size * 3 / 2
         val rgbBuffer = ByteBuffer.allocate(rgbBufferSize)
         val argbBuffer = ByteBuffer.allocate(rgbBufferSize)
         val yuvJavaBuffer = ByteArray(yuvBufferSize)

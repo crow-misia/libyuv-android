@@ -7,8 +7,7 @@ buildscript {
         'kotlin': '1.2.41',
         'androidPlugin': '3.1.2',
         'bintrayPlugin': '1.8.0',
-        'mavenPlugin': '2.1',
-        'benManesPlugin': '0.17.0'
+        'mavenPlugin': '2.1'
     ]
 
     ext.deps = [
@@ -23,7 +22,7 @@ buildscript {
     ext.maven = [
         groupId: "io.github.zncmn.libyuv",
         artifactId: "core",
-        version: "0.0.2",
+        version: "0.0.3",
         name: "libyuv-android",
         desc: "LibYuv for Android",
         licenses: [ "Apache-2.0" ],
