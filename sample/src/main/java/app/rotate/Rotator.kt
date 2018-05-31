@@ -4,5 +4,5 @@ import io.github.zncmn.libyuv.RotationMode
 
 interface Rotator {
     fun getName(): String
-    fun rotate(src: ByteArray, width: Int, height: Int, dest: ByteArray, mode: RotationMode)
+    fun rotate(src: ByteArray, dest: ByteArray, width: Int, height: Int, mode: RotationMode)
 }

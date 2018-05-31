@@ -3,7 +3,7 @@ package app.converter
 class JavaConverter : Converter {
     override fun getName() = "java"
 
-    override fun argbToYuv(argb: ByteArray, width: Int, height: Int, yuv: ByteArray) {
+    override fun argbToYuv(argb: ByteArray, yuv: ByteArray, width: Int, height: Int) {
         var rgbIndex = 0
         var yIndex = 0
         var uvIndex = width * height

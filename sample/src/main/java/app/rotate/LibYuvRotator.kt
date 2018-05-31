@@ -1,6 +1,7 @@
 package app.rotate
 
 import io.github.zncmn.libyuv.RotationMode
+import io.github.zncmn.libyuv.YuvFormat
 import io.github.zncmn.libyuv.YuvRotate
 
 class LibYuvRotator : Rotator {
@@ -8,7 +9,7 @@ class LibYuvRotator : Rotator {
 
     override fun getName() = "libYuv"
 
-    override fun rotate(src: ByteArray, width: Int, height: Int, dest: ByteArray, mode: RotationMode) {
-        libYuv.rorate(src, width, height, dest, mode)
+    override fun rotate(src: ByteArray, dest: ByteArray, width: Int, height: Int, mode: RotationMode) {
+        libYuv.rorate(src, dest, width, height, mode, YuvFormat.NV21)
     }
 }

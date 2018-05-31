@@ -10,6 +10,7 @@ import app.converter.LibYuvConverter
 import app.rotate.LibYuvRotator
 import io.github.zncmn.libyuv.Yuv
 import io.github.zncmn.libyuv.YuvConvert
+import io.github.zncmn.libyuv.YuvFormat
 import java.nio.ByteBuffer
 
 /**
@@ -39,9 +40,8 @@ class MainActivity : Activity() {
         val bitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
         val width = bitmap.width
         val height = bitmap.height
-        val size = width * height
         val rgbBufferSize = bitmap.rowBytes * height
-        val yuvBufferSize = size * 3 / 2
+        val yuvBufferSize = YuvFormat.NV21.getDataSize(width, height)
         val rgbBuffer = ByteBuffer.allocate(rgbBufferSize)
         val argbBuffer = ByteBuffer.allocate(rgbBufferSize)
         val yuvJavaBuffer = ByteArray(yuvBufferSize)
@@ -65,11 +65,6 @@ class MainActivity : Activity() {
             appendln(converterExecutor.execute(JavaConverter(), rgbBuffer.array(), width, height, yuvJavaBuffer))
             appendln(converterExecutor.execute(LibYuvConverter(), rgbBuffer.array(), width, height, yuvLibYuvBuffer))
 
-            append("RGB byte: ").appendln(rgbBuffer.array().copyOfRange(0, 16).toHex())
-            append("Java(Y) byte: ").appendln(yuvJavaBuffer.copyOfRange(0, 4).toHex())
-            append("Java(UV) byte: ").appendln(yuvJavaBuffer.copyOfRange(size, size + 8).toHex())
-            append("LibYuv(Y) byte: ").appendln(yuvLibYuvBuffer.copyOfRange(0, 4).toHex())
-            append("LibYuv(UV) byte: ").appendln(yuvLibYuvBuffer.copyOfRange(size, size + 8).toHex())
             convert.setImageBitmap(yuvToBitmap(yuvLibYuvBuffer, 1920, 1080, argbBuffer))
 
             appendln("Rotate")
@@ -82,7 +77,7 @@ class MainActivity : Activity() {
     fun yuvToBitmap(yuv: ByteArray, width: Int, height: Int, argb: ByteBuffer): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         argb.clear()
-        converter.yuvToArgb(yuv, width, height, argb.array())
+        converter.toARGB(yuv, argb.array(), width, height, YuvFormat.NV21)
         argb.limit(width * height * 4)
         bitmap.copyPixelsFromBuffer(argb)
         return bitmap

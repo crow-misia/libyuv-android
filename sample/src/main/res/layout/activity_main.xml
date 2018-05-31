@@ -7,7 +7,7 @@
     >
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         >
         <TextView
             android:id="@+id/textView"
@@ -23,19 +23,19 @@
         <ImageView
             android:id="@+id/origin"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             />
         <ImageView
             android:id="@+id/convert"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             />
         <ImageView
             android:id="@+id/rotate90"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             />
     </LinearLayout>
