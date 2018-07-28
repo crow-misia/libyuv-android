@@ -68,6 +68,6 @@ endif
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 
-LOCAL_MODULE := yuv-core
+LOCAL_MODULE := libyuv_static
 
 include $(BUILD_STATIC_LIBRARY)

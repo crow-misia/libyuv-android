@@ -8,8 +8,8 @@ LOCAL_SRC_FILES := \
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../libyuv/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../libyuv/include
 
-LOCAL_MODULE := yuv
+LOCAL_MODULE := libyuv
 
-LOCAL_STATIC_LIBRARIES := yuv-core
+LOCAL_STATIC_LIBRARIES := libyuv_static
 
 include $(BUILD_SHARED_LIBRARY)

@@ -11,6 +11,12 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         consumerProguardFiles 'consumer-proguard-rules.pro'
+
+        externalNativeBuild {
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            }
+        }
     }
 
     lintOptions {
