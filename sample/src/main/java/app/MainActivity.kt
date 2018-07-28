@@ -8,7 +8,6 @@ import android.widget.TextView
 import app.converter.JavaConverter
 import app.converter.LibYuvConverter
 import app.rotate.LibYuvRotator
-import io.github.zncmn.libyuv.Yuv
 import io.github.zncmn.libyuv.YuvConvert
 import io.github.zncmn.libyuv.YuvFormat
 import java.nio.ByteBuffer

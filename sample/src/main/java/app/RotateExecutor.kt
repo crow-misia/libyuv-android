@@ -11,7 +11,7 @@ class RotateExecutor {
 
             var millis = 0L
             for (i in 0 until 10) {
-                millis += measureTimeMillis {1
+                millis += measureTimeMillis {
                     rotator.rotate(src, dest, width, height, RotationMode.ROTATE_90)
                     callback.invoke(height, width)
                 }
