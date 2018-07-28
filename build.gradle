@@ -22,7 +22,7 @@ buildscript {
     ext.maven = [
         groupId: "io.github.zncmn.libyuv",
         artifactId: "core",
-        version: "0.0.4",
+        version: "0.0.5",
         name: "libyuv-android",
         desc: "LibYuv for Android",
         licenses: [ "Apache-2.0" ],
