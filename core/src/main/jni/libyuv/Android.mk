@@ -53,6 +53,18 @@ ifeq ($(TARGET_ARCH_ABI),$(filter $(TARGET_ARCH_ABI), x86 x86_64))
         source/scale_gcc.cc
 endif
 
+ifeq ($(TARGET_ARCH_ABI),$(filter $(TARGET_ARCH_ABI), mips mips64))
+    LOCAL_SRC_FILES += \
+        source/compare_msa.cc       \
+        source/compare_mmi.cc       \
+        source/rotate_msa.cc        \
+        source/rotate_mmi.cc        \
+        source/row_msa.cc           \
+        source/row_mmi.cc           \
+        source/scale_msa.cc         \
+        source/scale_mmi.cc
+endif
+
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 
