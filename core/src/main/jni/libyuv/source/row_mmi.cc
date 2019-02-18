@@ -7,10 +7,8 @@
  *  in the file PATENTS. All contributing project authors may
  *  be found in the AUTHORS file in the root of the source tree.
  */
-#include <sys/time.h>
 #include "libyuv/row.h"
 
-#include <stdio.h>
 #include <string.h>  // For memcpy and memset.
 
 #include "libyuv/basic_types.h"
@@ -19,6 +17,9 @@
 namespace libyuv {
 extern "C" {
 #endif
+
+// This module is for Mips MMI.
+#if !defined(LIBYUV_DISABLE_MMI) && defined(_MIPS_ARCH_LOONGSON3A)
 
 void RGB24ToARGBRow_MMI(const uint8_t* src_rgb24,
                         uint8_t* dst_argb,
@@ -4489,7 +4490,8 @@ void SobelXRow_MMI(const uint8_t* src_y0,
       "psubh     %[y00],        %[y10],          %[y20]  \n\t"
 
       "packushb  %[sobel],      %[sobel],        %[y00]  \n\t"  // clamp255
-      "sdc1      %[sobel],      0(%[dst_sobelx])         \n\t"
+      "gssdrc1   %[sobel],      0(%[dst_sobelx])         \n\t"
+      "gssdlc1   %[sobel],      7(%[dst_sobelx])         \n\t"
 
       "daddiu    %[src_y0],     %[src_y0],      8        \n\t"
       "daddiu    %[src_y1],     %[src_y1],      8        \n\t"
@@ -4584,7 +4586,8 @@ void SobelYRow_MMI(const uint8_t* src_y0,
       "psubh     %[y00],        %[y02],         %[y12]  \n\t"
 
       "packushb  %[sobel],      %[sobel],       %[y00]  \n\t"  // clamp255
-      "sdc1      %[sobel],      0(%[dst_sobely])        \n\t"
+      "gssdrc1   %[sobel],      0(%[dst_sobely])        \n\t"
+      "gssdlc1   %[sobel],      7(%[dst_sobely])        \n\t"
 
       "daddiu    %[src_y0],     %[src_y0],      8       \n\t"
       "daddiu    %[src_y1],     %[src_y1],      8       \n\t"
@@ -4592,10 +4595,10 @@ void SobelYRow_MMI(const uint8_t* src_y0,
       "daddiu    %[width],      %[width],      -8       \n\t"
       "bgtz      %[width],      1b                      \n\t"
       "nop                                              \n\t"
-      : [sobel] "=&f"(sobel), [y00] "=&f"(y00), [y01] "=&f"(y01), [y02] "=&f"(y02),
-        [y10] "=&f"(y10), [y11] "=&f"(y11), [y12] "=&f"(y12)
-      : [src_y0] "r"(src_y0), [src_y1] "r"(src_y1), [dst_sobely] "r"(dst_sobely),
-        [width] "r"(width), [zero] "f"(zero)
+      : [sobel] "=&f"(sobel), [y00] "=&f"(y00), [y01] "=&f"(y01),
+        [y02] "=&f"(y02), [y10] "=&f"(y10), [y11] "=&f"(y11), [y12] "=&f"(y12)
+      : [src_y0] "r"(src_y0), [src_y1] "r"(src_y1),
+        [dst_sobely] "r"(dst_sobely), [width] "r"(width), [zero] "f"(zero)
       : "memory");
 }
 
@@ -4621,13 +4624,15 @@ void SobelRow_MMI(const uint8_t* src_sobelx,
       "punpcklbh %[t1],         %[t0],              %[t0] \n\t"
       "or        %[t1],         %[t1],              %[c1] \n\t"
       // 255 s1 s1 s1 s55 s0 s0 s0
-      "sdc1      %[t1],         0x00(%[dst_argb])	  \n\t"
+      "gssdrc1   %[t1],         0x00(%[dst_argb])	  \n\t"
+      "gssdlc1   %[t1],         0x07(%[dst_argb])         \n\t"
 
       // s3 s3 s2 s2->s3 s3 s3 s3 s2 s2 s2 s2
       "punpckhbh %[t1],         %[t0],              %[t0] \n\t"
       "or        %[t1],         %[t1],              %[c1] \n\t"
       // 255 s3 s3 s3 255 s2 s2 s2
-      "sdc1      %[t1],         0x08(%[dst_argb])	  \n\t"
+      "gssdrc1   %[t1],         0x08(%[dst_argb])	  \n\t"
+      "gssdlc1   %[t1],         0x0f(%[dst_argb])         \n\t"
 
       // s7 s6 s5 s4->s7 s7 s6 s6 s5 s5 s4 s4
       "punpckhbh %[t0],         %[t2],              %[t2] \n\t"
@@ -4635,12 +4640,14 @@ void SobelRow_MMI(const uint8_t* src_sobelx,
       // s5 s5 s4 s4->s5 s5 s5 s5 s4 s4 s4 s4
       "punpcklbh %[t1],         %[t0],              %[t0] \n\t"
       "or        %[t1],         %[t1],              %[c1] \n\t"
-      "sdc1      %[t1],         0x10(%[dst_argb])	  \n\t"
+      "gssdrc1   %[t1],         0x10(%[dst_argb])	  \n\t"
+      "gssdlc1   %[t1],         0x17(%[dst_argb])         \n\t"
 
       // s7 s7 s6 s6->s7 s7 s7 s7 s6 s6 s6 s6
       "punpckhbh %[t1],         %[t0],              %[t0] \n\t"
       "or        %[t1],         %[t1],              %[c1] \n\t"
-      "sdc1      %[t1],         0x18(%[dst_argb])	  \n\t"
+      "gssdrc1   %[t1],         0x18(%[dst_argb])	  \n\t"
+      "gssdlc1   %[t1],         0x1f(%[dst_argb])         \n\t"
 
       "daddiu    %[dst_argb],   %[dst_argb],        32    \n\t"
       "daddiu    %[src_sobelx], %[src_sobelx],      8     \n\t"
@@ -4662,10 +4669,13 @@ void SobelToPlaneRow_MMI(const uint8_t* src_sobelx,
   uint64_t tb = 0;
   __asm__ volatile(
       "1:	                                       \n\t"
-      "ldc1    %[tr],         0x0(%[src_sobelx])       \n\t"  // r=src_sobelx[i]
-      "ldc1    %[tb],         0x0(%[src_sobely])       \n\t"  // b=src_sobely[i]
+      "gsldrc1 %[tr],         0x0(%[src_sobelx])       \n\t"
+      "gsldlc1 %[tr],         0x7(%[src_sobelx])       \n\t"  // r=src_sobelx[i]
+      "gsldrc1 %[tb],         0x0(%[src_sobely])       \n\t"
+      "gsldlc1 %[tb],         0x7(%[src_sobely])       \n\t"  // b=src_sobely[i]
       "paddusb %[tr],         %[tr],             %[tb] \n\t"  // g
-      "sdc1    %[tr],         0x0(%[dst_y])	       \n\t"
+      "gssdrc1 %[tr],         0x0(%[dst_y])	       \n\t"
+      "gssdlc1 %[tr],         0x7(%[dst_y])            \n\t"
 
       "daddiu  %[dst_y],      %[dst_y],          8     \n\t"
       "daddiu  %[src_sobelx], %[src_sobelx],     8     \n\t"
@@ -4702,10 +4712,12 @@ void SobelXYRow_MMI(const uint8_t* src_sobelx,
       "punpcklbh %[cr],         %[tr],              %[c1] \n\t"
       // c1 r1 g1 b1 c0 r0 g0 b0
       "punpcklhw %[result],     %[gb],              %[cr] \n\t"
-      "sdc1      %[result],     0x00(%[dst_argb])	  \n\t"
+      "gssdrc1   %[result],     0x00(%[dst_argb])	  \n\t"
+      "gssdlc1   %[result],     0x07(%[dst_argb])         \n\t"
       // c3 r3 g3 b3 c2 r2 g2 b2
       "punpckhhw %[result],     %[gb],              %[cr] \n\t"
-      "sdc1      %[result],     0x08(%[dst_argb])	  \n\t"
+      "gssdrc1   %[result],     0x08(%[dst_argb])	  \n\t"
+      "gssdlc1   %[result],     0x0f(%[dst_argb])         \n\t"
 
       // g7 b7 g6 b6 g5 b5 g4 b4
       "punpckhbh %[gb],         %[tb],              %[tg] \n\t"
@@ -4713,10 +4725,12 @@ void SobelXYRow_MMI(const uint8_t* src_sobelx,
       "punpckhbh %[cr],         %[tr],              %[c1] \n\t"
       // c5 r5 g5 b5 c4 r4 g4 b4
       "punpcklhw %[result],     %[gb],              %[cr] \n\t"
-      "sdc1      %[result],     0x10(%[dst_argb])	  \n\t"
+      "gssdrc1   %[result],     0x10(%[dst_argb])	  \n\t"
+      "gssdlc1   %[result],     0x17(%[dst_argb])         \n\t"
       // c7 r7 g7 b7 c6 r6 g6 b6
       "punpckhhw %[result],     %[gb],              %[cr] \n\t"
-      "sdc1      %[result],     0x18(%[dst_argb])	  \n\t"
+      "gssdrc1   %[result],     0x18(%[dst_argb])	  \n\t"
+      "gssdlc1   %[result],     0x1f(%[dst_argb])         \n\t"
 
       "daddiu    %[dst_argb],   %[dst_argb],        32    \n\t"
       "daddiu    %[src_sobelx], %[src_sobelx],      8     \n\t"
@@ -4745,12 +4759,14 @@ void J400ToARGBRow_MMI(const uint8_t* src_y, uint8_t* dst_argb, int width) {
       "punpcklhw  %[dest],         %[src],            %[src]        \n\t"
       "and        %[dest],         %[dest],           %[mask0]      \n\t"
       "or         %[dest],         %[dest],           %[mask1]      \n\t"
-      "sdc1       %[dest],         0x00(%[dst_ptr])                 \n\t"
+      "gssdrc1    %[dest],         0x00(%[dst_ptr])                 \n\t"
+      "gssdlc1    %[dest],         0x07(%[dst_ptr])                 \n\t"
 
       "punpckhhw  %[dest],         %[src],            %[src]        \n\t"
       "and        %[dest],         %[dest],           %[mask0]      \n\t"
       "or         %[dest],         %[dest],           %[mask1]      \n\t"
-      "sdc1       %[dest],         0x08(%[dst_ptr])                 \n\t"
+      "gssdrc1    %[dest],         0x08(%[dst_ptr])                 \n\t"
+      "gssdlc1    %[dest],         0x0f(%[dst_ptr])                 \n\t"
 
       "daddiu     %[src_ptr],      %[src_ptr],        0x04          \n\t"
       "daddiu     %[dst_ptr],      %[dst_ptr],        0x10          \n\t"
@@ -4952,7 +4968,8 @@ void ARGBMirrorRow_MMI(const uint8_t* src, uint8_t* dst, int width) {
       "gsldlc1 %[temp],  3(%[src])     	       \n\t"
       "gsldrc1 %[temp], -4(%[src])     	       \n\t"
       "pshufh  %[temp],  %[temp],    %[shuff]  \n\t"
-      "sdc1    %[temp],  0x0(%[dst])           \n\t"
+      "gssdrc1 %[temp],  0x0(%[dst])           \n\t"
+      "gssdlc1 %[temp],  0x7(%[dst])           \n\t"
 
       "daddiu  %[src],   %[src],    -0x08      \n\t"
       "daddiu  %[dst],   %[dst],     0x08      \n\t"
@@ -4972,18 +4989,22 @@ void SplitUVRow_MMI(const uint8_t* src_uv,
   uint64_t shift = 0x08;
   __asm__ volatile(
       "1:	                                    \n\t"
-      "ldc1     %[t0],     0x00(%[src_uv])          \n\t"
-      "ldc1     %[t1],     0x08(%[src_uv])          \n\t"
+      "gsldrc1  %[t0],     0x00(%[src_uv])          \n\t"
+      "gsldlc1  %[t0],     0x07(%[src_uv])          \n\t"
+      "gsldrc1  %[t1],     0x08(%[src_uv])          \n\t"
+      "gsldlc1  %[t1],     0x0f(%[src_uv])          \n\t"
 
       "and      %[t2],     %[t0],          %[c0]    \n\t"
       "and      %[t3],     %[t1],          %[c0]    \n\t"
       "packushb %[t2],     %[t2],          %[t3]    \n\t"
-      "sdc1     %[t2],     0x0(%[dst_u])	    \n\t"
+      "gssdrc1  %[t2],     0x0(%[dst_u])	    \n\t"
+      "gssdlc1  %[t2],     0x7(%[dst_u])            \n\t"
 
       "psrlh    %[t2],     %[t0],          %[shift] \n\t"
       "psrlh    %[t3],     %[t1],          %[shift] \n\t"
       "packushb %[t2],     %[t2],          %[t3]    \n\t"
-      "sdc1     %[t2],     0x0(%[dst_v])            \n\t"
+      "gssdrc1  %[t2],     0x0(%[dst_v])            \n\t"
+      "gssdlc1  %[t2],     0x7(%[dst_v])            \n\t"
 
       "daddiu   %[src_uv], %[src_uv],      16       \n\t"
       "daddiu   %[dst_u],  %[dst_u],       8        \n\t"
@@ -5005,12 +5026,16 @@ void MergeUVRow_MMI(const uint8_t* src_u,
   uint64_t temp[3];
   __asm__ volatile(
       "1:	                                 \n\t"
-      "ldc1      %[t0],     0x0(%[src_u])        \n\t"
-      "ldc1      %[t1],     0x0(%[src_v])        \n\t"
+      "gsldrc1   %[t0],     0x0(%[src_u])        \n\t"
+      "gsldlc1   %[t0],     0x7(%[src_u])        \n\t"
+      "gsldrc1   %[t1],     0x0(%[src_v])        \n\t"
+      "gsldlc1   %[t1],     0x7(%[src_v])        \n\t"
       "punpcklbh %[t2],     %[t0],         %[t1] \n\t"
-      "sdc1      %[t2],     0x0(%[dst_uv])	 \n\t"
+      "gssdrc1   %[t2],     0x0(%[dst_uv])	 \n\t"
+      "gssdlc1   %[t2],     0x7(%[dst_uv])       \n\t"
       "punpckhbh %[t2],     %[t0],         %[t1] \n\t"
-      "sdc1      %[t2],     0x8(%[dst_uv])	 \n\t"
+      "gssdrc1   %[t2],     0x8(%[dst_uv])	 \n\t"
+      "gssdlc1   %[t2],     0xf(%[dst_uv])       \n\t"
 
       "daddiu    %[src_u],  %[src_u],      8     \n\t"
       "daddiu    %[src_v],  %[src_v],      8     \n\t"
@@ -5146,13 +5171,17 @@ void YUY2ToUVRow_MMI(const uint8_t* src_yuy2,
   uint64_t src_stride = 0x0;
   __asm__ volatile(
       "1:	                                                     \n\t"
-      "ldc1     %[t0],         0x00(%[src_yuy2])                     \n\t"
+      "gsldrc1  %[t0],         0x00(%[src_yuy2])                     \n\t"
+      "gsldlc1  %[t0],         0x07(%[src_yuy2])                     \n\t"
       "daddu    %[src_stride], %[src_yuy2],       %[src_stride_yuy2] \n\t"
-      "ldc1     %[t1],         0x00(%[src_stride])                   \n\t"
-      "pavgb    %[t0],         %[t0], %[t1]                          \n\t"
+      "gsldrc1  %[t1],         0x00(%[src_stride])                   \n\t"
+      "gsldlc1  %[t1],         0x07(%[src_stride])                   \n\t"
+      "pavgb    %[t0],         %[t0],             %[t1]              \n\t"
 
-      "ldc1     %[t2],         0x08(%[src_yuy2])                     \n\t"
-      "ldc1     %[t1],         0x08(%[src_stride])                   \n\t"
+      "gsldrc1  %[t2],         0x08(%[src_yuy2])                     \n\t"
+      "gsldlc1  %[t2],         0x0f(%[src_yuy2])                     \n\t"
+      "gsldrc1  %[t1],         0x08(%[src_stride])                   \n\t"
+      "gsldlc1  %[t1],         0x0f(%[src_stride])                   \n\t"
       "pavgb    %[t1],         %[t2],             %[t1]              \n\t"
 
       "and      %[t0],         %[t0],             %[c0]              \n\t"
@@ -5164,12 +5193,16 @@ void YUY2ToUVRow_MMI(const uint8_t* src_yuy2,
       "and      %[d0],         %[t0],             %[c1]              \n\t"
       "psrlh    %[d1],         %[t1],             %[shift]           \n\t"
 
-      "ldc1     %[t0],         0x10(%[src_yuy2])                     \n\t"
-      "ldc1     %[t1],         0x10(%[src_stride])                   \n\t"
+      "gsldrc1  %[t0],         0x10(%[src_yuy2])                     \n\t"
+      "gsldlc1  %[t0],         0x17(%[src_yuy2])                     \n\t"
+      "gsldrc1  %[t1],         0x10(%[src_stride])                   \n\t"
+      "gsldlc1  %[t1],         0x17(%[src_stride])                   \n\t"
       "pavgb    %[t0],         %[t0],              %[t1]             \n\t"
 
-      "ldc1     %[t2],         0x18(%[src_yuy2])                     \n\t"
-      "ldc1     %[t1],         0x18(%[src_stride])                   \n\t"
+      "gsldrc1  %[t2],         0x18(%[src_yuy2])                     \n\t"
+      "gsldlc1  %[t2],         0x1f(%[src_yuy2])                     \n\t"
+      "gsldrc1  %[t1],         0x18(%[src_stride])                   \n\t"
+      "gsldlc1  %[t1],         0x1f(%[src_stride])                   \n\t"
       "pavgb    %[t1],         %[t2],              %[t1]             \n\t"
 
       "and      %[t0],         %[t0],              %[c0]             \n\t"
@@ -5183,8 +5216,10 @@ void YUY2ToUVRow_MMI(const uint8_t* src_yuy2,
 
       "packushb %[d0],         %[d0],              %[d2]             \n\t"
       "packushb %[d1],         %[d1],              %[d3]             \n\t"
-      "sdc1     %[d0],         0x0(%[dst_u])	                     \n\t"
-      "sdc1     %[d1],         0x0(%[dst_v])	                     \n\t"
+      "gssdrc1  %[d0],         0x0(%[dst_u])	                     \n\t"
+      "gssdlc1  %[d0],         0x7(%[dst_u])                         \n\t"
+      "gssdrc1  %[d1],         0x0(%[dst_v])	                     \n\t"
+      "gssdlc1  %[d1],         0x7(%[dst_v])                         \n\t"
       "daddiu   %[src_yuy2],   %[src_yuy2],        32                \n\t"
       "daddiu   %[dst_u],      %[dst_u],           8                 \n\t"
       "daddiu   %[dst_v],      %[dst_v],           8                 \n\t"
@@ -5212,8 +5247,10 @@ void YUY2ToUV422Row_MMI(const uint8_t* src_yuy2,
   uint64_t shift = 0x08;
   __asm__ volatile(
       "1:	                                        \n\t"
-      "ldc1     %[t0],       0x00(%[src_yuy2])          \n\t"
-      "ldc1     %[t1],       0x08(%[src_yuy2])          \n\t"
+      "gsldrc1  %[t0],       0x00(%[src_yuy2])          \n\t"
+      "gsldlc1  %[t0],       0x07(%[src_yuy2])          \n\t"
+      "gsldrc1  %[t1],       0x08(%[src_yuy2])          \n\t"
+      "gsldlc1  %[t1],       0x0f(%[src_yuy2])          \n\t"
       "and      %[t0],       %[t0],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "psrlh    %[t0],       %[t0],            %[shift] \n\t"
@@ -5223,8 +5260,10 @@ void YUY2ToUV422Row_MMI(const uint8_t* src_yuy2,
       "and      %[d0],       %[t0],            %[c1]    \n\t"
       "psrlh    %[d1],       %[t1],            %[shift] \n\t"
 
-      "ldc1     %[t0],       0x10(%[src_yuy2])          \n\t"
-      "ldc1     %[t1],       0x18(%[src_yuy2])          \n\t"
+      "gsldrc1  %[t0],       0x10(%[src_yuy2])          \n\t"
+      "gsldlc1  %[t0],       0x17(%[src_yuy2])          \n\t"
+      "gsldrc1  %[t1],       0x18(%[src_yuy2])          \n\t"
+      "gsldlc1  %[t1],       0x1f(%[src_yuy2])          \n\t"
       "and      %[t0],       %[t0],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "psrlh    %[t0],       %[t0],            %[shift] \n\t"
@@ -5236,8 +5275,10 @@ void YUY2ToUV422Row_MMI(const uint8_t* src_yuy2,
 
       "packushb %[d0],       %[d0],            %[d2]    \n\t"
       "packushb %[d1],       %[d1],            %[d3]    \n\t"
-      "sdc1     %[d0],       0x0(%[dst_u])	        \n\t"
-      "sdc1     %[d1],       0x0(%[dst_v])	        \n\t"
+      "gssdrc1  %[d0],       0x0(%[dst_u])	        \n\t"
+      "gssdlc1  %[d0],       0x7(%[dst_u])              \n\t"
+      "gssdrc1  %[d1],       0x0(%[dst_v])	        \n\t"
+      "gssdlc1  %[d1],       0x7(%[dst_v])              \n\t"
       "daddiu   %[src_yuy2], %[src_yuy2],      32       \n\t"
       "daddiu   %[dst_u],    %[dst_u],         8        \n\t"
       "daddiu   %[dst_v],    %[dst_v],         8        \n\t"
@@ -5253,17 +5294,19 @@ void YUY2ToUV422Row_MMI(const uint8_t* src_yuy2,
 
 // Copy row of YUY2 Y's (422) into Y (420/422).
 void YUY2ToYRow_MMI(const uint8_t* src_yuy2, uint8_t* dst_y, int width) {
-  // Output a row of UV values, filtering 2 rows of YUY2.
   uint64_t c0 = 0x00ff00ff00ff00ff;
   uint64_t temp[2];
   __asm__ volatile(
       "1:	                                     \n\t"
-      "ldc1     %[t0],       0x00(%[src_yuy2])       \n\t"
-      "ldc1     %[t1],       0x08(%[src_yuy2])       \n\t"
+      "gsldrc1  %[t0],       0x00(%[src_yuy2])       \n\t"
+      "gsldlc1  %[t0],       0x07(%[src_yuy2])       \n\t"
+      "gsldrc1  %[t1],       0x08(%[src_yuy2])       \n\t"
+      "gsldlc1  %[t1],       0x0f(%[src_yuy2])       \n\t"
       "and      %[t0],       %[t0],            %[c0] \n\t"
       "and      %[t1],       %[t1],            %[c0] \n\t"
       "packushb %[t0],       %[t0],            %[t1] \n\t"
-      "sdc1     %[t0],       0x0(%[dst_y])	     \n\t"
+      "gssdrc1  %[t0],       0x0(%[dst_y])	     \n\t"
+      "gssdlc1  %[t0],       0x7(%[dst_y])           \n\t"
       "daddiu   %[src_yuy2], %[src_yuy2],      16    \n\t"
       "daddiu   %[dst_y],    %[dst_y],         8     \n\t"
       "daddiu   %[width],    %[width],        -8     \n\t"
@@ -5289,13 +5332,17 @@ void UYVYToUVRow_MMI(const uint8_t* src_uyvy,
   uint64_t src_stride = 0x0;
   __asm__ volatile(
       "1:	                                                      \n\t"
-      "ldc1     %[t0],         0x00(%[src_uyvy])                      \n\t"
+      "gsldrc1  %[t0],         0x00(%[src_uyvy])                      \n\t"
+      "gsldlc1  %[t0],         0x07(%[src_uyvy])                      \n\t"
       "daddu    %[src_stride], %[src_uyvy],        %[src_stride_uyvy] \n\t"
-      "ldc1     %[t1],         0x00(%[src_stride])                    \n\t"
+      "gsldrc1  %[t1],         0x00(%[src_stride])                    \n\t"
+      "gsldlc1  %[t1],         0x07(%[src_stride])                    \n\t"
       "pavgb    %[t0],         %[t0],              %[t1]              \n\t"
 
-      "ldc1     %[t2],         0x08(%[src_uyvy])                      \n\t"
-      "ldc1     %[t1],         0x08(%[src_stride])                    \n\t"
+      "gsldrc1  %[t2],         0x08(%[src_uyvy])                      \n\t"
+      "gsldlc1  %[t2],         0x0f(%[src_uyvy])                      \n\t"
+      "gsldrc1  %[t1],         0x08(%[src_stride])                    \n\t"
+      "gsldlc1  %[t1],         0x0f(%[src_stride])                    \n\t"
       "pavgb    %[t1],         %[t2],              %[t1]              \n\t"
 
       "and      %[t0],         %[t0],              %[c0]              \n\t"
@@ -5305,12 +5352,16 @@ void UYVYToUVRow_MMI(const uint8_t* src_uyvy,
       "and      %[d0],         %[t0],              %[c0]              \n\t"
       "psrlh    %[d1],         %[t1],              %[shift]           \n\t"
 
-      "ldc1     %[t0],         0x10(%[src_uyvy])                      \n\t"
-      "ldc1     %[t1],         0x10(%[src_stride])                    \n\t"
+      "gsldrc1  %[t0],         0x10(%[src_uyvy])                      \n\t"
+      "gsldlc1  %[t0],         0x17(%[src_uyvy])                      \n\t"
+      "gsldrc1  %[t1],         0x10(%[src_stride])                    \n\t"
+      "gsldlc1  %[t1],         0x17(%[src_stride])                    \n\t"
       "pavgb    %[t0],         %[t0],              %[t1]              \n\t"
 
-      "ldc1     %[t2],         0x18(%[src_uyvy])                      \n\t"
-      "ldc1     %[t1],         0x18(%[src_stride])                    \n\t"
+      "gsldrc1  %[t2],         0x18(%[src_uyvy])                      \n\t"
+      "gsldlc1  %[t2],         0x1f(%[src_uyvy])                      \n\t"
+      "gsldrc1  %[t1],         0x18(%[src_stride])                    \n\t"
+      "gsldlc1  %[t1],         0x1f(%[src_stride])                    \n\t"
       "pavgb    %[t1],         %[t2],              %[t1]              \n\t"
 
       "and      %[t0],         %[t0],              %[c0]              \n\t"
@@ -5322,8 +5373,10 @@ void UYVYToUVRow_MMI(const uint8_t* src_uyvy,
 
       "packushb %[d0],         %[d0],              %[d2]              \n\t"
       "packushb %[d1],         %[d1],              %[d3]              \n\t"
-      "sdc1     %[d0],         0x0(%[dst_u])	                      \n\t"
-      "sdc1     %[d1],         0x0(%[dst_v])	                      \n\t"
+      "gssdrc1  %[d0],         0x0(%[dst_u])	                      \n\t"
+      "gssdlc1  %[d0],         0x7(%[dst_u])                          \n\t"
+      "gssdrc1  %[d1],         0x0(%[dst_v])	                      \n\t"
+      "gssdlc1  %[d1],         0x7(%[dst_v])                          \n\t"
       "daddiu   %[src_uyvy],   %[src_uyvy],        32                 \n\t"
       "daddiu   %[dst_u],      %[dst_u],           8                  \n\t"
       "daddiu   %[dst_v],      %[dst_v],           8                  \n\t"
@@ -5351,8 +5404,10 @@ void UYVYToUV422Row_MMI(const uint8_t* src_uyvy,
   uint64_t shift = 0x08;
   __asm__ volatile(
       "1:	                                        \n\t"
-      "ldc1     %[t0],       0x00(%[src_uyvy])          \n\t"
-      "ldc1     %[t1],       0x08(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t0],       0x00(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t0],       0x07(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t1],       0x08(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t1],       0x0f(%[src_uyvy])          \n\t"
       "and      %[t0],       %[t0],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "packushb %[t0],       %[t0],            %[t1]    \n\t"
@@ -5360,8 +5415,10 @@ void UYVYToUV422Row_MMI(const uint8_t* src_uyvy,
       "and      %[d0],       %[t0],            %[c0]    \n\t"
       "psrlh    %[d1],       %[t1],            %[shift] \n\t"
 
-      "ldc1     %[t0],       0x10(%[src_uyvy])          \n\t"
-      "ldc1     %[t1],       0x18(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t0],       0x10(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t0],       0x17(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t1],       0x18(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t1],       0x1f(%[src_uyvy])          \n\t"
       "and      %[t0],       %[t0],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "packushb %[t0],       %[t0],            %[t1]    \n\t"
@@ -5371,8 +5428,10 @@ void UYVYToUV422Row_MMI(const uint8_t* src_uyvy,
 
       "packushb %[d0],       %[d0],            %[d2]    \n\t"
       "packushb %[d1],       %[d1],            %[d3]    \n\t"
-      "sdc1     %[d0],       0x0(%[dst_u])	        \n\t"
-      "sdc1     %[d1],       0x0(%[dst_v])	        \n\t"
+      "gssdrc1  %[d0],       0x0(%[dst_u])	        \n\t"
+      "gssdlc1  %[d0],       0x7(%[dst_u])              \n\t"
+      "gssdrc1  %[d1],       0x0(%[dst_v])	        \n\t"
+      "gssdlc1  %[d1],       0x7(%[dst_v])              \n\t"
       "daddiu   %[src_uyvy], %[src_uyvy],      32       \n\t"
       "daddiu   %[dst_u],    %[dst_u],         8        \n\t"
       "daddiu   %[dst_v],    %[dst_v],         8        \n\t"
@@ -5394,15 +5453,18 @@ void UYVYToYRow_MMI(const uint8_t* src_uyvy, uint8_t* dst_y, int width) {
   uint64_t temp[2];
   __asm__ volatile(
       "1:	                                        \n\t"
-      "ldc1     %[t0],       0x00(%[src_uyvy])          \n\t"
-      "ldc1     %[t1],       0x08(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t0],       0x00(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t0],       0x07(%[src_uyvy])          \n\t"
+      "gsldrc1  %[t1],       0x08(%[src_uyvy])          \n\t"
+      "gsldlc1  %[t1],       0x0f(%[src_uyvy])          \n\t"
       "dsrl     %[t0],       %[t0],            %[shift] \n\t"
       "dsrl     %[t1],       %[t1],            %[shift] \n\t"
       "and      %[t0],       %[t0],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "and      %[t1],       %[t1],            %[c0]    \n\t"
       "packushb %[t0],       %[t0],            %[t1]    \n\t"
-      "sdc1     %[t0],       0x0(%[dst_y])	        \n\t"
+      "gssdrc1  %[t0],       0x0(%[dst_y])	        \n\t"
+      "gssdlc1  %[t0],       0x7(%[dst_y])              \n\t"
       "daddiu   %[src_uyvy], %[src_uyvy],      16       \n\t"
       "daddiu   %[dst_y],    %[dst_y],         8        \n\t"
       "daddiu   %[width],    %[width],        -8        \n\t"
@@ -5658,8 +5720,7 @@ void InterpolateRow_MMI(uint8_t* dst_ptr,
         "bgtz   %[width],   1b                \n\t"
         "nop                                  \n\t"
         :
-        : [dst_ptr] "r"(dst_ptr), [src_ptr] "r"(src_ptr),
-          [width] "r"(width)
+        : [dst_ptr] "r"(dst_ptr), [src_ptr] "r"(src_ptr), [width] "r"(width)
         : "memory");
     return;
   }
@@ -5667,19 +5728,22 @@ void InterpolateRow_MMI(uint8_t* dst_ptr,
     uint64_t uv = 0x0;
     uint64_t uv_stride = 0x0;
     __asm__ volatile(
-        "1:	                                           \n\t"
-        "ldc1   %[uv],        0x0(%[src_ptr])              \n\t"
-        "daddu  $t0,          %[src_ptr],     %[stride]    \n\t"
-        "ldc1   %[uv_stride], 0x0($t0)                     \n\t"
+        "1:	                                            \n\t"
+        "gsldrc1 %[uv],        0x0(%[src_ptr])              \n\t"
+        "gsldlc1 %[uv],        0x7(%[src_ptr])              \n\t"
+        "daddu   $t0,          %[src_ptr],     %[stride]    \n\t"
+        "gsldrc1 %[uv_stride], 0x0($t0)                     \n\t"
+        "gsldlc1 %[uv_stride], 0x7($t0)                     \n\t"
 
-        "pavgb  %[uv],        %[uv],          %[uv_stride] \n\t"
-        "sdc1   %[uv],        0x0(%[dst_ptr])              \n\t"
+        "pavgb   %[uv],        %[uv],          %[uv_stride] \n\t"
+        "gssdrc1 %[uv],        0x0(%[dst_ptr])              \n\t"
+        "gssdlc1 %[uv],        0x7(%[dst_ptr])              \n\t"
 
-        "daddiu %[src_ptr],   %[src_ptr],     8            \n\t"
-        "daddiu %[dst_ptr],   %[dst_ptr],     8            \n\t"
-        "daddiu %[width],     %[width],      -8            \n\t"
-        "bgtz   %[width],     1b                           \n\t"
-        "nop                                               \n\t"
+        "daddiu  %[src_ptr],   %[src_ptr],     8            \n\t"
+        "daddiu  %[dst_ptr],   %[dst_ptr],     8            \n\t"
+        "daddiu  %[width],     %[width],      -8            \n\t"
+        "bgtz    %[width],     1b                           \n\t"
+        "nop                                                \n\t"
         : [uv] "=&f"(uv), [uv_stride] "=&f"(uv_stride)
         : [src_ptr] "r"(src_ptr), [dst_ptr] "r"(dst_ptr), [width] "r"(width),
           [stride] "r"((int64_t)src_stride)
@@ -5697,10 +5761,12 @@ void InterpolateRow_MMI(uint8_t* dst_ptr,
       "pshufh    %[fy1],      %[fy1],          %[zero]  \n\t"
       "psubh     %[fy0],      %[fy0],          %[fy1]   \n\t"
       "1:	                                        \n\t"
-      "ldc1      %[t0],       0x0(%[src_ptr])           \n\t"
+      "gsldrc1   %[t0],       0x0(%[src_ptr])           \n\t"
+      "gsldlc1   %[t0],       0x7(%[src_ptr])           \n\t"
       "punpcklbh %[d0],       %[t0],           %[zero]  \n\t"
       "punpckhbh %[d1],       %[t0],           %[zero]  \n\t"
-      "ldc1      %[t0],       0x0(%[src_ptr1])          \n\t"
+      "gsldrc1   %[t0],       0x0(%[src_ptr1])          \n\t"
+      "gsldlc1   %[t0],       0x7(%[src_ptr1])          \n\t"
       "punpcklbh %[d2],       %[t0],           %[zero]  \n\t"
       "punpckhbh %[d3],       %[t0],           %[zero]  \n\t"
 
@@ -5717,7 +5783,8 @@ void InterpolateRow_MMI(uint8_t* dst_ptr,
       "psrlh     %[d1],       %[d1],           %[shift] \n\t"
 
       "packushb  %[d0],       %[d0],           %[d1]    \n\t"
-      "sdc1      %[d0],       0x0(%[dst_ptr])           \n\t"
+      "gssdrc1   %[d0],       0x0(%[dst_ptr])           \n\t"
+      "gssdlc1   %[d0],       0x7(%[dst_ptr])           \n\t"
       "daddiu    %[src_ptr],  %[src_ptr],      8        \n\t"
       "daddiu    %[src_ptr1], %[src_ptr1],     8        \n\t"
       "daddiu    %[dst_ptr],  %[dst_ptr],      8        \n\t"
@@ -5726,9 +5793,10 @@ void InterpolateRow_MMI(uint8_t* dst_ptr,
       "nop                                              \n\t"
       : [t0] "=&f"(temp), [d0] "=&f"(data[0]), [d1] "=&f"(data[1]),
         [d2] "=&f"(data[2]), [d3] "=&f"(data[3])
-      : [src_ptr] "r"(src_ptr), [src_ptr1] "r"(src_ptr1), [dst_ptr] "r"(dst_ptr),
-        [width] "r"(width), [fy1] "f"(source_y_fraction), [fy0] "f"(fy0),
-        [c0] "f"(c0), [shift] "f"(shift), [zero] "f"(zero)
+      : [src_ptr] "r"(src_ptr), [src_ptr1] "r"(src_ptr1),
+        [dst_ptr] "r"(dst_ptr), [width] "r"(width),
+        [fy1] "f"(source_y_fraction), [fy0] "f"(fy0), [c0] "f"(c0),
+        [shift] "f"(shift), [zero] "f"(zero)
       : "memory");
 }
 
@@ -5965,6 +6033,8 @@ void ARGBCopyYToAlphaRow_MMI(const uint8_t* src, uint8_t* dst, int width) {
         [mask1] "f"(mask1), [width] "r"(width)
       : "memory");
 }
+
+#endif  // !defined(LIBYUV_DISABLE_MMI) && defined(_MIPS_ARCH_LOONGSON3A)
 
 #ifdef __cplusplus
 }  // extern "C"

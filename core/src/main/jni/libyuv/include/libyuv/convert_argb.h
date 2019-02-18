@@ -298,6 +298,28 @@ int NV21ToRGB24(const uint8_t* src_y,
                 int width,
                 int height);
 
+// Convert NV12 to RAW.
+LIBYUV_API
+int NV12ToRAW(const uint8_t* src_y,
+              int src_stride_y,
+              const uint8_t* src_uv,
+              int src_stride_uv,
+              uint8_t* dst_raw,
+              int dst_stride_raw,
+              int width,
+              int height);
+
+// Convert NV21 to RAW.
+LIBYUV_API
+int NV21ToRAW(const uint8_t* src_y,
+              int src_stride_y,
+              const uint8_t* src_vu,
+              int src_stride_vu,
+              uint8_t* dst_raw,
+              int dst_stride_raw,
+              int width,
+              int height);
+
 // Convert M420 to ARGB.
 LIBYUV_API
 int M420ToARGB(const uint8_t* src_m420,
@@ -605,8 +627,8 @@ int AR30ToAB30(const uint8_t* src_ar30,
 // src_width/height provided by capture
 // dst_width/height for clipping determine final size.
 LIBYUV_API
-int MJPGToARGB(const uint8_t* sample,
-               size_t sample_size,
+int MJPGToARGB(const uint8_t* src_mjpg,
+               size_t src_size_mjpg,
                uint8_t* dst_argb,
                int dst_stride_argb,
                int src_width,
