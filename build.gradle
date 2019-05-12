@@ -22,14 +22,14 @@ buildscript {
     ext.maven = [
         groupId: "io.github.zncmn.libyuv",
         artifactId: "core",
-        version: "0.0.6",
+        version: "0.0.7",
         name: "libyuv-android",
         desc: "LibYuv for Android",
         licenses: [ "Apache-2.0" ],
-        siteUrl: "https://github.com/zncmn/libyuv-android",
-        issueTrackerUrl: "https://github.com/zncmn/libyuv-android/issues",
-        gitUrl: "https://github.com/zncmn/libyuv-android.git",
-        githubRepo: "zncmn/libyuv-android",
+        siteUrl: "https://github.com/crow-misia/libyuv-android",
+        issueTrackerUrl: "https://github.com/crow-misia/libyuv-android/issues",
+        gitUrl: "https://github.com/crow-misia/libyuv-android.git",
+        githubRepo: "crow-misia/libyuv-android",
         labels: [ "android", "libyuv" ]
     ]
 
