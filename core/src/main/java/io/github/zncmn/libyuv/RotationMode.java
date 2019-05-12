@@ -1,7 +1,7 @@
 package io.github.zncmn.libyuv;
 
 /**
- * Ro
+ * Rotation Mode
  */
 public enum RotationMode {
     ROTATE_0(0),
