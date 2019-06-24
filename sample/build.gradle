@@ -27,5 +27,5 @@ android {
 dependencies {
     implementation deps.kotlin
 
-    implementation(project(path: ":core", configuration: "default"))
+    implementation project(":core")
 }

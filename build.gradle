@@ -4,8 +4,8 @@ buildscript {
     ext.versions = [
         'minSdk': 9,
         'compileSdk': 28,
-        'kotlin': '1.3.31',
-        'androidPlugin': '3.4.0',
+        'kotlin': '1.3.40',
+        'androidPlugin': '3.4.1',
         'bintrayPlugin': '1.+',
         'mavenPlugin': '2.+'
     ]

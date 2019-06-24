@@ -25,6 +25,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable false
+            jniDebuggable false
+        }
         release {
             debuggable false
             jniDebuggable false
@@ -34,13 +38,6 @@ android {
     externalNativeBuild {
         ndkBuild {
             setPath(new File(projectDir, "src/main/jni/Android.mk"))
-        }
-    }
-
-    // release only
-    variantFilter {
-        if (buildType.name == "debug") {
-            ignore = true
         }
     }
 
