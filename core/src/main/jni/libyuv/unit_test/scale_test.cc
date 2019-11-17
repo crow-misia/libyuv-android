@@ -14,7 +14,10 @@
 #include "../unit_test/unit_test.h"
 #include "libyuv/cpu_id.h"
 #include "libyuv/scale.h"
+
+#ifdef ENABLE_ROW_TESTS
 #include "libyuv/scale_row.h"  // For ScaleRowDown2Box_Odd_C
+#endif
 
 #define STRINGIZE(line) #line
 #define FILELINESTR(file, line) file ":" STRINGIZE(line)
@@ -497,7 +500,7 @@ static int I444TestFilter_16(int src_width,
 #define DX(x, nom, denom) static_cast<int>(((Abs(x) / nom + 1) / 2) * nom * 2)
 #define SX(x, nom, denom) static_cast<int>(((x / nom + 1) / 2) * denom * 2)
 
-#define TEST_FACTOR1(name, filter, nom, denom, max_diff)                     \
+#define TEST_FACTOR1(DISABLED_, name, filter, nom, denom, max_diff)                     \
   TEST_F(LibYUVScaleTest, I420ScaleDownBy##name##_##filter) {                \
     int diff = I420TestFilter(                                               \
         SX(benchmark_width_, nom, denom), SX(benchmark_height_, nom, denom), \
@@ -514,7 +517,7 @@ static int I444TestFilter_16(int src_width,
         benchmark_cpu_info_);                                                \
     EXPECT_LE(diff, max_diff);                                               \
   }                                                                          \
-  TEST_F(LibYUVScaleTest, I420ScaleDownBy##name##_##filter##_16) {           \
+  TEST_F(LibYUVScaleTest, DISABLED_##I420ScaleDownBy##name##_##filter##_16) { \
     int diff = I420TestFilter_16(                                            \
         SX(benchmark_width_, nom, denom), SX(benchmark_height_, nom, denom), \
         DX(benchmark_width_, nom, denom), DX(benchmark_height_, nom, denom), \
@@ -522,7 +525,7 @@ static int I444TestFilter_16(int src_width,
         benchmark_cpu_info_);                                                \
     EXPECT_LE(diff, max_diff);                                               \
   }                                                                          \
-  TEST_F(LibYUVScaleTest, I444ScaleDownBy##name##_##filter##_16) {           \
+  TEST_F(LibYUVScaleTest, DISABLED_##I444ScaleDownBy##name##_##filter##_16) { \
     int diff = I444TestFilter_16(                                            \
         SX(benchmark_width_, nom, denom), SX(benchmark_height_, nom, denom), \
         DX(benchmark_width_, nom, denom), DX(benchmark_height_, nom, denom), \
@@ -533,15 +536,23 @@ static int I444TestFilter_16(int src_width,
 
 // Test a scale factor with all 4 filters.  Expect unfiltered to be exact, but
 // filtering is different fixed point implementations for SSSE3, Neon and C.
+#ifdef ENABLE_SLOW_TESTS
 #define TEST_FACTOR(name, nom, denom, boxdiff) \
-  TEST_FACTOR1(name, None, nom, denom, 0)      \
-  TEST_FACTOR1(name, Linear, nom, denom, 3)    \
-  TEST_FACTOR1(name, Bilinear, nom, denom, 3)  \
-  TEST_FACTOR1(name, Box, nom, denom, boxdiff)
+  TEST_FACTOR1(, name, None, nom, denom, 0)      \
+  TEST_FACTOR1(, name, Linear, nom, denom, 3)    \
+  TEST_FACTOR1(, name, Bilinear, nom, denom, 3)  \
+  TEST_FACTOR1(, name, Box, nom, denom, boxdiff)
+#else
+#define TEST_FACTOR(name, nom, denom, boxdiff) \
+  TEST_FACTOR1(DISABLED_, name, None, nom, denom, 0)      \
+  TEST_FACTOR1(DISABLED_, name, Linear, nom, denom, 3)    \
+  TEST_FACTOR1(DISABLED_, name, Bilinear, nom, denom, 3)  \
+  TEST_FACTOR1(DISABLED_, name, Box, nom, denom, boxdiff)
+#endif
 
 TEST_FACTOR(2, 1, 2, 0)
 TEST_FACTOR(4, 1, 4, 0)
-TEST_FACTOR(8, 1, 8, 0)
+// TEST_FACTOR(8, 1, 8, 0) Disable for benchmark performance.  Takes 90 seconds.
 TEST_FACTOR(3by4, 3, 4, 1)
 TEST_FACTOR(3by8, 3, 8, 1)
 TEST_FACTOR(3, 1, 3, 0)
@@ -550,7 +561,7 @@ TEST_FACTOR(3, 1, 3, 0)
 #undef SX
 #undef DX
 
-#define TEST_SCALETO1(name, width, height, filter, max_diff)                  \
+#define TEST_SCALETO1(DISABLED_, name, width, height, filter, max_diff)                  \
   TEST_F(LibYUVScaleTest, I420##name##To##width##x##height##_##filter) {      \
     int diff = I420TestFilter(benchmark_width_, benchmark_height_, width,     \
                               height, kFilter##filter, benchmark_iterations_, \
@@ -563,13 +574,13 @@ TEST_FACTOR(3, 1, 3, 0)
                               disable_cpu_flags_, benchmark_cpu_info_);       \
     EXPECT_LE(diff, max_diff);                                                \
   }                                                                           \
-  TEST_F(LibYUVScaleTest, I420##name##To##width##x##height##_##filter##_16) { \
+  TEST_F(LibYUVScaleTest, DISABLED_##I420##name##To##width##x##height##_##filter##_16) { \
     int diff = I420TestFilter_16(                                             \
         benchmark_width_, benchmark_height_, width, height, kFilter##filter,  \
         benchmark_iterations_, disable_cpu_flags_, benchmark_cpu_info_);      \
     EXPECT_LE(diff, max_diff);                                                \
   }                                                                           \
-  TEST_F(LibYUVScaleTest, I444##name##To##width##x##height##_##filter##_16) { \
+  TEST_F(LibYUVScaleTest, DISABLED_##I444##name##To##width##x##height##_##filter##_16) { \
     int diff = I444TestFilter_16(                                             \
         benchmark_width_, benchmark_height_, width, height, kFilter##filter,  \
         benchmark_iterations_, disable_cpu_flags_, benchmark_cpu_info_);      \
@@ -590,7 +601,7 @@ TEST_FACTOR(3, 1, 3, 0)
     EXPECT_LE(diff, max_diff);                                                \
   }                                                                           \
   TEST_F(LibYUVScaleTest,                                                     \
-         I420##name##From##width##x##height##_##filter##_16) {                \
+         DISABLED_##I420##name##From##width##x##height##_##filter##_16) {                \
     int diff = I420TestFilter_16(width, height, Abs(benchmark_width_),        \
                                  Abs(benchmark_height_), kFilter##filter,     \
                                  benchmark_iterations_, disable_cpu_flags_,   \
@@ -598,7 +609,7 @@ TEST_FACTOR(3, 1, 3, 0)
     EXPECT_LE(diff, max_diff);                                                \
   }                                                                           \
   TEST_F(LibYUVScaleTest,                                                     \
-         I444##name##From##width##x##height##_##filter##_16) {                \
+         DISABLED_##I444##name##From##width##x##height##_##filter##_16) {                \
     int diff = I444TestFilter_16(width, height, Abs(benchmark_width_),        \
                                  Abs(benchmark_height_), kFilter##filter,     \
                                  benchmark_iterations_, disable_cpu_flags_,   \
@@ -606,22 +617,34 @@ TEST_FACTOR(3, 1, 3, 0)
     EXPECT_LE(diff, max_diff);                                                \
   }
 
+#ifdef ENABLE_SLOW_TESTS
 // Test scale to a specified size with all 4 filters.
 #define TEST_SCALETO(name, width, height)         \
-  TEST_SCALETO1(name, width, height, None, 0)     \
-  TEST_SCALETO1(name, width, height, Linear, 3)   \
-  TEST_SCALETO1(name, width, height, Bilinear, 3) \
-  TEST_SCALETO1(name, width, height, Box, 3)
+  TEST_SCALETO1(, name, width, height, None, 0)     \
+  TEST_SCALETO1(, name, width, height, Linear, 3)   \
+  TEST_SCALETO1(, name, width, height, Bilinear, 3) \
+  TEST_SCALETO1(, name, width, height, Box, 3)
+#else
+  // Test scale to a specified size with all 4 filters.
+#define TEST_SCALETO(name, width, height)         \
+  TEST_SCALETO1(DISABLED_, name, width, height, None, 0)     \
+  TEST_SCALETO1(DISABLED_, name, width, height, Linear, 3)   \
+  TEST_SCALETO1(DISABLED_, name, width, height, Bilinear, 3) \
+  TEST_SCALETO1(DISABLED_, name, width, height, Box, 3)
+#endif
 
 TEST_SCALETO(Scale, 1, 1)
 TEST_SCALETO(Scale, 320, 240)
 TEST_SCALETO(Scale, 569, 480)
 TEST_SCALETO(Scale, 640, 360)
 TEST_SCALETO(Scale, 1280, 720)
+#ifdef ENABLE_SLOW_TESTS
 TEST_SCALETO(Scale, 1920, 1080)
+#endif  // ENABLE_SLOW_TESTS
 #undef TEST_SCALETO1
 #undef TEST_SCALETO
 
+#ifdef ENABLE_ROW_TESTS
 #ifdef HAS_SCALEROWDOWN2_SSSE3
 TEST_F(LibYUVScaleTest, TestScaleRowDown2Box_Odd_SSSE3) {
   SIMD_ALIGNED(uint8_t orig_pixels[128 * 2]);
@@ -803,6 +826,7 @@ TEST_F(LibYUVScaleTest, TestScaleRowDown2Box_16) {
   EXPECT_EQ(dst_pixels_c[0], (0 + 1 + 2560 + 2561 + 2) / 4);
   EXPECT_EQ(dst_pixels_c[1279], 3839);
 }
+#endif  // ENABLE_ROW_TESTS
 
 // Test scaling plane with 8 bit C vs 16 bit C and return maximum pixel
 // difference.
@@ -874,7 +898,7 @@ static int TestPlaneFilter_16(int src_width,
 #define SX(x, nom, denom) static_cast<int>(((x / nom + 1) / 2) * denom * 2)
 
 #define TEST_FACTOR1(name, filter, nom, denom, max_diff)                     \
-  TEST_F(LibYUVScaleTest, ScalePlaneDownBy##name##_##filter##_16) {          \
+  TEST_F(LibYUVScaleTest, DISABLED_##ScalePlaneDownBy##name##_##filter##_16) {\
     int diff = TestPlaneFilter_16(                                           \
         SX(benchmark_width_, nom, denom), SX(benchmark_height_, nom, denom), \
         DX(benchmark_width_, nom, denom), DX(benchmark_height_, nom, denom), \
@@ -893,7 +917,7 @@ static int TestPlaneFilter_16(int src_width,
 
 TEST_FACTOR(2, 1, 2, 0)
 TEST_FACTOR(4, 1, 4, 0)
-TEST_FACTOR(8, 1, 8, 0)
+// TEST_FACTOR(8, 1, 8, 0) Disable for benchmark performance.  Takes 90 seconds.
 TEST_FACTOR(3by4, 3, 4, 1)
 TEST_FACTOR(3by8, 3, 8, 1)
 TEST_FACTOR(3, 1, 3, 0)

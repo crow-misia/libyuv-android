@@ -1594,9 +1594,9 @@ __declspec(naked) void ARGBToUVJRow_AVX2(const uint8_t* src_argb0,
     mov        edx, [esp + 8 + 12]  // dst_u
     mov        edi, [esp + 8 + 16]  // dst_v
     mov        ecx, [esp + 8 + 20]  // width
-    vbroadcastf128 ymm5, xmmword ptr kAddUV128
-    vbroadcastf128 ymm6, xmmword ptr kARGBToV
-    vbroadcastf128 ymm7, xmmword ptr kARGBToU
+    vbroadcastf128 ymm5, xmmword ptr kAddUVJ128
+    vbroadcastf128 ymm6, xmmword ptr kARGBToVJ
+    vbroadcastf128 ymm7, xmmword ptr kARGBToUJ
     sub        edi, edx   // stride from u to v
 
  convertloop:
@@ -5450,7 +5450,7 @@ void ComputeCumulativeSumRow_SSE2(const uint8_t* row,
 
             // 1 pixel loop
   l1:
-    movd       xmm2, dword ptr [eax]  // 1 argb pixel 4 bytes.
+    movd       xmm2, dword ptr [eax]  // 1 argb pixel
     lea        eax, [eax + 4]
     punpcklbw  xmm2, xmm1
     punpcklwd  xmm2, xmm1
