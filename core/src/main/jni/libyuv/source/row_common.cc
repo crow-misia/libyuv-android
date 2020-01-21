@@ -565,6 +565,8 @@ static __inline int RGBToVJ(uint8_t r, uint8_t g, uint8_t b) {
 
 MAKEROWYJ(ARGB, 2, 1, 0, 4)
 MAKEROWYJ(RGBA, 3, 2, 1, 4)
+MAKEROWYJ(RGB24, 2, 1, 0, 3)
+MAKEROWYJ(RAW, 0, 1, 2, 3)
 #undef MAKEROWYJ
 
 void RGB565ToYRow_C(const uint8_t* src_rgb565, uint8_t* dst_y, int width) {
@@ -3352,6 +3354,29 @@ void GaussCol_C(const uint16_t* src0,
                 const uint16_t* src4,
                 uint32_t* dst,
                 int width) {
+  int i;
+  for (i = 0; i < width; ++i) {
+    *dst++ = *src0++ + *src1++ * 4 + *src2++ * 6 + *src3++ * 4 + *src4++;
+  }
+}
+
+void GaussRow_F32_C(const float* src, float* dst, int width) {
+  int i;
+  for (i = 0; i < width; ++i) {
+    *dst++ =
+        (src[0] + src[1] * 4 + src[2] * 6 + src[3] * 4 + src[4]) * (1.0f / 256.0f);
+    ++src;
+  }
+}
+
+// filter 5 rows with 1, 4, 6, 4, 1 coefficients to produce 1 row.
+void GaussCol_F32_C(const float* src0,
+                    const float* src1,
+                    const float* src2,
+                    const float* src3,
+                    const float* src4,
+                    float* dst,
+                    int width) {
   int i;
   for (i = 0; i < width; ++i) {
     *dst++ = *src0++ + *src1++ * 4 + *src2++ * 6 + *src3++ * 4 + *src4++;

@@ -2103,6 +2103,48 @@ void RAWToYRow_NEON(const uint8_t* src_raw, uint8_t* dst_y, int width) {
       : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v16");
 }
 
+void RGB24ToYJRow_NEON(const uint8_t* src_rgb24, uint8_t* dst_yj, int width) {
+  asm volatile(
+      "movi       v4.8b, #29                     \n"  // B * 0.1140 coefficient
+      "movi       v5.8b, #150                    \n"  // G * 0.5870 coefficient
+      "movi       v6.8b, #77                     \n"  // R * 0.2990 coefficient
+      "1:                                        \n"
+      "ld3        {v0.8b,v1.8b,v2.8b}, [%0], #24 \n"  // load 8 pixels.
+      "subs       %w2, %w2, #8                   \n"  // 8 processed per loop.
+      "umull      v0.8h, v0.8b, v4.8b            \n"  // B
+      "umlal      v0.8h, v1.8b, v5.8b            \n"  // G
+      "umlal      v0.8h, v2.8b, v6.8b            \n"  // R
+      "uqrshrn    v0.8b, v0.8h, #8               \n"  // 16 bit to 8 bit Y
+      "st1        {v0.8b}, [%1], #8              \n"  // store 8 pixels Y.
+      "b.gt       1b                             \n"
+      : "+r"(src_rgb24),  // %0
+        "+r"(dst_yj),     // %1
+        "+r"(width)       // %2
+      :
+      : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6");
+}
+
+void RAWToYJRow_NEON(const uint8_t* src_raw, uint8_t* dst_yj, int width) {
+  asm volatile(
+      "movi       v6.8b, #29                     \n"  // B * 0.1140 coefficient
+      "movi       v5.8b, #150                    \n"  // G * 0.5870 coefficient
+      "movi       v4.8b, #77                     \n"  // R * 0.2990 coefficient
+      "1:                                        \n"
+      "ld3        {v0.8b,v1.8b,v2.8b}, [%0], #24 \n"  // load 8 pixels.
+      "subs       %w2, %w2, #8                   \n"  // 8 processed per loop.
+      "umull      v0.8h, v0.8b, v4.8b            \n"  // B
+      "umlal      v0.8h, v1.8b, v5.8b            \n"  // G
+      "umlal      v0.8h, v2.8b, v6.8b            \n"  // R
+      "uqrshrn    v0.8b, v0.8h, #8               \n"  // 16 bit to 8 bit Y
+      "st1        {v0.8b}, [%1], #8              \n"  // store 8 pixels Y.
+      "b.gt       1b                             \n"
+      : "+r"(src_raw),  // %0
+        "+r"(dst_yj),   // %1
+        "+r"(width)     // %2
+      :
+      : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6");
+}
+
 // Bilinear filter 16x2 -> 16x1
 void InterpolateRow_NEON(uint8_t* dst_ptr,
                          const uint8_t* src_ptr,
@@ -2919,6 +2961,82 @@ void GaussRow_NEON(const uint32_t* src, uint16_t* dst, int width) {
         "+r"(width)  // %5
       : "r"(32LL)    // %6
       : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7");
+}
+
+static const vecf32 kGaussCoefficients = {4.0f, 6.0f, 1.0f / 256.0f, 0.0f};
+
+// filter 5 rows with 1, 4, 6, 4, 1 coefficients to produce 1 row.
+void GaussCol_F32_NEON(const float* src0,
+                       const float* src1,
+                       const float* src2,
+                       const float* src3,
+                       const float* src4,
+                       float* dst,
+                       int width) {
+  asm volatile(
+      "ld2r       {v6.4s, v7.4s}, [%7]           \n"  // constants 4 and 6
+
+      "1:                                        \n"
+      "ld1        {v0.4s, v1.4s}, [%0], #32      \n"  // load 8 samples, 5 rows
+      "ld1        {v2.4s, v3.4s}, [%1], #32      \n"
+      "fmla       v0.4s, v2.4s, v6.4s            \n"  // * 4
+      "ld1        {v4.4s, v5.4s}, [%2], #32      \n"
+      "fmla       v1.4s, v3.4s, v6.4s            \n"
+      "fmla       v0.4s, v4.4s, v7.4s            \n"  // * 6
+      "ld1        {v2.4s, v3.4s}, [%3], #32      \n"
+      "fmla       v1.4s, v5.4s, v7.4s            \n"
+      "fmla       v0.4s, v2.4s, v6.4s            \n"  // * 4
+      "ld1        {v4.4s, v5.4s}, [%4], #32      \n"
+      "fmla       v1.4s, v3.4s, v6.4s            \n"
+      "fadd       v0.4s, v0.4s, v4.4s            \n"  // * 1
+      "fadd       v1.4s, v1.4s, v5.4s            \n"
+      "subs       %w6, %w6, #8                   \n"  // 8 processed per loop
+      "st1        {v0.4s, v1.4s}, [%5], #32      \n"  // store 8 samples
+      "b.gt       1b                             \n"
+      : "+r"(src0),  // %0
+        "+r"(src1),  // %1
+        "+r"(src2),  // %2
+        "+r"(src3),  // %3
+        "+r"(src4),  // %4
+        "+r"(dst),   // %5
+        "+r"(width)  // %6
+      : "r"(&kGaussCoefficients) // %7
+      : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7");
+}
+
+// filter 5 rows with 1, 4, 6, 4, 1 coefficients to produce 1 row.
+void GaussRow_F32_NEON(const float* src,
+                       float* dst,
+                       int width) {
+  asm volatile(
+      "ld3r       {v6.4s, v7.4s, v8.4s}, [%3]    \n"  // constants 4, 6, 1/256
+
+      "1:                                        \n"
+      "ld1        {v0.4s, v1.4s, v2.4s}, [%0], %4\n"  // load 12 samples, 5 rows
+      "fadd       v0.4s, v0.4s, v1.4s            \n"  // * 1
+      "ld1        {v4.4s, v5.4s}, [%0], %5       \n"
+      "fadd       v1.4s, v1.4s, v2.4s            \n"
+      "fmla       v0.4s, v4.4s, v7.4s            \n"  // * 6
+      "ld1        {v2.4s, v3.4s}, [%0], %4       \n"
+      "fmla       v1.4s, v5.4s, v7.4s            \n"
+      "ld1        {v4.4s, v5.4s}, [%0], %6       \n"
+      "fadd       v2.4s, v2.4s, v4.4s            \n"
+      "fadd       v3.4s, v3.4s, v5.4s            \n"
+      "fmla       v0.4s, v2.4s, v6.4s            \n"  // * 4
+      "fmla       v1.4s, v3.4s, v6.4s            \n"
+      "fmul       v0.4s, v0.4s, v8.4s            \n"  // / 256
+      "fmul       v1.4s, v1.4s, v8.4s            \n"
+      "subs       %w2, %w2, #8                   \n"  // 8 processed per loop
+      "st1        {v0.4s, v1.4s}, [%1], #32      \n"  // store 8 samples
+      "b.gt       1b                             \n"
+      : "+r"(src),   // %0
+        "+r"(dst),   // %1
+        "+r"(width)  // %2
+      : "r"(&kGaussCoefficients), // %3
+        "r"(8LL),    // %4
+        "r"(-4LL),   // %5
+        "r"(20LL)    // %6
+      : "cc", "memory", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8");
 }
 
 // Convert biplanar NV21 to packed YUV24
