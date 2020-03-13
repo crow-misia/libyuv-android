@@ -12,6 +12,7 @@ group = Maven.groupId
 version = Versions.name
 
 android {
+    buildToolsVersion(Versions.buildTools)
     compileSdkVersion(Versions.compileSdk)
 
     defaultConfig {
@@ -45,16 +46,20 @@ android {
         ndkBuild {
             setPath(File(projectDir, "src/main/jni/Android.mk"))
         }
+        cmake {
+            setVersion(Versions.cmake)
+        }
     }
+    ndkVersion = Versions.ndk
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_6
-        targetCompatibility = JavaVersion.VERSION_1_6
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    api(Deps.annotations)
+    api(kotlin("stdlib-jdk7", Versions.kotlin))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

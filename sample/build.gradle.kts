@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    buildToolsVersion(Versions.buildTools)
     compileSdkVersion(Versions.compileSdk)
     defaultConfig {
         applicationId = "com.example.libyuv"
@@ -29,6 +30,6 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", Versions.kotlin))
+    implementation(kotlin("stdlib-jdk7", Versions.kotlin))
     implementation(project(":core"))
 }
