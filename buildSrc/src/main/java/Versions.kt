@@ -10,5 +10,5 @@ object Versions {
     const val targetSdk = 29
     const val minSdk = 9
 
-    const val name = "0.1.0"
+    const val name = "0.1.1"
 }
