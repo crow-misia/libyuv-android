@@ -4,24 +4,18 @@ import android.app.Activity
 import android.graphics.*
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.TextView
-import app.converter.JavaConverter
-import app.converter.LibYuvConverter
-import app.rotate.LibYuvRotator
-import io.github.zncmn.libyuv.YuvConvert
-import io.github.zncmn.libyuv.YuvFormat
+import io.github.zncmn.libyuv.*
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+
 
 /**
  * This activity demonstrates how to use JNI to encode and decode ogg/vorbis audio
  */
 class MainActivity : Activity() {
-    private val converterExecutor = ConverterExecutor()
-    private val rotateExecutor = RotateExecutor()
     private lateinit var origin: ImageView
     private lateinit var convert: ImageView
     private lateinit var rotate90: ImageView
-    private val converter = YuvConvert()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +33,10 @@ class MainActivity : Activity() {
         val bitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
         val width = bitmap.width
         val height = bitmap.height
-        val rgbBufferSize = bitmap.rowBytes * height
-        val yuvBufferSize = YuvFormat.NV21.getDataSize(width, height)
-        val rgbBuffer = ByteBuffer.allocate(rgbBufferSize)
-        val argbBuffer = ByteBuffer.allocate(rgbBufferSize)
-        val yuvJavaBuffer = ByteArray(yuvBufferSize)
-        val yuvLibYuvBuffer = ByteArray(yuvBufferSize)
-        val rotateYuvLibYuvBuffer = ByteArray(yuvBufferSize)
+        val originalBuffer = AbgrBuffer.allocate(width, height)
+        val nv21Buffer = Nv21Buffer.allocate(width, height)
+        val rotate90Buffer = I420Buffer.allocate(height, width)
+        val nv21Rotate90Buffer = Nv21Buffer.allocate(height, width)
 
         // dummy draw
         Canvas(bitmap).also {
@@ -54,33 +45,24 @@ class MainActivity : Activity() {
             paint.shader = shader
             it.drawRect(0f, 0f, 1920f, 1080f, paint)
         }
-        bitmap.copyPixelsToBuffer(rgbBuffer)
+        bitmap.copyPixelsToBuffer(originalBuffer.bufferABGR)
         origin.setImageBitmap(bitmap)
 
-        val textView: TextView = findViewById(R.id.textView)
+        originalBuffer.convertTo(nv21Buffer)
+        nv21Buffer.rotate(rotate90Buffer, RotateMode.ROTATE_180)
+        rotate90Buffer.convertTo(nv21Rotate90Buffer)
 
-        textView.text = buildString {
-            appendln("Convert")
-            appendln(converterExecutor.execute(JavaConverter(), rgbBuffer.array(), width, height, yuvJavaBuffer))
-            appendln(converterExecutor.execute(LibYuvConverter(), rgbBuffer.array(), width, height, yuvLibYuvBuffer))
-
-            convert.setImageBitmap(yuvToBitmap(yuvLibYuvBuffer, 1920, 1080, argbBuffer))
-
-            appendln("Rotate")
-            appendln(rotateExecutor.execute(LibYuvRotator(), yuvLibYuvBuffer, width, height, rotateYuvLibYuvBuffer) { w, h ->
-                rotate90.setImageBitmap(yuvToBitmap(rotateYuvLibYuvBuffer, w, h, argbBuffer))
-            })
-        }
+        convert.setImageBitmap(yuvToBitmap(nv21Buffer, width, height))
+        rotate90.setImageBitmap(yuvToBitmap(nv21Rotate90Buffer, height, width))
     }
 
-    fun yuvToBitmap(yuv: ByteArray, width: Int, height: Int, argb: ByteBuffer): Bitmap {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        argb.clear()
-        converter.toARGB(yuv, argb.array(), width, height, YuvFormat.NV21)
-        argb.limit(width * height * 4)
-        bitmap.copyPixelsFromBuffer(argb)
-        return bitmap
+    fun yuvToBitmap(nv21Buffer: Nv21Buffer, width: Int, height: Int): Bitmap {
+        val yumData = nv21Buffer.asByteArray()
+        val yuvImage = YuvImage(yumData, ImageFormat.NV21, width, height, null)
+        val baos = ByteArrayOutputStream()
+        yuvImage.compressToJpeg(Rect(0, 0, width, height), 80, baos)
+        val jpegData: ByteArray = baos.toByteArray()
+
+        return BitmapFactory.decodeByteArray(jpegData, 0, jpegData.size)
     }
 }
-
-fun ByteArray.toHex() = this.joinToString(separator = " ") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
