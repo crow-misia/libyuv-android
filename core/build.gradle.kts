@@ -70,27 +70,6 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.create("main").allSource)
 }
 
-val javadoc by tasks.creating(Javadoc::class) {
-    setSource(project.the<BaseExtension>().sourceSets["main"].java.srcDirs)
-    classpath += files(project.the<BaseExtension>().bootClasspath)
-
-    project.the<LibraryExtension>().libraryVariants.configureEach {
-        dependsOn(assembleProvider?.get())
-        classpath += files((javaCompileProvider.get() as AbstractCompile).classpath)
-    }
-
-    // Ignore warnings about incomplete documentation
-    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
-}
-
-val javadocJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles javadoc JAR"
-    dependsOn(javadoc)
-    archiveClassifier.set("javadoc")
-    from(javadoc.destinationDir)
-}
-
 val publicationName = "core"
 publishing {
     publications {
@@ -111,7 +90,6 @@ publishing {
 
             artifact(releaseAar)
             artifact(sourcesJar)
-            artifact(javadocJar)
 
             pom {
                 name.set(Maven.name)
