@@ -40,16 +40,16 @@ class MainActivity : Activity() {
 
         // dummy draw
         Canvas(bitmap).also {
-            val paint = Paint()
-            val shader = LinearGradient(0f, 0f, 0f, 1080f, Color.RED, Color.BLUE, Shader.TileMode.CLAMP)
-            paint.shader = shader
-            it.drawRect(0f, 0f, 1920f, 1080f, paint)
+            it.drawRect(0f, 0f, 1920f, 1080f, Paint().also { p ->
+                p.shader = LinearGradient(0f, 0f, 0f, 1080f, Color.GREEN, Color.YELLOW, Shader.TileMode.CLAMP)
+            })
+            it.drawRect(50f, 50f, 150f, 150f, Paint().also { p -> p.color = Color.BLACK })
         }
         bitmap.copyPixelsToBuffer(originalBuffer.bufferABGR)
         origin.setImageBitmap(bitmap)
 
         originalBuffer.convertTo(nv21Buffer)
-        nv21Buffer.rotate(rotate90Buffer, RotateMode.ROTATE_180)
+        nv21Buffer.rotate(rotate90Buffer, RotateMode.ROTATE_90)
         rotate90Buffer.convertTo(nv21Rotate90Buffer)
 
         convert.setImageBitmap(yuvToBitmap(nv21Buffer, width, height))
