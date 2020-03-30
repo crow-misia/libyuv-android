@@ -11,8 +11,13 @@ class ArgbBuffer private constructor(
     internal val strideARGB: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = bufferARGB.asByteArray()
     override fun asByteArray(dst: ByteArray) = bufferARGB.asByteArray(dst)
 
@@ -28,13 +33,16 @@ class ArgbBuffer private constructor(
         fun allocate(width: Int, height: Int): ArgbBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return ArgbBuffer(buffer, stride, width, height)
+            return ArgbBuffer(buffer, stride, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): ArgbBuffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): ArgbBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
-            return ArgbBuffer(buffer.sliceRange(0, capacity), stride, width, height)
+            return ArgbBuffer(buffer.sliceRange(0, capacity), stride, width, height, releaseCallback)
         }
     }
 }

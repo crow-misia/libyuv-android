@@ -54,6 +54,11 @@ class MainActivity : Activity() {
 
         convert.setImageBitmap(yuvToBitmap(nv21Buffer, width, height))
         rotate90.setImageBitmap(yuvToBitmap(nv21Rotate90Buffer, height, width))
+
+        originalBuffer.release()
+        rotate90Buffer.release()
+        nv21Buffer.release()
+        nv21Rotate90Buffer.release()
     }
 
     fun yuvToBitmap(nv21Buffer: Nv21Buffer, width: Int, height: Int): Bitmap {

@@ -7,6 +7,10 @@ internal object Yuv {
         System.loadLibrary("yuv")
     }
 
+    // helper.cpp
+    external fun allocNativeBuffer(size: Int): ByteBuffer
+    external fun freeNativeBuffer(buffer: ByteBuffer)
+
     // convert.cpp
 
     /** Convert I444 to I420 */

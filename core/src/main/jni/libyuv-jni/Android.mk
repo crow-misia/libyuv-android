@@ -9,6 +9,7 @@ LOCAL_SRC_FILES := \
     convert_argb.cpp \
     convert_from.cpp \
     convert_from_argb.cpp \
+    helper.cpp \
     jniload.cpp \
     jniutil.cpp \
     memcopy.cpp \

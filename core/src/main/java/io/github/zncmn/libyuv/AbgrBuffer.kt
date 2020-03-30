@@ -11,8 +11,13 @@ class AbgrBuffer private constructor(
     internal val strideABGR: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = bufferABGR.asByteArray()
     override fun asByteArray(dst: ByteArray) = bufferABGR.asByteArray(dst)
 
@@ -28,13 +33,16 @@ class AbgrBuffer private constructor(
         fun allocate(width: Int, height: Int): AbgrBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return AbgrBuffer(buffer, stride, width, height)
+            return AbgrBuffer(buffer, stride, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): AbgrBuffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): AbgrBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
-            return AbgrBuffer(buffer.sliceRange(0, capacity), stride, width, height)
+            return AbgrBuffer(buffer.sliceRange(0, capacity), stride, width, height, releaseCallback)
         }
     }
 }

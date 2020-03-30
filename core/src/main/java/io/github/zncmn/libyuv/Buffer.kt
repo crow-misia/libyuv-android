@@ -8,4 +8,8 @@ interface Buffer {
     fun asByteArray(): ByteArray
 
     fun asByteArray(dst: ByteArray)
+
+    fun retain()
+
+    fun release()
 }

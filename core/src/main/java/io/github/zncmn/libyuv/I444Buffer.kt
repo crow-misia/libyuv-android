@@ -17,8 +17,13 @@ class I444Buffer private constructor(
     internal val strideV: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = buffer.asByteArray()
     override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
 
@@ -34,14 +39,17 @@ class I444Buffer private constructor(
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height)
+            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): I444Buffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): I444Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height)
+            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, releaseCallback)
         }
     }
 }

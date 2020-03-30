@@ -14,8 +14,13 @@ class Nv21Buffer private constructor(
     internal val strideVU: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = buffer.asByteArray()
     override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
 
@@ -32,14 +37,17 @@ class Nv21Buffer private constructor(
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityVU)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
-            return Nv21Buffer(buffer, bufferY, bufferVU, strideY, strideVU, width, height)
+            return Nv21Buffer(buffer, bufferY, bufferVU, strideY, strideVU, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): Nv21Buffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Nv21Buffer {
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
-            return Nv21Buffer(buffer.duplicate(), bufferY, bufferVU, strideY, strideVU, width, height)
+            return Nv21Buffer(buffer.duplicate(), bufferY, bufferVU, strideY, strideVU, width, height, releaseCallback)
         }
     }
 }

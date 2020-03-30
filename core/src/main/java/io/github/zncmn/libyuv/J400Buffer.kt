@@ -11,8 +11,13 @@ class J400Buffer private constructor(
     internal val strideY: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = bufferY.asByteArray()
     override fun asByteArray(dst: ByteArray) = bufferY.asByteArray(dst)
 
@@ -26,13 +31,16 @@ class J400Buffer private constructor(
         fun allocate(width: Int, height: Int): J400Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return J400Buffer(buffer, stride, width, height)
+            return J400Buffer(buffer, stride, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): J400Buffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): J400Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
-            return J400Buffer(buffer.sliceRange(0, capacity), stride, width, height)
+            return J400Buffer(buffer.sliceRange(0, capacity), stride, width, height, releaseCallback)
         }
     }
 }

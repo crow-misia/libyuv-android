@@ -20,7 +20,7 @@ internal fun ByteBuffer.asByteArray(dst: ByteArray) {
 }
 
 internal fun createByteBuffer(capacity: Int): ByteBuffer {
-    return ByteBuffer.allocateDirect(capacity)
+    return Yuv.allocNativeBuffer(capacity)
 }
 
 internal fun ByteBuffer.sliceRange(offset: Int, length: Int): ByteBuffer {

@@ -11,8 +11,13 @@ class Rgb24Buffer private constructor(
     internal val strideRGB24: Int,
 
     override val width: Int,
-    override val height: Int
+    override val height: Int,
+    releaseCallback: Runnable?
 ) : Buffer {
+    private val refCountDelegate = RefCountDelegate(releaseCallback)
+    override fun retain() = refCountDelegate.retain()
+    override fun release() = refCountDelegate.release()
+
     override fun asByteArray() = bufferRGB24.asByteArray()
     override fun asByteArray(dst: ByteArray) = bufferRGB24.asByteArray(dst)
 
@@ -28,13 +33,16 @@ class Rgb24Buffer private constructor(
         fun allocate(width: Int, height: Int): Rgb24Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return Rgb24Buffer(buffer, stride, width, height)
+            return Rgb24Buffer(buffer, stride, width, height, Runnable {
+                Yuv.freeNativeBuffer(buffer)
+            })
         }
 
         @JvmStatic
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int): Rgb24Buffer {
+        @JvmOverloads
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Rgb24Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
-            return Rgb24Buffer(buffer.sliceRange(0, capacity), stride, width, height)
+            return Rgb24Buffer(buffer.sliceRange(0, capacity), stride, width, height, releaseCallback )
         }
     }
 }
