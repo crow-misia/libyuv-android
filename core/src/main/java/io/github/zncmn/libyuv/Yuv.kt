@@ -527,4 +527,15 @@ internal object Yuv {
     external fun memcopy(dst: Any,
                          src1: Any, src1Length: Int)
 
+    // original
+    // Rotate NV21 frame
+    external fun rotateNV12Rotate(srcY: ByteBuffer, srcStrideY: Int, srcUV: ByteBuffer, srcStrideUV: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
+                                  width: Int, height: Int, rotateMode: Int)
+
+    // Rotate NV21 frame
+    external fun rotateNV21Rotate(srcY: ByteBuffer, srcStrideY: Int, srcVU: ByteBuffer, srcStrideVU: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
+                                  width: Int, height: Int, rotateMode: Int)
+
 }

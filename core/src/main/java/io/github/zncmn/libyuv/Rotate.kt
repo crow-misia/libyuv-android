@@ -42,9 +42,21 @@ fun Nv12Buffer.rotate(dst: I420Buffer, rotateMode: RotateMode) {
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
+fun Nv12Buffer.rotate(dst: Nv12Buffer, rotateMode: RotateMode) {
+    Yuv.rotateNV12Rotate(bufferY, strideY, bufferUV, strideUV,
+            dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV,
+            calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
 fun Nv21Buffer.rotate(dst: I420Buffer, rotateMode: RotateMode) {
     Yuv.rotateNV12ToI420Rotate(bufferY, strideY, bufferVU, strideVU,
-        dst.bufferY, dst.strideY, dst.bufferV, dst.strideV, dst.bufferU, dst.strideU,
+            dst.bufferY, dst.strideY, dst.bufferV, dst.strideV, dst.bufferU, dst.strideU,
+            calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
+fun Nv21Buffer.rotate(dst: Nv21Buffer, rotateMode: RotateMode) {
+    Yuv.rotateNV21Rotate(bufferY, strideY, bufferVU, strideVU,
+        dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 

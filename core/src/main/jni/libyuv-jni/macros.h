@@ -26,7 +26,7 @@
   }
 
 #define DECLARE_STRIDE(jStride, stride) \
-  const int stride = jStride; \
+  int stride = jStride; \
   if (stride < 0) { \
     throwIllegalArgumentException(env, "Stride " #stride " must be positive"); \
     return; \
