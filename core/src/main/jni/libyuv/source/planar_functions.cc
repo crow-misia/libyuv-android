@@ -986,8 +986,12 @@ int YUY2ToY(const uint8_t* src_yuy2,
 // Mirror a plane of data.
 // See Also I400Mirror
 LIBYUV_API
-void MirrorPlane(const uint8_t* src_y, int src_stride_y, uint8_t* dst_y,
-                 int dst_stride_y, int width, int height) {
+void MirrorPlane(const uint8_t* src_y,
+                 int src_stride_y,
+                 uint8_t* dst_y,
+                 int dst_stride_y,
+                 int width,
+                 int height) {
   int y;
   void (*MirrorRow)(const uint8_t* src, uint8_t* dst, int width) = MirrorRow_C;
   // Negative height means invert the image.
@@ -1182,11 +1186,11 @@ int ARGBMirror(const uint8_t* src_argb,
 // RGB24 mirror.
 LIBYUV_API
 int RGB24Mirror(const uint8_t* src_rgb24,
-               int src_stride_rgb24,
-               uint8_t* dst_rgb24,
-               int dst_stride_rgb24,
-               int width,
-               int height) {
+                int src_stride_rgb24,
+                uint8_t* dst_rgb24,
+                int dst_stride_rgb24,
+                int width,
+                int height) {
   int y;
   void (*RGB24MirrorRow)(const uint8_t* src, uint8_t* dst, int width) =
       RGB24MirrorRow_C;
@@ -3101,14 +3105,11 @@ int GaussPlane_F32(const float* src,
                    int width,
                    int height) {
   int y;
-  void (*GaussCol_F32)(const float* src0,
-                       const float* src1,
-                       const float* src2,
-                       const float* src3,
-                       const float* src4,
-                       float* dst,
+  void (*GaussCol_F32)(const float* src0, const float* src1, const float* src2,
+                       const float* src3, const float* src4, float* dst,
                        int width) = GaussCol_F32_C;
-  void (*GaussRow_F32)(const float* src, float* dst, int width) = GaussRow_F32_C;
+  void (*GaussRow_F32)(const float* src, float* dst, int width) =
+      GaussRow_F32_C;
   if (!src || !dst || width <= 0 || height == 0) {
     return -1;
   }
@@ -3139,10 +3140,9 @@ int GaussPlane_F32(const float* src,
     const float* src1 = src;
     const float* src2 = src;
     const float* src3 = src2 + ((height > 1) ? src_stride : 0);
-    const float* src4 = src3 + ((height > 2) ? src_stride: 0);
+    const float* src4 = src3 + ((height > 2) ? src_stride : 0);
 
     for (y = 0; y < height; ++y) {
-
       GaussCol_F32(src0, src1, src2, src3, src4, row, width);
 
       // Extrude edge by 2 floats
@@ -4101,6 +4101,52 @@ int UYVYToNV12(const uint8_t* src_uyvy,
     free_aligned_buffer_64(rows);
   }
   return 0;
+}
+
+// width and height are src size allowing odd size handling.
+LIBYUV_API
+void HalfMergeUVPlane(const uint8_t* src_u,
+                      int src_stride_u,
+                      const uint8_t* src_v,
+                      int src_stride_v,
+                      uint8_t* dst_uv,
+                      int dst_stride_uv,
+                      int width,
+                      int height) {
+  int y;
+  void (*HalfMergeUVRow)(const uint8_t* src_u, int src_stride_u,
+                         const uint8_t* src_v, int src_stride_v,
+                         uint8_t* dst_uv, int width) = HalfMergeUVRow_C;
+
+  // Negative height means invert the image.
+  if (height < 0) {
+    height = -height;
+    src_u = src_u + (height - 1) * src_stride_u;
+    src_v = src_v + (height - 1) * src_stride_v;
+    src_stride_u = -src_stride_u;
+    src_stride_v = -src_stride_v;
+  }
+#if defined(HAS_HALFMERGEUVROW_NEON)
+  if (TestCpuFlag(kCpuHasNEON) && IS_ALIGNED(width, 16)) {
+    HalfMergeUVRow = HalfMergeUVRow_NEON;
+  }
+#endif
+#if defined(HAS_HALFMERGEUVROW_SSSE3)
+  if (TestCpuFlag(kCpuHasSSSE3) && IS_ALIGNED(width, 16)) {
+    HalfMergeUVRow = HalfMergeUVRow_SSSE3;
+  }
+#endif
+
+  for (y = 0; y < height - 1; y += 2) {
+    // Merge a row of U and V into a row of UV.
+    HalfMergeUVRow(src_u, src_stride_u, src_v, src_stride_v, dst_uv, width);
+    src_u += src_stride_u * 2;
+    src_v += src_stride_v * 2;
+    dst_uv += dst_stride_uv;
+  }
+  if (height & 1) {
+    HalfMergeUVRow(src_u, 0, src_v, 0, dst_uv, width);
+  }
 }
 
 #ifdef __cplusplus

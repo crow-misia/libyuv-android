@@ -2167,10 +2167,10 @@ void MirrorRow_C(const uint8_t* src, uint8_t* dst, int width) {
   }
 }
 
-void MirrorUVRow_C(const uint8_t* src_uv,
-                   uint8_t* dst_u,
-                   uint8_t* dst_v,
-                   int width) {
+void MirrorSplitUVRow_C(const uint8_t* src_uv,
+                        uint8_t* dst_u,
+                        uint8_t* dst_v,
+                        int width) {
   int x;
   src_uv += (width - 1) << 1;
   for (x = 0; x < width - 1; x += 2) {
@@ -2201,8 +2201,7 @@ void ARGBMirrorRow_C(const uint8_t* src, uint8_t* dst, int width) {
   }
 }
 
-void RGB24MirrorRow_C(const uint8_t* src_rgb24, uint8_t* dst_rgb24,
-                      int width) {
+void RGB24MirrorRow_C(const uint8_t* src_rgb24, uint8_t* dst_rgb24, int width) {
   int x;
   src_rgb24 += width * 3 - 3;
   for (x = 0; x < width; ++x) {
@@ -3561,6 +3560,30 @@ void SwapUVRow_C(const uint8_t* src_uv, uint8_t* dst_vu, int width) {
     dst_vu[1] = u;
     src_uv += 2;
     dst_vu += 2;
+  }
+}
+
+void HalfMergeUVRow_C(const uint8_t* src_u,
+                      int src_stride_u,
+                      const uint8_t* src_v,
+                      int src_stride_v,
+                      uint8_t* dst_uv,
+                      int width) {
+  int x;
+  for (x = 0; x < width - 1; x += 2) {
+    dst_uv[0] = (src_u[0] + src_u[1] + src_u[src_stride_u] +
+                 src_u[src_stride_u + 1] + 2) >>
+                2;
+    dst_uv[1] = (src_v[0] + src_v[1] + src_v[src_stride_v] +
+                 src_v[src_stride_v + 1] + 2) >>
+                2;
+    src_u += 2;
+    src_v += 2;
+    dst_uv += 2;
+  }
+  if (width & 1) {
+    dst_uv[0] = (src_u[0] + src_u[src_stride_u] + 1) >> 1;
+    dst_uv[1] = (src_v[0] + src_v[src_stride_v] + 1) >> 1;
   }
 }
 

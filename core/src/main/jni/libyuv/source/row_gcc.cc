@@ -1078,6 +1078,8 @@ void ABGRToAR30Row_AVX2(const uint8_t* src, uint8_t* dst, int width) {
 }
 #endif
 
+// clang-format off
+
 // TODO(mraptis): Consider passing R, G, B multipliers as parameter.
 // round parameter is register containing value to add before shift.
 #define RGBTOY(round)                            \
@@ -1102,10 +1104,8 @@ void ABGRToAR30Row_AVX2(const uint8_t* src, uint8_t* dst, int width) {
   "phaddw    %%xmm0,%%xmm6                   \n" \
   "phaddw    %%xmm2,%%xmm1                   \n" \
   "prefetcht0 1280(%0)                       \n" \
-  "paddw     %%" #round                          \
-  ",%%xmm6             \n"                       \
-  "paddw     %%" #round                          \
-  ",%%xmm1             \n"                       \
+  "paddw     %%" #round ",%%xmm6             \n" \
+  "paddw     %%" #round ",%%xmm1             \n" \
   "psrlw     $0x8,%%xmm6                     \n" \
   "psrlw     $0x8,%%xmm1                     \n" \
   "packuswb  %%xmm1,%%xmm6                   \n" \
@@ -1132,10 +1132,8 @@ void ABGRToAR30Row_AVX2(const uint8_t* src, uint8_t* dst, int width) {
   "vphaddw    %%ymm1,%%ymm0,%%ymm0           \n" /* mutates. */  \
   "vphaddw    %%ymm3,%%ymm2,%%ymm2           \n"                 \
   "prefetcht0 1280(%0)                       \n"                 \
-  "vpaddw     %%" #round                                         \
-  ",%%ymm0,%%ymm0     \n" /* Add .5 for rounding. */             \
-  "vpaddw     %%" #round                                         \
-  ",%%ymm2,%%ymm2     \n"                                        \
+  "vpaddw     %%" #round ",%%ymm0,%%ymm0     \n" /* Add .5 for rounding. */             \
+  "vpaddw     %%" #round ",%%ymm2,%%ymm2     \n" \
   "vpsrlw     $0x8,%%ymm0,%%ymm0             \n"                 \
   "vpsrlw     $0x8,%%ymm2,%%ymm2             \n"                 \
   "vpackuswb  %%ymm2,%%ymm0,%%ymm0           \n" /* mutates. */  \
@@ -1145,6 +1143,8 @@ void ABGRToAR30Row_AVX2(const uint8_t* src, uint8_t* dst, int width) {
   "sub       $0x20,%2                        \n"                 \
   "jg        1b                              \n"                 \
   "vzeroupper                                \n"
+
+// clang-format on
 
 #ifdef HAS_ARGBTOYROW_SSSE3
 // Convert 16 ARGB pixels (64 bytes) to 16 Y values.
@@ -3229,14 +3229,14 @@ void MirrorRow_AVX2(const uint8_t* src, uint8_t* dst, int width) {
 }
 #endif  // HAS_MIRRORROW_AVX2
 
-#ifdef HAS_MIRRORUVROW_SSSE3
+#ifdef HAS_MIRRORSPLITUVROW_SSSE3
 // Shuffle table for reversing the bytes of UV channels.
 static const uvec8 kShuffleMirrorUV = {14u, 12u, 10u, 8u, 6u, 4u, 2u, 0u,
                                        15u, 13u, 11u, 9u, 7u, 5u, 3u, 1u};
-void MirrorUVRow_SSSE3(const uint8_t* src,
-                       uint8_t* dst_u,
-                       uint8_t* dst_v,
-                       int width) {
+void MirrorSplitUVRow_SSSE3(const uint8_t* src,
+                            uint8_t* dst_u,
+                            uint8_t* dst_v,
+                            int width) {
   intptr_t temp_width = (intptr_t)(width);
   asm volatile(
       "movdqa    %4,%%xmm1                       \n"
@@ -3260,20 +3260,21 @@ void MirrorUVRow_SSSE3(const uint8_t* src,
       : "m"(kShuffleMirrorUV)  // %4
       : "memory", "cc", "xmm0", "xmm1");
 }
-#endif  // HAS_MIRRORUVROW_SSSE3
+#endif  // HAS_MIRRORSPLITUVROW_SSSE3
 
 #ifdef HAS_RGB24MIRRORROW_SSSE3
 
 // Shuffle first 5 pixels to last 5 mirrored.  first byte zero
 static const uvec8 kShuffleMirrorRGB0 = {128u, 12u, 13u, 14u, 9u, 10u, 11u, 6u,
-                                         7u, 8u, 3u, 4u, 5u, 0u, 1u, 2u};
+                                         7u,   8u,  3u,  4u,  5u, 0u,  1u,  2u};
 
 // Shuffle last 5 pixels to first 5 mirrored.  last byte zero
-static const uvec8 kShuffleMirrorRGB1 = {13u, 14u, 15u, 10u, 11u, 12u, 7u,
-                                         8u, 9u, 4u, 5u, 6u, 1u, 2u, 3u, 128u};
+static const uvec8 kShuffleMirrorRGB1 = {
+    13u, 14u, 15u, 10u, 11u, 12u, 7u, 8u, 9u, 4u, 5u, 6u, 1u, 2u, 3u, 128u};
 
 // Shuffle 5 pixels at a time (15 bytes)
-void RGB24MirrorRow_SSSE3(const uint8_t* src_rgb24, uint8_t* dst_rgb24,
+void RGB24MirrorRow_SSSE3(const uint8_t* src_rgb24,
+                          uint8_t* dst_rgb24,
                           int width) {
   intptr_t temp_width = (intptr_t)(width);
   src_rgb24 += width * 3 - 48;
@@ -3292,21 +3293,21 @@ void RGB24MirrorRow_SSSE3(const uint8_t* src_rgb24, uint8_t* dst_rgb24,
       "pshufb    %%xmm4,%%xmm2                   \n"
       "pshufb    %%xmm5,%%xmm3                   \n"
       "lea       -0x30(%0),%0                    \n"
-      "movdqu    %%xmm0,32(%1)                   \n" // last 5
-      "movdqu    %%xmm1,17(%1)                   \n" // next 5
-      "movdqu    %%xmm2,2(%1)                    \n" // next 5
-      "movlpd    %%xmm3,0(%1)                    \n" // first 1
+      "movdqu    %%xmm0,32(%1)                   \n"  // last 5
+      "movdqu    %%xmm1,17(%1)                   \n"  // next 5
+      "movdqu    %%xmm2,2(%1)                    \n"  // next 5
+      "movlpd    %%xmm3,0(%1)                    \n"  // first 1
       "lea       0x30(%1),%1                     \n"
       "sub       $0x10,%2                        \n"
       "jg        1b                              \n"
-      : "+r"(src_rgb24),  // %0
-        "+r"(dst_rgb24),  // %1
-        "+r"(temp_width)  // %2
-      : "m"(kShuffleMirrorRGB0), // %3
-        "m"(kShuffleMirrorRGB1)  // %4
+      : "+r"(src_rgb24),          // %0
+        "+r"(dst_rgb24),          // %1
+        "+r"(temp_width)          // %2
+      : "m"(kShuffleMirrorRGB0),  // %3
+        "m"(kShuffleMirrorRGB1)   // %4
       : "memory", "cc", "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5");
 }
-#endif   // HAS_RGB24MIRRORROW_SSSE3
+#endif  // HAS_RGB24MIRRORROW_SSSE3
 
 #ifdef HAS_ARGBMIRRORROW_SSE2
 
@@ -7003,6 +7004,53 @@ void SwapUVRow_AVX2(const uint8_t* src_uv, uint8_t* dst_vu, int width) {
       : "memory", "cc", "xmm0", "xmm1", "xmm5");
 }
 #endif  // HAS_SWAPUVROW_AVX2
+
+void HalfMergeUVRow_SSSE3(const uint8_t* src_u,
+                          int src_stride_u,
+                          const uint8_t* src_v,
+                          int src_stride_v,
+                          uint8_t* dst_uv,
+                          int width) {
+  asm volatile(
+      "pcmpeqb    %%xmm4,%%xmm4                  \n"
+      "psrlw      $0xf,%%xmm4                    \n"
+      "packuswb   %%xmm4,%%xmm4                  \n"
+      "pxor       %%xmm5,%%xmm5                  \n"
+      "1:                                        \n"
+
+      LABELALIGN
+      "1:                                        \n"
+      "movdqu    (%0),%%xmm0                     \n"  // load 16 U values
+      "movdqu    (%1),%%xmm1                     \n"  // load 16 V values
+      "movdqu    0(%0,%4,1),%%xmm2               \n"  // 16 from next row
+      "movdqu    0(%1,%5,1),%%xmm3               \n"
+      "lea       0x10(%0),%0                     \n"
+      "pmaddubsw %%xmm4,%%xmm0                   \n"  // half size
+      "pmaddubsw %%xmm4,%%xmm1                   \n"
+      "pmaddubsw %%xmm4,%%xmm2                   \n"
+      "pmaddubsw %%xmm4,%%xmm3                   \n"
+      "lea       0x10(%1),%1                     \n"
+      "paddw     %%xmm2,%%xmm0                   \n"
+      "paddw     %%xmm3,%%xmm1                   \n"
+      "psrlw     $0x1,%%xmm0                     \n"
+      "psrlw     $0x1,%%xmm1                     \n"
+      "pavgw     %%xmm5,%%xmm0                   \n"
+      "pavgw     %%xmm5,%%xmm1                   \n"
+      "packuswb  %%xmm0,%%xmm0                   \n"
+      "packuswb  %%xmm1,%%xmm1                   \n"
+      "punpcklbw %%xmm1,%%xmm0                   \n"
+      "movdqu    %%xmm0,(%2)                     \n"  // store 8 UV pixels
+      "lea       0x10(%2),%2                     \n"
+      "sub       $0x10,%3                        \n"  // 16 src pixels per loop
+      "jg        1b                              \n"
+      : "+r"(src_u),                    // %0
+        "+r"(src_v),                    // %1
+        "+r"(dst_uv),                   // %2
+        "+r"(width)                     // %3
+      : "r"((intptr_t)(src_stride_u)),  // %4
+        "r"((intptr_t)(src_stride_v))   // %5
+      : "memory", "cc", "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5");
+}
 
 #endif  // defined(__x86_64__) || defined(__i386__)
 
