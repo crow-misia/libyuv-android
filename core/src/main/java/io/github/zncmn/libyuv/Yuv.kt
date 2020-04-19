@@ -18,6 +18,11 @@ internal object Yuv {
                                    dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
                                    width: Int, height: Int)
 
+    /** Convert I444 to NV12 */
+    external fun convertI444ToNV12(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
+                                   dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
+                                   width: Int, height: Int)
+
     /** Convert I444 to NV21 */
     external fun convertI444ToNV21(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
                                    dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
@@ -508,6 +513,14 @@ internal object Yuv {
                                          dstARGB: ByteBuffer, dstStrideARGB: Int, dstFourcc: Int, dstWidth: Int, dstHeight: Int,
                                          clipX: Int, clipY: Int, clipWidth: Int, clipHeight: Int,
                                          filterMode: Int)
+
+    // planar_functions.cpp
+    /** Convert NV21 to NV12 */
+    external fun planerNV21ToNV12(srcY: ByteBuffer, srcStrideY: Int, srcVU: ByteBuffer, srcStrideVU: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
+                                  width: Int, height: Int)
+
+
 
     // memcopy.cpp
 

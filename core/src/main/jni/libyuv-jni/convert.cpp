@@ -8,6 +8,9 @@ extern "C" {
 // Convert I444 to I420
 PLANES_3_TO_3(I444ToI420, y, u, v, y, u, v);
 
+// Convert I444 to NV12
+PLANES_3_TO_2(I444ToNV12, y, u, v, y, uv);
+
 // Convert I444 to NV21
 PLANES_3_TO_2(I444ToNV21, y, u, v, y, vu);
 

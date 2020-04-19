@@ -7,6 +7,11 @@ fun I444Buffer.convertTo(dst: I420Buffer) {
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
 }
 
+fun I444Buffer.convertTo(dst: Nv12Buffer) {
+    Yuv.convertI444ToNV12(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+            dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
+}
+
 fun I444Buffer.convertTo(dst: Nv21Buffer) {
     Yuv.convertI444ToNV21(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
@@ -37,9 +42,19 @@ fun I400Buffer.convertTo(dst: Nv21Buffer) {
         dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
 }
 
+fun Nv12Buffer.convertTo(dst: Nv21Buffer) {
+    Yuv.planerNV21ToNV12(bufferY, strideY, bufferUV, strideUV,
+            dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+}
+
 fun Nv12Buffer.convertTo(dst: I420Buffer) {
     Yuv.convertNV12ToI420(bufferY, strideY, bufferUV, strideUV,
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
+}
+
+fun Nv21Buffer.convertTo(dst: Nv12Buffer) {
+    Yuv.planerNV21ToNV12(bufferY, strideY, bufferVU, strideVU,
+            dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
 }
 
 fun Nv21Buffer.convertTo(dst: I420Buffer) {
