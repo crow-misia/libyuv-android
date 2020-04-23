@@ -52,15 +52,10 @@ android {
         }
     }
     ndkVersion = Versions.ndk
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk7", Versions.kotlin))
+    api(kotlin("stdlib", Versions.kotlin))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {

@@ -32,6 +32,6 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk7", Versions.kotlin))
+    implementation(kotlin("stdlib", Versions.kotlin))
     implementation(project(":core"))
 }
