@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import io.github.zncmn.libyuv.*
 import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
-
 
 /**
  * This activity demonstrates how to use JNI to encode and decode ogg/vorbis audio
@@ -16,6 +14,7 @@ class MainActivity : Activity() {
     private lateinit var origin: ImageView
     private lateinit var convert: ImageView
     private lateinit var rotate90: ImageView
+    private lateinit var mirror: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +24,7 @@ class MainActivity : Activity() {
         origin = findViewById(R.id.origin)
         convert = findViewById(R.id.convert)
         rotate90 = findViewById(R.id.rotate90)
+        mirror = findViewById(R.id.mirror)
     }
 
     override fun onResume() {
@@ -37,6 +37,7 @@ class MainActivity : Activity() {
         val nv21Buffer = Nv21Buffer.allocate(width, height)
         val rotate90Buffer = I420Buffer.allocate(height, width)
         val nv21Rotate90Buffer = Nv21Buffer.allocate(height, width)
+        val nv21MirrorBuffer = Nv21Buffer.allocate(height, width)
 
         // dummy draw
         Canvas(bitmap).also {
@@ -51,8 +52,11 @@ class MainActivity : Activity() {
         originalBuffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
 
+        nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
+
         convert.setImageBitmap(yuvToBitmap(nv21Buffer, width, height))
         rotate90.setImageBitmap(yuvToBitmap(nv21Rotate90Buffer, height, width))
+        mirror.setImageBitmap(yuvToBitmap(nv21MirrorBuffer, height, width))
 
         originalBuffer.release()
         rotate90Buffer.release()

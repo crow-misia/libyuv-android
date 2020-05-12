@@ -38,5 +38,11 @@
             android:layout_height="140dp"
             android:layout_weight="1"
             />
+        <ImageView
+            android:id="@+id/mirror"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:layout_weight="1"
+            />
     </LinearLayout>
 </LinearLayout>

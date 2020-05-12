@@ -404,3 +404,44 @@ fun AbgrBuffer.convertTo(dst: Nv21Buffer) {
     Yuv.convertABGRToNV21(bufferABGR, strideABGR, dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
 }
 
+fun I400Buffer.mirrorTo(dst: I400Buffer) {
+    Yuv.planerI400Mirror(bufferY, strideY, dst.bufferY, dst.strideY, min(width, dst.width), min(height, dst.height))
+}
+
+fun I420Buffer.mirrorTo(dst: I420Buffer) {
+    Yuv.planerI420Mirror(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+            dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+            min(width, dst.width), min(height, dst.height))
+}
+
+fun Nv12Buffer.mirrorTo(dst: Nv12Buffer) {
+    Yuv.planerNV12Mirror(bufferY, strideY, bufferUV, strideUV, dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
+}
+
+fun Nv21Buffer.mirrorTo(dst: Nv21Buffer) {
+    Yuv.planerNV12Mirror(bufferY, strideY, bufferVU, strideVU, dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+}
+
+fun AbgrBuffer.mirrorTo(dst: AbgrBuffer) {
+    Yuv.planerI400Mirror(bufferABGR, strideABGR, dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun ArgbBuffer.mirrorTo(dst: ArgbBuffer) {
+    Yuv.planerI400Mirror(bufferARGB, strideARGB, dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun BgraBuffer.mirrorTo(dst: BgraBuffer) {
+    Yuv.planerI400Mirror(bufferBGRA, strideBGRA, dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
+}
+
+fun RgbaBuffer.mirrorTo(dst: RgbaBuffer) {
+    Yuv.planerI400Mirror(bufferRGBA, strideRGBA, dst.bufferRGBA, dst.strideRGBA, min(width, dst.width), min(height, dst.height))
+}
+
+fun Rgb24Buffer.mirrorTo(dst: Rgb24Buffer) {
+    Yuv.planerI400Mirror(bufferRGB24, strideRGB24, dst.bufferRGB24, dst.strideRGB24, min(width, dst.width), min(height, dst.height))
+}
+
+fun RawBuffer.mirrorTo(dst: RawBuffer) {
+    Yuv.planerI400Mirror(bufferRAW, strideRAW, dst.bufferRAW, dst.strideRAW, min(width, dst.width), min(height, dst.height))
+}

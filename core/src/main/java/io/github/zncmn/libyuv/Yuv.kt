@@ -520,7 +520,30 @@ internal object Yuv {
                                   dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
                                   width: Int, height: Int)
 
+    /** Mirror I400 */
+    external fun planerI400Mirror(srcY: ByteBuffer, srcStrideY: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int,
+                                  width: Int, height: Int)
 
+    /** Mirror I420 */
+    external fun planerI420Mirror(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                  width: Int, height: Int)
+
+    /** Mirror NV12 */
+    external fun planerNV12Mirror(srcY: ByteBuffer, srcStrideY: Int, srcUV: ByteBuffer, srcStrideUV: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
+                                  width: Int, height: Int)
+
+    /** Mirror ARGB */
+    external fun planerARGBMirror(srcARGB: ByteBuffer, srcStrideARGB: Int,
+                                  dstARGB: ByteBuffer, dstStrideARGB: Int,
+                                  width: Int, height: Int)
+
+    /** Mirror RGB24 */
+    external fun planerRGB24Mirror(srcRGB24: ByteBuffer, srcStrideRGB24: Int,
+                                   dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+                                   width: Int, height: Int)
 
     // memcopy.cpp
 
