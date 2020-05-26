@@ -14,6 +14,8 @@
 #if !defined(LIBYUV_DISABLE_X86) && defined(_MSC_VER) && \
     (defined(_M_IX86) || (defined(_M_X64) && !defined(__clang__)))
 
+#include "libyuv/convert_argb.h"  // For kYuvI601Constants
+
 #if defined(_M_X64)
 #include <emmintrin.h>
 #include <tmmintrin.h>  // For _mm_maddubs_epi16
@@ -2898,10 +2900,12 @@ __declspec(naked) void I422ToRGBARow_SSSE3(
 }
 #endif  // HAS_I422TOARGBROW_SSSE3
 
+// I400ToARGBRow_SSE2 is disabled due to new yuvconstant parameter
 #ifdef HAS_I400TOARGBROW_SSE2
 // 8 pixels of Y converted to 8 pixels of ARGB (32 bytes).
 __declspec(naked) void I400ToARGBRow_SSE2(const uint8_t* y_buf,
                                           uint8_t* rgb_buf,
+                                          const struct YuvConstants*,
                                           int width) {
   __asm {
     mov        eax, 0x4a354a35  // 4a35 = 18997 = round(1.164 * 64 * 256)
@@ -2949,6 +2953,7 @@ __declspec(naked) void I400ToARGBRow_SSE2(const uint8_t* y_buf,
 // note: vpunpcklbw mutates and vpackuswb unmutates.
 __declspec(naked) void I400ToARGBRow_AVX2(const uint8_t* y_buf,
                                           uint8_t* rgb_buf,
+                                          const struct YuvConstants*,
                                           int width) {
   __asm {
     mov        eax, 0x4a354a35  // 4a35 = 18997 = round(1.164 * 64 * 256)
@@ -4254,6 +4259,8 @@ __declspec(naked) void ARGBBlendRow_SSSE3(const uint8_t* src_argb0,
 }
 #endif  // HAS_ARGBBLENDROW_SSSE3
 
+// ARGBAttenuateRow disabled on win32 due to differences (off by 1) compared
+// to C and Neon.  Use row_gcc.cc with clangcl.
 #ifdef HAS_ARGBATTENUATEROW_SSSE3
 // Shuffle table duplicating alpha.
 static const uvec8 kShuffleAlpha0 = {

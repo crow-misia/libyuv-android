@@ -3,9 +3,9 @@ package io.github.zncmn.libyuv
 import java.nio.ByteBuffer
 
 /**
- * I444 (BT.601) YUV Format. 4:4:4 24bpp
+ * H444 (BT.709) YUV Format. 4:4:4 24bpp
  */
-class I444Buffer private constructor(
+class H444Buffer private constructor(
     private val buffer: ByteBuffer,
 
     val bufferY: ByteBuffer,
@@ -35,21 +35,21 @@ class I444Buffer private constructor(
         }
 
         @JvmStatic
-        fun allocate(width: Int, height: Int): I444Buffer {
+        fun allocate(width: Int, height: Int): H444Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
+            return H444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
                 Yuv.freeNativeBuffer(buffer)
             })
         }
 
         @JvmStatic
         @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): I444Buffer {
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): H444Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, releaseCallback)
+            return H444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, releaseCallback)
         }
     }
 }

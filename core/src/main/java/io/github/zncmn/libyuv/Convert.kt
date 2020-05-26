@@ -2,6 +2,8 @@ package io.github.zncmn.libyuv
 
 import kotlin.math.min
 
+// convert
+
 fun I444Buffer.convertTo(dst: I420Buffer) {
     Yuv.convertI444ToI420(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
@@ -42,19 +44,14 @@ fun I400Buffer.convertTo(dst: Nv21Buffer) {
         dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
 }
 
-fun Nv12Buffer.convertTo(dst: Nv21Buffer) {
-    Yuv.planerNV21ToNV12(bufferY, strideY, bufferUV, strideUV,
-            dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+fun I400Buffer.convertTo(dst: Nv12Buffer) {
+    Yuv.convertI400ToNV21(bufferY, strideY,
+        dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
 }
 
 fun Nv12Buffer.convertTo(dst: I420Buffer) {
     Yuv.convertNV12ToI420(bufferY, strideY, bufferUV, strideUV,
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
-}
-
-fun Nv21Buffer.convertTo(dst: Nv12Buffer) {
-    Yuv.planerNV21ToNV12(bufferY, strideY, bufferVU, strideVU,
-            dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
 }
 
 fun Nv21Buffer.convertTo(dst: I420Buffer) {
@@ -120,17 +117,39 @@ fun RawBuffer.convertTo(dst: J400Buffer) {
     Yuv.convertRAWToJ400(bufferRAW, strideRAW, dst.bufferY, dst.strideY, min(width, dst.width), min(height, dst.height))
 }
 
+// convert_argb
+
 fun ArgbBuffer.convertTo(dst: ArgbBuffer) {
     Yuv.convertARGBCopy(bufferARGB, strideARGB, dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: ArgbBuffer) {
-    Yuv.convertI420ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+fun J420Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertJ420ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: AbgrBuffer) {
-    Yuv.convertI420ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+fun J420Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertJ420ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun H420Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertH420ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun H420Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertH420ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun U420Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertU420ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun U420Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertU420ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
@@ -139,8 +158,33 @@ fun I422Buffer.convertTo(dst: ArgbBuffer) {
         dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
-fun I422Buffer.convertTo(dst: AbgrBuffer) {
-    Yuv.convertI422ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+fun J422Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertJ422ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun J422Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertJ422ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun H422Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertH422ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun H422Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertH422ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun U422Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertU422ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun U422Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertU422ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
@@ -151,6 +195,36 @@ fun I444Buffer.convertTo(dst: ArgbBuffer) {
 
 fun I444Buffer.convertTo(dst: AbgrBuffer) {
     Yuv.convertI444ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun J444Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertJ444ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun J444Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertJ444ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun H444Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertH444ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun H444Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertH444ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+}
+
+fun U444Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertU444ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+}
+
+fun U444Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertU444ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
@@ -184,6 +258,10 @@ fun Nv12Buffer.convertTo(dst: Rgb24Buffer) {
 
 fun Nv21Buffer.convertTo(dst: Rgb24Buffer) {
     Yuv.convertNV21ToRGB24(bufferY, strideY, bufferVU, strideVU, dst.bufferRGB24, dst.strideRGB24, min(width, dst.width), min(height, dst.height))
+}
+
+fun Nv21Buffer.convertTo(dst: Yuv24Buffer) {
+    Yuv.convertNV21ToYUV24(bufferY, strideY, bufferVU, strideVU, dst.bufferYUV24, dst.strideYUV24, min(width, dst.width), min(height, dst.height))
 }
 
 fun Nv12Buffer.convertTo(dst: RawBuffer) {
@@ -230,33 +308,38 @@ fun Argb4444Buffer.convertTo(dst: ArgbBuffer) {
     Yuv.convertARGB4444ToARGB(bufferARGB4444, strideARGB4444, dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: I422Buffer) {
-    Yuv.convertI420ToI422(bufferY, strideY, bufferU, strideU, bufferV, strideV,
-        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
+fun Nv12Buffer.convertTo(dst: Rgb565Buffer) {
+    Yuv.convertNV12ToRGB565(bufferY, strideY, bufferUV, strideUV, dst.bufferRGB565, dst.strideRGB565, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: I444Buffer) {
-    Yuv.convertI420ToI444(bufferY, strideY, bufferU, strideU, bufferV, strideV,
-        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
+fun I422Buffer.convertTo(dst: BgraBuffer) {
+    Yuv.convertI422ToBGRA(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
 }
 
-fun I400Buffer.convertTo(dst: I400Buffer) {
-    Yuv.convertI400Copy(bufferY, strideY, dst.bufferY, dst.strideY, min(width, dst.width), min(height, dst.height))
+fun I422Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertI422ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: Nv12Buffer) {
-    Yuv.convertI420ToNV12(bufferY, strideY, bufferU, strideU, bufferV, strideV,
-        dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
+fun I422Buffer.convertTo(dst: RgbaBuffer) {
+    Yuv.convertI422ToRGBA(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferRGBA, dst.strideRGBA, min(width, dst.width), min(height, dst.height))
 }
 
-fun I420Buffer.convertTo(dst: Nv21Buffer) {
-    Yuv.convertI420ToNV21(bufferY, strideY, bufferU, strideU, bufferV, strideV,
-        dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+fun I420Buffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertI420ToARGB(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
 fun I420Buffer.convertTo(dst: BgraBuffer) {
     Yuv.convertI420ToBGRA(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
+}
+
+fun I420Buffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertI420ToABGR(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
 fun I420Buffer.convertTo(dst: RgbaBuffer) {
@@ -323,6 +406,34 @@ fun I420Buffer.convertTo(dst: Argb4444Buffer) {
     Yuv.convertI420ToARGB4444(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferARGB4444, dst.strideARGB4444, min(width, dst.width), min(height, dst.height))
 }
+
+// convert_from
+
+fun I420Buffer.convertTo(dst: I422Buffer) {
+    Yuv.convertI420ToI422(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
+}
+
+fun I420Buffer.convertTo(dst: I444Buffer) {
+    Yuv.convertI420ToI444(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, min(width, dst.width), min(height, dst.height))
+}
+
+fun I400Buffer.convertTo(dst: I400Buffer) {
+    Yuv.convertI400Copy(bufferY, strideY, dst.bufferY, dst.strideY, min(width, dst.width), min(height, dst.height))
+}
+
+fun I420Buffer.convertTo(dst: Nv12Buffer) {
+    Yuv.convertI420ToNV12(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
+}
+
+fun I420Buffer.convertTo(dst: Nv21Buffer) {
+    Yuv.convertI420ToNV21(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+}
+
+// convert_from_argb
 
 fun ArgbBuffer.convertTo(dst: BgraBuffer) {
     Yuv.convertARGBToBGRA(bufferARGB, strideARGB, dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
@@ -404,6 +515,18 @@ fun AbgrBuffer.convertTo(dst: Nv21Buffer) {
     Yuv.convertABGRToNV21(bufferABGR, strideABGR, dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
 }
 
+// planar_functions
+
+fun Nv21Buffer.convertTo(dst: Nv12Buffer) {
+    Yuv.planerNV21ToNV12(bufferY, strideY, bufferVU, strideVU,
+        dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, min(width, dst.width), min(height, dst.height))
+}
+
+fun Nv12Buffer.convertTo(dst: Nv21Buffer) {
+    Yuv.planerNV21ToNV12(bufferY, strideY, bufferUV, strideUV,
+            dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, min(width, dst.width), min(height, dst.height))
+}
+
 fun I400Buffer.mirrorTo(dst: I400Buffer) {
     Yuv.planerI400Mirror(bufferY, strideY, dst.bufferY, dst.strideY, min(width, dst.width), min(height, dst.height))
 }
@@ -423,25 +546,25 @@ fun Nv21Buffer.mirrorTo(dst: Nv21Buffer) {
 }
 
 fun AbgrBuffer.mirrorTo(dst: AbgrBuffer) {
-    Yuv.planerI400Mirror(bufferABGR, strideABGR, dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
+    Yuv.planerARGBMirror(bufferABGR, strideABGR, dst.bufferABGR, dst.strideABGR, min(width, dst.width), min(height, dst.height))
 }
 
 fun ArgbBuffer.mirrorTo(dst: ArgbBuffer) {
-    Yuv.planerI400Mirror(bufferARGB, strideARGB, dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
+    Yuv.planerARGBMirror(bufferARGB, strideARGB, dst.bufferARGB, dst.strideARGB, min(width, dst.width), min(height, dst.height))
 }
 
 fun BgraBuffer.mirrorTo(dst: BgraBuffer) {
-    Yuv.planerI400Mirror(bufferBGRA, strideBGRA, dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
+    Yuv.planerARGBMirror(bufferBGRA, strideBGRA, dst.bufferBGRA, dst.strideBGRA, min(width, dst.width), min(height, dst.height))
 }
 
 fun RgbaBuffer.mirrorTo(dst: RgbaBuffer) {
-    Yuv.planerI400Mirror(bufferRGBA, strideRGBA, dst.bufferRGBA, dst.strideRGBA, min(width, dst.width), min(height, dst.height))
+    Yuv.planerARGBMirror(bufferRGBA, strideRGBA, dst.bufferRGBA, dst.strideRGBA, min(width, dst.width), min(height, dst.height))
 }
 
 fun Rgb24Buffer.mirrorTo(dst: Rgb24Buffer) {
-    Yuv.planerI400Mirror(bufferRGB24, strideRGB24, dst.bufferRGB24, dst.strideRGB24, min(width, dst.width), min(height, dst.height))
+    Yuv.planerRGB24Mirror(bufferRGB24, strideRGB24, dst.bufferRGB24, dst.strideRGB24, min(width, dst.width), min(height, dst.height))
 }
 
 fun RawBuffer.mirrorTo(dst: RawBuffer) {
-    Yuv.planerI400Mirror(bufferRAW, strideRAW, dst.bufferRAW, dst.strideRAW, min(width, dst.width), min(height, dst.height))
+    Yuv.planerRGB24Mirror(bufferRAW, strideRAW, dst.bufferRAW, dst.strideRAW, min(width, dst.width), min(height, dst.height))
 }

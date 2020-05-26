@@ -37,6 +37,25 @@
          width, height); \
   }
 
+#define PLANES_3_TO_1(NAME, S1, S2, S3, D1) \
+  JNI_DEFINE_METHOD(void, planer##NAME, \
+      const jobject j_src_##S1, const jint j_src_stride_##S1, \
+      const jobject j_src_##S2, const jint j_src_stride_##S2, \
+      const jobject j_src_##S3, const jint j_src_stride_##S3, \
+            jobject j_dst_##D1, const jint j_dst_stride_##D1, \
+      const jint width, const jint height) { \
+    SRC_PLANE(S1); \
+    SRC_PLANE(S2); \
+    SRC_PLANE(S3); \
+    DST_PLANE(D1); \
+    CALL(NAME, \
+         src_##S1, src_stride_##S1, \
+         src_##S2, src_stride_##S2, \
+         src_##S3, src_stride_##S3, \
+         dst_##D1, dst_stride_##D1, \
+         width, height); \
+  }
+
 #define PLANES_3_TO_3(NAME, S1, S2, S3, D1, D2, D3) \
   JNI_DEFINE_METHOD(void, planer##NAME, \
       const jobject j_src_##S1, const jint j_src_stride_##S1, \

@@ -3,7 +3,7 @@ package io.github.zncmn.libyuv
 import java.nio.ByteBuffer
 
 /**
- * I420 YUV Format. 4:2:0 12bpp
+ * I420 (BT.601) YUV Format. 4:2:0 12bpp
  */
 class I420Buffer private constructor(
     private val buffer: ByteBuffer,

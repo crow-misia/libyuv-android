@@ -3,9 +3,9 @@ package io.github.zncmn.libyuv
 import java.nio.ByteBuffer
 
 /**
- * I444 (BT.601) YUV Format. 4:4:4 24bpp
+ * U420 (BT.2020) YUV Format. 4:2:0 12bpp
  */
-class I444Buffer private constructor(
+class U420Buffer private constructor(
     private val buffer: ByteBuffer,
 
     val bufferY: ByteBuffer,
@@ -30,26 +30,28 @@ class I444Buffer private constructor(
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+            val halfWidth = (width + 1).shr(1)
             val capacity = width * height
-            return intArrayOf(width, capacity, width, capacity, width, capacity)
+            val halfCapacity = (halfWidth + 1).shr(1) * height
+            return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
         }
 
         @JvmStatic
-        fun allocate(width: Int, height: Int): I444Buffer {
+        fun allocate(width: Int, height: Int): U420Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
+            return U420Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
                 Yuv.freeNativeBuffer(buffer)
             })
         }
 
         @JvmStatic
         @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): I444Buffer {
+        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): U420Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return I444Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, releaseCallback)
+            return U420Buffer(buffer.duplicate(), bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, releaseCallback)
         }
     }
 }

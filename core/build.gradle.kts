@@ -47,9 +47,6 @@ android {
         ndkBuild {
             setPath(File(projectDir, "src/main/jni/Android.mk"))
         }
-        cmake {
-            setVersion(Versions.cmake)
-        }
     }
     ndkVersion = Versions.ndk
 }

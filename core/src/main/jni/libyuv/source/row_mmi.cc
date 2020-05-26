@@ -12,6 +12,7 @@
 #include <string.h>  // For memcpy and memset.
 
 #include "libyuv/basic_types.h"
+#include "libyuv/convert_argb.h"  // For kYuvI601Constants
 
 #ifdef __cplusplus
 namespace libyuv {
@@ -4780,7 +4781,9 @@ void J400ToARGBRow_MMI(const uint8_t* src_y, uint8_t* dst_argb, int width) {
       : "memory");
 }
 
-void I400ToARGBRow_MMI(const uint8_t* src_y, uint8_t* rgb_buf, int width) {
+// TODO - respect YuvConstants
+void I400ToARGBRow_MMI(const uint8_t* src_y, uint8_t* rgb_buf,
+                       const struct YuvConstants*, int width) {
   uint64_t src, src_lo, src_hi, dest, dest_lo, dest_hi;
   const uint64_t mask0 = 0x0;
   const uint64_t mask1 = 0x55;

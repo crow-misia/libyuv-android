@@ -2,7 +2,25 @@ package io.github.zncmn.libyuv
 
 import kotlin.math.min
 
+fun I420Buffer.rotate(dst: I420Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+        calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
+fun J420Buffer.rotate(dst: J420Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+        calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
 fun H420Buffer.rotate(dst: H420Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+        calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
+fun U420Buffer.rotate(dst: U420Buffer, rotateMode: RotateMode) {
     Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
@@ -13,9 +31,8 @@ fun I400Buffer.rotate(dst: I400Buffer, rotateMode: RotateMode) {
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
-fun I420Buffer.rotate(dst: I420Buffer, rotateMode: RotateMode) {
-    Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
-        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+fun J400Buffer.rotate(dst: J400Buffer, rotateMode: RotateMode) {
+    Yuv.rotateRotatePlane(bufferY, strideY, dst.bufferY, dst.strideY,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
@@ -25,13 +42,20 @@ fun I444Buffer.rotate(dst: I444Buffer, rotateMode: RotateMode) {
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
-fun J400Buffer.rotate(dst: J400Buffer, rotateMode: RotateMode) {
-    Yuv.rotateRotatePlane(bufferY, strideY, dst.bufferY, dst.strideY,
+fun J444Buffer.rotate(dst: J444Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI444Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
-fun J420Buffer.rotate(dst: J420Buffer, rotateMode: RotateMode) {
-    Yuv.rotateI420Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+fun H444Buffer.rotate(dst: H444Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI444Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
+        dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
+        calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
+}
+
+fun U444Buffer.rotate(dst: U444Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI444Rotate(bufferY, strideY, bufferU, strideU, bufferV, strideV,
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
