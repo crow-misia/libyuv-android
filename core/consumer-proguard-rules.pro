@@ -1,5 +1,5 @@
 -dontwarn org.jetbrains.annotations.**
 
--keepclasseswithmembernames io.github.zncmn.libyuv.Yuv {
+-keepclasseswithmembernames class io.github.zncmn.libyuv.Yuv {
    *;
 }
