@@ -4,7 +4,7 @@ object Versions {
     const val bintrayPlugin = "1.8.4"
 
     const val cmake = "3.10.2"
-    const val ndk = "21.1.6352462"
+    const val ndk = "21.2.6472646"
     const val buildTools = "29.0.3"
     const val compileSdk = 29
     const val targetSdk = 29
