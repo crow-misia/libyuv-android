@@ -45,7 +45,7 @@ android {
 
     externalNativeBuild {
         ndkBuild {
-            setPath(File(projectDir, "src/main/jni/Android.mk"))
+            setPath(File(projectDir, "Android.mk"))
         }
     }
     ndkVersion = Versions.ndk

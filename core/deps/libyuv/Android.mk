@@ -65,25 +65,5 @@ LOCAL_MODULE_TAGS := optional
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_STATIC_LIBRARIES := libyuv_static
-LOCAL_MODULE_TAGS := tests
-LOCAL_CPP_EXTENSION := .cc
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
-LOCAL_SRC_FILES := \
-    unit_test/unit_test.cc        \
-    unit_test/basictypes_test.cc  \
-    unit_test/color_test.cc       \
-    unit_test/compare_test.cc     \
-    unit_test/convert_test.cc     \
-    unit_test/cpu_test.cc         \
-    unit_test/cpu_thread_test.cc  \
-    unit_test/math_test.cc        \
-    unit_test/planar_test.cc      \
-    unit_test/rotate_argb_test.cc \
-    unit_test/rotate_test.cc      \
-    unit_test/scale_argb_test.cc  \
-    unit_test/scale_test.cc       \
-    unit_test/video_common_test.cc
 
-LOCAL_MODULE := libyuv_unittest
-include $(BUILD_NATIVE_TEST)
+LOCAL_WHOLE_STATIC_LIBRARIES := libyuv_static

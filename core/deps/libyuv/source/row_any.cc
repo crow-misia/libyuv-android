@@ -13,7 +13,6 @@
 #include <string.h>  // For memset.
 
 #include "libyuv/basic_types.h"
-#include "libyuv/convert_argb.h"  // For kYuvI601Constants
 
 #ifdef __cplusplus
 namespace libyuv {
@@ -1224,6 +1223,9 @@ ANY11M(MirrorUVRow_Any_SSSE3, MirrorUVRow_SSSE3, 2, 7)
 #ifdef HAS_MIRRORUVROW_NEON
 ANY11M(MirrorUVRow_Any_NEON, MirrorUVRow_NEON, 2, 31)
 #endif
+#ifdef HAS_MIRRORUVROW_MSA
+ANY11M(MirrorUVRow_Any_MSA, MirrorUVRow_MSA, 2, 7)
+#endif
 #ifdef HAS_ARGBMIRRORROW_AVX2
 ANY11M(ARGBMirrorRow_Any_AVX2, ARGBMirrorRow_AVX2, 4, 7)
 #endif
@@ -1437,7 +1439,7 @@ ANY12S(ARGBToUVJRow_Any_MMI, ARGBToUVJRow_MMI, 0, 4, 15)
 ANY12S(BGRAToUVRow_Any_NEON, BGRAToUVRow_NEON, 0, 4, 15)
 #endif
 #ifdef HAS_BGRATOUVROW_MSA
-ANY12S(BGRAToUVRow_Any_MSA, BGRAToUVRow_MSA, 0, 4, 31)
+ANY12S(BGRAToUVRow_Any_MSA, BGRAToUVRow_MSA, 0, 4, 15)
 #endif
 #ifdef HAS_BGRATOUVROW_MMI
 ANY12S(BGRAToUVRow_Any_MMI, BGRAToUVRow_MMI, 0, 4, 15)
@@ -1446,7 +1448,7 @@ ANY12S(BGRAToUVRow_Any_MMI, BGRAToUVRow_MMI, 0, 4, 15)
 ANY12S(ABGRToUVRow_Any_NEON, ABGRToUVRow_NEON, 0, 4, 15)
 #endif
 #ifdef HAS_ABGRTOUVROW_MSA
-ANY12S(ABGRToUVRow_Any_MSA, ABGRToUVRow_MSA, 0, 4, 31)
+ANY12S(ABGRToUVRow_Any_MSA, ABGRToUVRow_MSA, 0, 4, 15)
 #endif
 #ifdef HAS_ABGRTOUVROW_MMI
 ANY12S(ABGRToUVRow_Any_MMI, ABGRToUVRow_MMI, 0, 4, 15)
@@ -1455,7 +1457,7 @@ ANY12S(ABGRToUVRow_Any_MMI, ABGRToUVRow_MMI, 0, 4, 15)
 ANY12S(RGBAToUVRow_Any_NEON, RGBAToUVRow_NEON, 0, 4, 15)
 #endif
 #ifdef HAS_RGBATOUVROW_MSA
-ANY12S(RGBAToUVRow_Any_MSA, RGBAToUVRow_MSA, 0, 4, 31)
+ANY12S(RGBAToUVRow_Any_MSA, RGBAToUVRow_MSA, 0, 4, 15)
 #endif
 #ifdef HAS_RGBATOUVROW_MMI
 ANY12S(RGBAToUVRow_Any_MMI, RGBAToUVRow_MMI, 0, 4, 15)
