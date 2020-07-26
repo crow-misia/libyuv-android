@@ -39,19 +39,19 @@ extern "C" {
 #define USE_BRANCHLESS 1
 #if USE_BRANCHLESS
 static __inline int32_t clamp0(int32_t v) {
-  return ((-(v) >> 31) & (v));
+  return -(v >= 0) & v;
 }
-
+// TODO(fbarchard): make clamp255 preserve negative values.
 static __inline int32_t clamp255(int32_t v) {
-  return (((255 - (v)) >> 31) | (v)) & 255;
+  return (-(v >= 255) | v) & 255;
 }
 
 static __inline int32_t clamp1023(int32_t v) {
-  return (((1023 - (v)) >> 31) | (v)) & 1023;
+  return (-(v >= 1023) | v) & 1023;
 }
 
 static __inline uint32_t Abs(int32_t v) {
-  int m = v >> 31;
+  int m = -(v < 0);
   return (v + m) ^ m;
 }
 #else   // USE_BRANCHLESS
@@ -1586,7 +1586,7 @@ const struct YuvConstants SIMD_ALIGNED(kYvuH709Constants) = {
 
 // BT.2020 YUV to RGB reference
 //  R = (Y - 16) * 1.164384                - V * -1.67867
-//  G = (Y - 16) * 1.164384 - U * 0.187326 - V * -0.65042
+//  G = (Y - 16) * 1.164384 - U * 0.187326 - V *  0.65042
 //  B = (Y - 16) * 1.164384 - U * -2.14177
 
 // Y contribution to R,G,B.  Scale and bias.
@@ -1594,6 +1594,7 @@ const struct YuvConstants SIMD_ALIGNED(kYvuH709Constants) = {
 #define YGB -1160 /* 1.164384 * 64 * -16 + 64 / 2 */
 
 // TODO(fbarchard): Improve accuracy; the B channel is off by 7%.
+// U and V contributions to R,G,B.
 #define UB -128 /* max(-128, round(-2.142 * 64)) */
 #define UG 12   /* round(0.187326 * 64) */
 #define VG 42   /* round(0.65042 * 64) */
@@ -2781,7 +2782,12 @@ void BlendPlaneRow_C(const uint8_t* src0,
 }
 #undef UBLEND
 
+#if defined(__aarch64__) || defined(__arm__)
 #define ATTENUATE(f, a) (f * a + 128) >> 8
+#else
+// This code mimics the SSSE3 version for better testability.
+#define ATTENUATE(f, a) (a | (a << 8)) * (f | (f << 8)) >> 24
+#endif
 
 // Multiply source RGB by alpha and store to destination.
 void ARGBAttenuateRow_C(const uint8_t* src_argb, uint8_t* dst_argb, int width) {
