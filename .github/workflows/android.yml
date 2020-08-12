@@ -1,6 +1,12 @@
 name: Android CI
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'NOTICE'
+  pull_request:
 
 jobs:
   build:
