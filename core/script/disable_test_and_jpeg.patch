@@ -1,7 +1,7 @@
 diff -ur a/Android.mk b/Android.mk
 --- a/Android.mk	2020-06-27 10:07:20.000000000 +0900
 +++ b/Android.mk	2020-06-27 10:08:14.000000000 +0900
-@@ -53,14 +53,6 @@
+@@ -54,14 +54,6 @@
      source/video_common.cc
  
  common_CFLAGS := -Wall -fexceptions
@@ -16,11 +16,11 @@ diff -ur a/Android.mk b/Android.mk
  
  LOCAL_CFLAGS += $(common_CFLAGS)
  LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
-@@ -74,35 +66,4 @@
+@@ -75,36 +66,4 @@
  
  include $(CLEAR_VARS)
  
--LOCAL_WHOLE_STATIC_LIBRARIES := libyuv_static
+ LOCAL_WHOLE_STATIC_LIBRARIES := libyuv_static
 -LOCAL_MODULE := libyuv
 -ifneq ($(LIBYUV_DISABLE_JPEG), "yes")
 -LOCAL_SHARED_LIBRARIES := libjpeg
@@ -35,7 +35,6 @@ diff -ur a/Android.mk b/Android.mk
 -LOCAL_CPP_EXTENSION := .cc
 -LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
 -LOCAL_SRC_FILES := \
--    unit_test/unit_test.cc        \
 -    unit_test/basictypes_test.cc  \
 -    unit_test/color_test.cc       \
 -    unit_test/compare_test.cc     \
@@ -48,9 +47,9 @@ diff -ur a/Android.mk b/Android.mk
 -    unit_test/rotate_test.cc      \
 -    unit_test/scale_argb_test.cc  \
 -    unit_test/scale_test.cc       \
+-    unit_test/scale_uv_test.cc    \
+-    unit_test/unit_test.cc        \
 -    unit_test/video_common_test.cc
 -
 -LOCAL_MODULE := libyuv_unittest
 -include $(BUILD_NATIVE_TEST)
-+LOCAL_WHOLE_STATIC_LIBRARIES := libyuv_static
-\ No newline at end of file

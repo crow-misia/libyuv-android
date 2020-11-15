@@ -17,6 +17,7 @@
 #include "libyuv/planar_functions.h"  // For CopyPlane
 #include "libyuv/row.h"
 #include "libyuv/scale_row.h"
+#include "libyuv/scale_uv.h"  // For UVScale
 
 #ifdef __cplusplus
 namespace libyuv {
@@ -1670,7 +1671,7 @@ void ScalePlane_16(const uint16_t* src,
   }
   if (dst_width == src_width && filtering != kFilterBox) {
     int dy = FixedDiv(src_height, dst_height);
-    // Arbitrary scale vertically, but unscaled vertically.
+    // Arbitrary scale vertically, but unscaled horizontally.
     ScalePlaneVertical_16(src_height, dst_width, dst_height, src_stride,
                           dst_stride, src, dst, 0, 0, dy, 1, filtering);
     return;
@@ -1866,6 +1867,40 @@ int I444Scale_16(const uint16_t* src_y,
                 dst_width, dst_height, filtering);
   ScalePlane_16(src_v, src_stride_v, src_width, src_height, dst_v, dst_stride_v,
                 dst_width, dst_height, filtering);
+  return 0;
+}
+
+// Scale an NV12 image.
+// This function in turn calls a scaling function for each plane.
+
+LIBYUV_API
+int NV12Scale(const uint8_t* src_y,
+              int src_stride_y,
+              const uint8_t* src_uv,
+              int src_stride_uv,
+              int src_width,
+              int src_height,
+              uint8_t* dst_y,
+              int dst_stride_y,
+              uint8_t* dst_uv,
+              int dst_stride_uv,
+              int dst_width,
+              int dst_height,
+              enum FilterMode filtering) {
+  int src_halfwidth = SUBSAMPLE(src_width, 1, 1);
+  int src_halfheight = SUBSAMPLE(src_height, 1, 1);
+  int dst_halfwidth = SUBSAMPLE(dst_width, 1, 1);
+  int dst_halfheight = SUBSAMPLE(dst_height, 1, 1);
+  if (!src_y || !src_uv || src_width == 0 || src_height == 0 ||
+      src_width > 32768 || src_height > 32768 || !dst_y || !dst_uv ||
+      dst_width <= 0 || dst_height <= 0) {
+    return -1;
+  }
+
+  ScalePlane(src_y, src_stride_y, src_width, src_height, dst_y, dst_stride_y,
+             dst_width, dst_height, filtering);
+  UVScale(src_uv, src_stride_uv, src_halfwidth, src_halfheight, dst_uv,
+          dst_stride_uv, dst_halfwidth, dst_halfheight, filtering);
   return 0;
 }
 
