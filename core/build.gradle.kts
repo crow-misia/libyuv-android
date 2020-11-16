@@ -1,12 +1,11 @@
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
-import com.jfrog.bintray.gradle.BintrayExtension
+import com.android.build.gradle.*
+import com.jfrog.bintray.gradle.*
 
 plugins {
     id("com.android.library")
     kotlin("android")
     `maven-publish`
-    id("com.jfrog.bintray") version Versions.bintrayPlugin
+    id("com.jfrog.bintray") version "1.8.5"
 }
 
 group = Maven.groupId
@@ -45,14 +44,14 @@ android {
 
     externalNativeBuild {
         ndkBuild {
-            setPath(File(projectDir, "Android.mk"))
+            path(File("${projectDir}/Android.mk"))
         }
     }
     ndkVersion = Versions.ndk
 }
 
 dependencies {
-    api(kotlin("stdlib", Versions.kotlin))
+    implementation(kotlin("stdlib", Versions.kotlin))
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
