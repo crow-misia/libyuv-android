@@ -50,6 +50,16 @@ fun U444Buffer.scale(dst: U444Buffer, filterMode: FilterMode) {
         dst.bufferY, dst.strideY, dst.bufferU, dst.strideU, dst.bufferV, dst.strideV, dst.width, dst.height, filterMode.mode)
 }
 
+fun Nv12Buffer.scale(dst: Nv12Buffer, filterMode: FilterMode) {
+    Yuv.scaleNV12Scale(bufferY, strideY, bufferUV, strideUV, width, height,
+            dst.bufferY, dst.strideY, dst.bufferUV, dst.strideUV, dst.width, dst.height, filterMode.mode)
+}
+
+fun Nv21Buffer.scale(dst: Nv21Buffer, filterMode: FilterMode) {
+    Yuv.scaleNV12Scale(bufferY, strideY, bufferVU, strideVU, width, height,
+            dst.bufferY, dst.strideY, dst.bufferVU, dst.strideVU, dst.width, dst.height, filterMode.mode)
+}
+
 fun ArgbBuffer.scale(dst: ArgbBuffer, filterMode: FilterMode) {
     Yuv.scaleARGBScale(bufferARGB, strideARGB, width, height, dst.bufferARGB, dst.strideARGB, dst.width, dst.height, filterMode.mode)
 }

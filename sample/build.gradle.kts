@@ -8,7 +8,7 @@ android {
     compileSdkVersion(Versions.compileSdk)
     defaultConfig {
         applicationId = "com.example.libyuv"
-        minSdkVersion(Versions.minSdk)
+        minSdkVersion(11)
         targetSdkVersion(Versions.targetSdk)
         versionCode = 1
         versionName = "1.0.0"

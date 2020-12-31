@@ -626,6 +626,10 @@ internal object Yuv {
                                 dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int, dstWidth: Int, dstHeight: Int,
                                 filterMode: Int)
 
+    external fun scaleNV12Scale(srcY: ByteBuffer, srcStrideY: Int, srcUV: ByteBuffer, srcStrideUV: Int, srcWidth: Int, srcHeight: Int,
+                                dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int, dstWidth: Int, dstHeight: Int,
+                                filterMode: Int)
+
     // scale_argb.cpp
 
     external fun scaleARGBScale(srcARGB: ByteBuffer, srcStrideARGB: Int, srcWidth: Int, srcHeight: Int,
