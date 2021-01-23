@@ -33,9 +33,9 @@ class ArgbBuffer private constructor(
         fun allocate(width: Int, height: Int): ArgbBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return ArgbBuffer(buffer, stride, width, height, Runnable {
+            return ArgbBuffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

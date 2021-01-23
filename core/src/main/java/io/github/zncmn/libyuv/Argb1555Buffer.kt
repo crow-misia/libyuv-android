@@ -33,9 +33,9 @@ class Argb1555Buffer private constructor(
         fun allocate(width: Int, height: Int): Argb1555Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return Argb1555Buffer(buffer, stride, width, height, Runnable {
+            return Argb1555Buffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

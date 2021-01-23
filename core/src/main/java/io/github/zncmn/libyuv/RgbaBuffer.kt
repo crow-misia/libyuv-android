@@ -33,9 +33,9 @@ class RgbaBuffer private constructor(
         fun allocate(width: Int, height: Int): RgbaBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return RgbaBuffer(buffer, stride, width, height, Runnable {
+            return RgbaBuffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

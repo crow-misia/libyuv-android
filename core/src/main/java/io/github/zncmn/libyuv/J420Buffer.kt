@@ -41,9 +41,9 @@ class J420Buffer private constructor(
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
-            return J420Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height, Runnable {
+            return J420Buffer(buffer, bufferY, bufferU, bufferV, strideY, strideU, strideV, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

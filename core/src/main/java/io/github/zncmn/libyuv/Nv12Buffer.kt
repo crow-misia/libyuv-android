@@ -38,9 +38,9 @@ class Nv12Buffer private constructor(
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityUV)
             val (bufferY, bufferUV) = buffer.slice(capacityY, capacityUV)
-            return Nv12Buffer(buffer, bufferY, bufferUV, strideY, strideUV, width, height, Runnable {
+            return Nv12Buffer(buffer, bufferY, bufferUV, strideY, strideUV, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

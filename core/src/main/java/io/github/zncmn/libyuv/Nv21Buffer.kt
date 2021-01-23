@@ -37,9 +37,9 @@ class Nv21Buffer private constructor(
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityVU)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
-            return Nv21Buffer(buffer, bufferY, bufferVU, strideY, strideVU, width, height, Runnable {
+            return Nv21Buffer(buffer, bufferY, bufferVU, strideY, strideVU, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

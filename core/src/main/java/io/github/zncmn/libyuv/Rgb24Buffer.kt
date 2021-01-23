@@ -33,9 +33,9 @@ class Rgb24Buffer private constructor(
         fun allocate(width: Int, height: Int): Rgb24Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return Rgb24Buffer(buffer, stride, width, height, Runnable {
+            return Rgb24Buffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

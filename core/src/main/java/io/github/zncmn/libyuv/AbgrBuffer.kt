@@ -33,9 +33,9 @@ class AbgrBuffer private constructor(
         fun allocate(width: Int, height: Int): AbgrBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return AbgrBuffer(buffer, stride, width, height, Runnable {
+            return AbgrBuffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

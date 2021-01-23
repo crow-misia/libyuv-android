@@ -33,9 +33,9 @@ class RawBuffer private constructor(
         fun allocate(width: Int, height: Int): RawBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return RawBuffer(buffer, stride, width, height, Runnable {
+            return RawBuffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic

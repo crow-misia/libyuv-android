@@ -14,7 +14,7 @@ internal fun ByteBuffer.asByteArray(): ByteArray {
 internal fun ByteBuffer.asByteArray(dst: ByteArray) {
     val capacity = capacity()
     val srcObj: Any = if (isDirect) this else array()
-    assert(dst.size >= capacity) { "dst size is less than capacity" }
+    check(dst.size >= capacity) { "dst size is less than capacity" }
 
     Yuv.memcopy(dst, srcObj, capacity)
 }
@@ -43,7 +43,7 @@ internal fun ByteBuffer.slice(vararg sliceLengths: Int): Array<ByteBuffer> {
         limit(limit() + sliceLength)
         results[i] = slice()
     }
-    assert(capacity() == limit()) { "buffer capacity is bigger than expected" }
+    check(capacity() == limit()) { "buffer capacity is bigger than expected" }
     clear()
     return results.requireNoNulls()
 }

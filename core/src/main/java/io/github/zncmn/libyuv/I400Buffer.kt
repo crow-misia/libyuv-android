@@ -31,9 +31,9 @@ class I400Buffer private constructor(
         fun allocate(width: Int, height: Int): I400Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return I400Buffer(buffer, stride, width, height, Runnable {
+            return I400Buffer(buffer, stride, width, height) {
                 Yuv.freeNativeBuffer(buffer)
-            })
+            }
         }
 
         @JvmStatic
