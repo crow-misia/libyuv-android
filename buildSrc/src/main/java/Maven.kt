@@ -1,5 +1,5 @@
 object Maven {
-    const val groupId = "io.github.zncmn.libyuv"
+    const val groupId = "io.github.crow-misia.libyuv"
     const val artifactId = "core"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"

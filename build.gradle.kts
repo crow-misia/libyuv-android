@@ -6,10 +6,12 @@ plugins {
 buildscript {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
     dependencies {
         classpath(Deps.androidPlugin)
+        classpath(Deps.dokkaPlugin)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
@@ -19,10 +21,12 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
 }
 
 val clean by tasks.creating(Delete::class) {
+    group = "build"
     delete(rootProject.buildDir)
 }

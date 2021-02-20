@@ -1,11 +1,13 @@
 import com.android.build.gradle.*
-import com.jfrog.bintray.gradle.*
+import org.jetbrains.dokka.gradle.DokkaTask
+import java.net.URI
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    `maven-publish`
-    id("com.jfrog.bintray") version "1.8.5"
+    id("org.jetbrains.dokka")
+    id("signing")
+    id("maven-publish")
 }
 
 group = Maven.groupId
@@ -61,6 +63,25 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.create("main").allSource)
 }
 
+val customDokkaTask by tasks.creating(DokkaTask::class) {
+    dokkaSourceSets.getByName("main") {
+        noAndroidSdkLink.set(false)
+    }
+    dependencies {
+        plugins("org.jetbrains.dokka:javadoc-plugin:${Versions.dokkaPlugin}")
+    }
+    inputs.dir("src/main/java")
+    outputDirectory.set(buildDir.resolve("javadoc"))
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn(customDokkaTask)
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles JavaDoc JAR"
+    archiveClassifier.set("javadoc")
+    from(customDokkaTask.outputDirectory)
+}
+
 val publicationName = "core"
 publishing {
     publications {
@@ -81,6 +102,7 @@ publishing {
 
             artifact(releaseAar)
             artifact(sourcesJar)
+            artifact(javadocJar)
 
             pom {
                 name.set(Maven.name)
@@ -115,25 +137,23 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
+            url = if (Versions.name.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+            val sonatypeUsername: String by project
+            val sonatypePassword: String by project
+            credentials {
+                username = sonatypeUsername
+                password = sonatypePassword
+            }
+        }
+    }
 }
 
-fun findProperty(s: String) = project.findProperty(s) as String?
-bintray {
-    user = findProperty("bintray_user")
-    key = findProperty("bintray_apikey")
-    publish = true
-    setPublications(publicationName)
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = "maven"
-        name = Maven.name
-        desc = Maven.desc
-        setLicenses(*Maven.licenses)
-        setLabels(*Maven.labels)
-        issueTrackerUrl = Maven.issueTrackerUrl
-        vcsUrl = Maven.gitUrl
-        githubRepo = Maven.githubRepo
-        description = Maven.desc
-    })
+signing {
+    sign(publishing.publications.getByName(publicationName))
 }
 
 tasks {
