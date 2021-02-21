@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.renderscript.RenderScript
 import android.widget.ImageView
-import io.github.zncmn.libyuv.*
+import io.github.crow_misia.libyuv.*
 
 /**
  * This activity demonstrates how to use JNI to encode and decode ogg/vorbis audio
