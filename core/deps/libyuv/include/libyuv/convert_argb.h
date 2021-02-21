@@ -21,16 +21,20 @@ extern "C" {
 #endif
 
 // Conversion matrix for YUV to RGB
-LIBYUV_API extern const struct YuvConstants kYuvI601Constants;  // BT.601
-LIBYUV_API extern const struct YuvConstants kYuvJPEGConstants;  // JPeg
-LIBYUV_API extern const struct YuvConstants kYuvH709Constants;  // BT.709
-LIBYUV_API extern const struct YuvConstants kYuv2020Constants;  // BT.2020
+LIBYUV_API extern const struct YuvConstants kYuvI601Constants;   // BT.601
+LIBYUV_API extern const struct YuvConstants kYuvJPEGConstants;   // BT.601 full
+LIBYUV_API extern const struct YuvConstants kYuvH709Constants;   // BT.709
+LIBYUV_API extern const struct YuvConstants kYuvF709Constants;   // BT.709 full
+LIBYUV_API extern const struct YuvConstants kYuv2020Constants;   // BT.2020
+LIBYUV_API extern const struct YuvConstants kYuvV2020Constants;  // BT.2020 full
 
 // Conversion matrix for YVU to BGR
-LIBYUV_API extern const struct YuvConstants kYvuI601Constants;  // BT.601
-LIBYUV_API extern const struct YuvConstants kYvuJPEGConstants;  // JPeg
-LIBYUV_API extern const struct YuvConstants kYvuH709Constants;  // BT.709
-LIBYUV_API extern const struct YuvConstants kYvu2020Constants;  // BT.2020
+LIBYUV_API extern const struct YuvConstants kYvuI601Constants;   // BT.601
+LIBYUV_API extern const struct YuvConstants kYvuJPEGConstants;   // BT.601 full
+LIBYUV_API extern const struct YuvConstants kYvuH709Constants;   // BT.709
+LIBYUV_API extern const struct YuvConstants kYvuF709Constants;   // BT.709 full
+LIBYUV_API extern const struct YuvConstants kYvu2020Constants;   // BT.2020
+LIBYUV_API extern const struct YuvConstants kYvuV2020Constants;  // BT.2020 full
 
 // Macros for end swapped destination Matrix conversions.
 // Swap UV and pass mirrored kYvuJPEGConstants matrix.
@@ -38,7 +42,10 @@ LIBYUV_API extern const struct YuvConstants kYvu2020Constants;  // BT.2020
 #define kYuvI601ConstantsVU kYvuI601Constants
 #define kYuvJPEGConstantsVU kYvuJPEGConstants
 #define kYuvH709ConstantsVU kYvuH709Constants
+#define kYuvF709ConstantsVU kYvuF709Constants
 #define kYuv2020ConstantsVU kYvu2020Constants
+#define kYuvV2020ConstantsVU kYvuV2020Constants
+
 #define NV12ToABGRMatrix(a, b, c, d, e, f, g, h, i) \
   NV21ToARGBMatrix(a, b, c, d, e, f, g##VU, h, i)
 #define NV21ToABGRMatrix(a, b, c, d, e, f, g, h, i) \
@@ -108,6 +115,32 @@ int J420ToARGB(const uint8_t* src_y,
 // Convert J420 to ABGR.
 LIBYUV_API
 int J420ToABGR(const uint8_t* src_y,
+               int src_stride_y,
+               const uint8_t* src_u,
+               int src_stride_u,
+               const uint8_t* src_v,
+               int src_stride_v,
+               uint8_t* dst_abgr,
+               int dst_stride_abgr,
+               int width,
+               int height);
+
+// Convert F420 to ARGB. BT.709 full range
+LIBYUV_API
+int F420ToARGB(const uint8_t* src_y,
+               int src_stride_y,
+               const uint8_t* src_u,
+               int src_stride_u,
+               const uint8_t* src_v,
+               int src_stride_v,
+               uint8_t* dst_argb,
+               int dst_stride_argb,
+               int width,
+               int height);
+
+// Convert F420 to ABGR. BT.709 full range
+LIBYUV_API
+int F420ToABGR(const uint8_t* src_y,
                int src_stride_y,
                const uint8_t* src_u,
                int src_stride_u,

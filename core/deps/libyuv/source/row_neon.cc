@@ -168,8 +168,8 @@ void I444AlphaToARGBRow_NEON(const uint8_t* src_y,
   asm volatile(
       YUVTORGB_SETUP
       "1:                                        \n" READYUV444 YUVTORGB
-      "subs        %5, %5, #8                    \n"
       "vld1.8      {d23}, [%3]!                  \n"
+      "subs        %5, %5, #8                    \n"
       "vst4.8      {d20, d21, d22, d23}, [%4]!   \n"
       "bgt         1b                            \n"
       : "+r"(src_y),     // %0
@@ -415,11 +415,11 @@ void NV12ToARGBRow_NEON(const uint8_t* src_y,
                         const struct YuvConstants* yuvconstants,
                         int width) {
   asm volatile(YUVTORGB_SETUP
-               "vmov.u8     d23, #255                     \n"
-               "1:                                        \n" READNV12 YUVTORGB
-               "subs        %3, %3, #8                    \n"
-               "vst4.8      {d20, d21, d22, d23}, [%2]!   \n"
-               "bgt         1b                            \n"
+      "vmov.u8     d23, #255                     \n"
+      "1:                                        \n" READNV12 YUVTORGB
+      "subs        %3, %3, #8                    \n"
+      "vst4.8      {d20, d21, d22, d23}, [%2]!   \n"
+      "bgt         1b                            \n"
                : "+r"(src_y),     // %0
                  "+r"(src_uv),    // %1
                  "+r"(dst_argb),  // %2
@@ -438,11 +438,11 @@ void NV21ToARGBRow_NEON(const uint8_t* src_y,
                         const struct YuvConstants* yuvconstants,
                         int width) {
   asm volatile(YUVTORGB_SETUP
-               "vmov.u8     d23, #255                     \n"
-               "1:                                        \n" READNV21 YUVTORGB
-               "subs        %3, %3, #8                    \n"
-               "vst4.8      {d20, d21, d22, d23}, [%2]!   \n"
-               "bgt         1b                            \n"
+      "vmov.u8     d23, #255                     \n"
+      "1:                                        \n" READNV21 YUVTORGB
+      "subs        %3, %3, #8                    \n"
+      "vst4.8      {d20, d21, d22, d23}, [%2]!   \n"
+      "bgt         1b                            \n"
                : "+r"(src_y),     // %0
                  "+r"(src_vu),    // %1
                  "+r"(dst_argb),  // %2
@@ -537,11 +537,11 @@ void YUY2ToARGBRow_NEON(const uint8_t* src_yuy2,
                         const struct YuvConstants* yuvconstants,
                         int width) {
   asm volatile(YUVTORGB_SETUP
-               "vmov.u8     d23, #255                     \n"
-               "1:                                        \n" READYUY2 YUVTORGB
-               "subs        %2, %2, #8                    \n"
-               "vst4.8      {d20, d21, d22, d23}, [%1]!   \n"
-               "bgt         1b                            \n"
+      "vmov.u8     d23, #255                     \n"
+      "1:                                        \n" READYUY2 YUVTORGB
+      "subs        %2, %2, #8                    \n"
+      "vst4.8      {d20, d21, d22, d23}, [%1]!   \n"
+      "bgt         1b                            \n"
                : "+r"(src_yuy2),  // %0
                  "+r"(dst_argb),  // %1
                  "+r"(width)      // %2
@@ -558,11 +558,11 @@ void UYVYToARGBRow_NEON(const uint8_t* src_uyvy,
                         const struct YuvConstants* yuvconstants,
                         int width) {
   asm volatile(YUVTORGB_SETUP
-               "vmov.u8     d23, #255                     \n"
-               "1:                                        \n" READUYVY YUVTORGB
-               "subs        %2, %2, #8                    \n"
-               "vst4.8      {d20, d21, d22, d23}, [%1]!   \n"
-               "bgt         1b                            \n"
+      "vmov.u8     d23, #255                     \n"
+      "1:                                        \n" READUYVY YUVTORGB
+      "subs        %2, %2, #8                    \n"
+      "vst4.8      {d20, d21, d22, d23}, [%1]!   \n"
+      "bgt         1b                            \n"
                : "+r"(src_uyvy),  // %0
                  "+r"(dst_argb),  // %1
                  "+r"(width)      // %2
@@ -663,6 +663,113 @@ void MergeRGBRow_NEON(const uint8_t* src_r,
         "+r"(width)                       // %4
       :                                   // Input registers
       : "cc", "memory", "q0", "q1", "q2"  // Clobber List
+  );
+}
+
+// Reads 16 packed ARGB and write to planar dst_r, dst_g, dst_b, dst_a.
+void SplitARGBRow_NEON(const uint8_t* src_argb,
+                       uint8_t* dst_r,
+                       uint8_t* dst_g,
+                       uint8_t* dst_b,
+                       uint8_t* dst_a,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "vld4.8      {d0, d2, d4, d6}, [%0]!       \n"  // load 8 ARGB
+      "vld4.8      {d1, d3, d5, d7}, [%0]!       \n"  // next 8 ARGB
+      "subs        %5, %5, #16                   \n"  // 16 processed per loop
+      "vst1.8      {q0}, [%3]!                   \n"  // store B
+      "vst1.8      {q1}, [%2]!                   \n"  // store G
+      "vst1.8      {q2}, [%1]!                   \n"  // store R
+      "vst1.8      {q3}, [%4]!                   \n"  // store A
+      "bgt         1b                            \n"
+      : "+r"(src_argb),                         // %0
+        "+r"(dst_r),                            // %1
+        "+r"(dst_g),                            // %2
+        "+r"(dst_b),                            // %3
+        "+r"(dst_a),                            // %4
+        "+r"(width)                             // %5
+      :                                         // Input registers
+      : "cc", "memory", "q0", "q1", "q2", "q3"  // Clobber List
+  );
+}
+
+// Reads 16 planar R's, G's and B's and writes out 16 packed ARGB at a time
+void MergeARGBRow_NEON(const uint8_t* src_r,
+                       const uint8_t* src_g,
+                       const uint8_t* src_b,
+                       const uint8_t* src_a,
+                       uint8_t* dst_argb,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "vld1.8      {q2}, [%0]!                   \n"  // load R
+      "vld1.8      {q1}, [%1]!                   \n"  // load G
+      "vld1.8      {q0}, [%2]!                   \n"  // load B
+      "vld1.8      {q3}, [%3]!                   \n"  // load A
+      "subs        %5, %5, #16                   \n"  // 16 processed per loop
+      "vst4.8      {d0, d2, d4, d6}, [%4]!       \n"  // store 8 ARGB
+      "vst4.8      {d1, d3, d5, d7}, [%4]!       \n"  // next 8 ARGB
+      "bgt         1b                            \n"
+      : "+r"(src_r),                            // %0
+        "+r"(src_g),                            // %1
+        "+r"(src_b),                            // %2
+        "+r"(src_a),                            // %3
+        "+r"(dst_argb),                         // %4
+        "+r"(width)                             // %5
+      :                                         // Input registers
+      : "cc", "memory", "q0", "q1", "q2", "q3"  // Clobber List
+  );
+}
+
+// Reads 16 packed ARGB and write to planar dst_r, dst_g, dst_b.
+void SplitXRGBRow_NEON(const uint8_t* src_argb,
+                       uint8_t* dst_r,
+                       uint8_t* dst_g,
+                       uint8_t* dst_b,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "vld4.8      {d0, d2, d4, d6}, [%0]!       \n"  // load 8 ARGB
+      "vld4.8      {d1, d3, d5, d7}, [%0]!       \n"  // next 8 ARGB
+      "subs        %4, %4, #16                   \n"  // 16 processed per loop
+      "vst1.8      {q0}, [%3]!                   \n"  // store B
+      "vst1.8      {q1}, [%2]!                   \n"  // store G
+      "vst1.8      {q2}, [%1]!                   \n"  // store R
+      "bgt         1b                            \n"
+      : "+r"(src_argb),                         // %0
+        "+r"(dst_r),                            // %1
+        "+r"(dst_g),                            // %2
+        "+r"(dst_b),                            // %3
+        "+r"(width)                             // %4
+      :                                         // Input registers
+      : "cc", "memory", "q0", "q1", "q2", "q3"  // Clobber List
+  );
+}
+
+// Reads 16 planar R's, G's, B's and A's and writes out 16 packed ARGB at a time
+void MergeXRGBRow_NEON(const uint8_t* src_r,
+                       const uint8_t* src_g,
+                       const uint8_t* src_b,
+                       uint8_t* dst_argb,
+                       int width) {
+  asm volatile(
+      "vmov.u8     q3, #255                      \n"  // load A(255)
+      "1:                                        \n"
+      "vld1.8      {q2}, [%0]!                   \n"  // load R
+      "vld1.8      {q1}, [%1]!                   \n"  // load G
+      "vld1.8      {q0}, [%2]!                   \n"  // load B
+      "subs        %4, %4, #16                   \n"  // 16 processed per loop
+      "vst4.8      {d0, d2, d4, d6}, [%4]!       \n"  // store 8 ARGB
+      "vst4.8      {d1, d3, d5, d7}, [%4]!       \n"  // next 8 ARGB
+      "bgt         1b                            \n"
+      : "+r"(src_r),                            // %0
+        "+r"(src_g),                            // %1
+        "+r"(src_b),                            // %2
+        "+r"(dst_argb),                         // %3
+        "+r"(width)                             // %4
+      :                                         // Input registers
+      : "cc", "memory", "q0", "q1", "q2", "q3"  // Clobber List
   );
 }
 
