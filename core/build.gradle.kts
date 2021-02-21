@@ -50,6 +50,10 @@ android {
         }
     }
     ndkVersion = Versions.ndk
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -82,78 +86,77 @@ val javadocJar by tasks.creating(Jar::class) {
     from(customDokkaTask.outputDirectory)
 }
 
-val publicationName = "core"
-publishing {
-    publications {
-        create<MavenPublication>(publicationName) {
-            groupId = Maven.groupId
-            artifactId = Maven.artifactId
-            version = Versions.name
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["release"])
 
-            val releaseAar = "$buildDir/outputs/aar/${project.name}-release.aar"
+                groupId = Maven.groupId
+                artifactId = Maven.artifactId
+                version = Versions.name
 
-            println("""
-                    |Creating maven publication '$publicationName'
+                println("""
+                    |Creating maven publication
                     |    Group: $groupId
                     |    Artifact: $artifactId
                     |    Version: $version
-                    |    Aar: $releaseAar
                 """.trimMargin())
 
-            artifact(releaseAar)
-            artifact(sourcesJar)
-            artifact(javadocJar)
+                artifact(sourcesJar)
+                artifact(javadocJar)
 
-            pom {
-                name.set(Maven.name)
-                description.set(Maven.desc)
-                url.set(Maven.siteUrl)
+                pom {
+                    name.set(Maven.name)
+                    description.set(Maven.desc)
+                    url.set(Maven.siteUrl)
 
-                scm {
-                    val scmUrl = "scm:git:${Maven.gitUrl}"
-                    connection.set(scmUrl)
-                    developerConnection.set(scmUrl)
-                    url.set(this@pom.url)
-                    tag.set("HEAD")
-                }
-
-                developers {
-                    developer {
-                        id.set("crow-misia")
-                        name.set("Zenichi Amano")
-                        email.set("crow.misia@gmail.com")
-                        roles.set(listOf("Project-Administrator", "Developer"))
-                        timezone.set("+9")
+                    scm {
+                        val scmUrl = "scm:git:${Maven.gitUrl}"
+                        connection.set(scmUrl)
+                        developerConnection.set(scmUrl)
+                        url.set(this@pom.url)
+                        tag.set("HEAD")
                     }
-                }
 
-                licenses {
-                    license {
-                        name.set(Maven.licenseName)
-                        url.set(Maven.licenseUrl)
-                        distribution.set(Maven.licenseDist)
+                    developers {
+                        developer {
+                            id.set("crow-misia")
+                            name.set("Zenichi Amano")
+                            email.set("crow.misia@gmail.com")
+                            roles.set(listOf("Project-Administrator", "Developer"))
+                            timezone.set("+9")
+                        }
+                    }
+
+                    licenses {
+                        license {
+                            name.set(Maven.licenseName)
+                            url.set(Maven.licenseUrl)
+                            distribution.set(Maven.licenseDist)
+                        }
                     }
                 }
             }
         }
-    }
-    repositories {
-        maven {
-            val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
-            url = if (Versions.name.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-            val sonatypeUsername: String by project
-            val sonatypePassword: String by project
-            credentials {
-                username = sonatypeUsername
-                password = sonatypePassword
+        repositories {
+            maven {
+                val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+                val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
+                url = if (Versions.name.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                val sonatypeUsername: String? by project
+                val sonatypePassword: String? by project
+                credentials {
+                    username = sonatypeUsername.orEmpty()
+                    password = sonatypePassword.orEmpty()
+                }
             }
         }
     }
-}
 
-signing {
-    sign(publishing.publications.getByName(publicationName))
+    signing {
+        sign(publishing.publications.getByName("maven"))
+    }
 }
 
 tasks {
