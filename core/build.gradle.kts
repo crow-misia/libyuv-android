@@ -11,7 +11,7 @@ plugins {
 }
 
 group = Maven.groupId
-version = Versions.name
+version = Versions.core
 
 android {
     buildToolsVersion(Versions.buildTools)
@@ -51,8 +51,11 @@ android {
     }
     ndkVersion = Versions.ndk
 
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
+            jvmTarget = "1.8"
+        }
     }
 }
 
@@ -94,7 +97,7 @@ afterEvaluate {
 
                 groupId = Maven.groupId
                 artifactId = Maven.artifactId
-                version = Versions.name
+                version = Versions.core
 
                 println("""
                     |Creating maven publication
@@ -143,7 +146,7 @@ afterEvaluate {
             maven {
                 val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
                 val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
-                url = if (Versions.name.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                url = if (Versions.core.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
                 val sonatypeUsername: String? by project
                 val sonatypePassword: String? by project
                 credentials {
