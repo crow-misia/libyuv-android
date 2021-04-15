@@ -6,6 +6,12 @@ using namespace libyuv::jniutil;
 extern "C" {
 
 // Convert 8 bit YUV to 10 bit.
+// #define H420ToH010 I420ToI010
+// I420ToI010
+
+// Convert 8 bit YUV to 12 bit.
+// #define H420ToH012 I420ToI012
+// I420ToI012
 
 PLANES_3_TO_3(I420ToI422, y, u, v, y, u, v);
 
@@ -18,6 +24,11 @@ PLANES_3_TO_2(I420ToNV12, y, u, v, y, uv);
 
 PLANES_3_TO_2(I420ToNV21, y, u, v, y, vu);
 
+// I420ToYUY2
+
+// I420ToUYVY
+
 // Convert I420 to specified format.
+// ConvertFromI420
 
 }

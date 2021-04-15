@@ -33,6 +33,11 @@ internal object Yuv {
                                    dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
                                    width: Int, height: Int)
 
+    /** Convert I422 to I444 */
+    external fun convertI422ToI444(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
+                                   dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                   width: Int, height: Int)
+
     /** Convert I422 to NV21 */
     external fun convertI422ToNV21(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
                                    dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
@@ -646,19 +651,40 @@ internal object Yuv {
 
     // planar_functions.cpp
 
+    /** Copy I422 to I422 */
+    external fun planerI422Copy(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
+                                dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                width: Int, height: Int)
+
+    /** Copy I444 to I444 */
+    external fun planerI444Copy(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
+                                dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                width: Int, height: Int)
+
+    /** Copy NV12 to NV12 */
+    external fun planerNV12Copy(srcY: ByteBuffer, srcStrideY: Int, srcVU: ByteBuffer, srcStrideVU: Int,
+                                dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
+                                width: Int, height: Int)
+
     /** Convert NV21 to NV12 */
     external fun planerNV21ToNV12(srcY: ByteBuffer, srcStrideY: Int, srcVU: ByteBuffer, srcStrideVU: Int,
                                   dstY: ByteBuffer, dstStrideY: Int, dstUV: ByteBuffer, dstStrideUV: Int,
                                   width: Int, height: Int)
 
-    /** Mirror I400 */
-    external fun planerI400Mirror(srcY: ByteBuffer, srcStrideY: Int,
+    /** Convert I420 to I400 */
+    external fun planerI420ToI400(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
                                   dstY: ByteBuffer, dstStrideY: Int,
                                   width: Int, height: Int)
+
 
     /** Mirror I420 */
     external fun planerI420Mirror(srcY: ByteBuffer, srcStrideY: Int, srcU: ByteBuffer, srcStrideU: Int, srcV: ByteBuffer, srcStrideV: Int,
                                   dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                  width: Int, height: Int)
+
+    /** Mirror I400 */
+    external fun planerI400Mirror(srcY: ByteBuffer, srcStrideY: Int,
+                                  dstY: ByteBuffer, dstStrideY: Int,
                                   width: Int, height: Int)
 
     /** Mirror NV12 */
@@ -675,6 +701,11 @@ internal object Yuv {
     external fun planerRGB24Mirror(srcRGB24: ByteBuffer, srcStrideRGB24: Int,
                                    dstRGB24: ByteBuffer, dstStrideRGB24: Int,
                                    width: Int, height: Int)
+
+    /** Convert RAW to RGB24 */
+    external fun planerRAWToRGB24(srcRAW: ByteBuffer, srcStrideRAW: Int,
+                                  dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+                                  width: Int, height: Int)
 
     // memcopy.cpp
 

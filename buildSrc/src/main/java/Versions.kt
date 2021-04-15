@@ -1,6 +1,6 @@
 object Versions {
     const val kotlin = "1.4.21"
-    const val gradlePlugin = "4.1.2"
+    const val gradlePlugin = "4.1.3"
     const val dokkaPlugin = "1.4.20"
 
     const val ndk = "22.0.7026061"
@@ -9,5 +9,5 @@ object Versions {
     const val targetSdk = 30
     const val minSdk = 9
 
-    const val core = "0.6.0"
+    const val core = "0.7.0"
 }
