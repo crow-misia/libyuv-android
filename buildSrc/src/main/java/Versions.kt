@@ -3,7 +3,7 @@ object Versions {
     const val gradlePlugin = "4.1.3"
     const val dokkaPlugin = "1.4.20"
 
-    const val ndk = "22.0.7026061"
+    const val ndk = "23.0.7123448"
     const val buildTools = "30.0.3"
     const val compileSdk = 30
     const val targetSdk = 30
