@@ -55,6 +55,8 @@ android {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
             jvmTarget = "1.8"
+            apiVersion = "1.5"
+            languageVersion = "1.5"
         }
     }
 }
@@ -75,7 +77,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins("org.jetbrains.dokka:javadoc-plugin:${Versions.dokkaPlugin}")
+        plugins(Deps.dokkaJavadocPlugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
