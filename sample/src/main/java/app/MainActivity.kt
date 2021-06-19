@@ -108,9 +108,13 @@ class MainActivity : Activity() {
         scale2.setImageBitmap(nv21ScaleBuffer.toBitmap(rs))
 
         originalBuffer.release()
-        rotate90Buffer.release()
+        original2Buffer.release()
+        i420Buffer.release()
         nv21Buffer.release()
+        rotate90Buffer.release()
         nv21Rotate90Buffer.release()
+        nv21MirrorBuffer.release()
+        nv21ScaleBuffer.release()
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
