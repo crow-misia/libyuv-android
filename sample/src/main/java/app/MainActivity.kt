@@ -5,7 +5,6 @@ import android.app.Activity
 import android.graphics.*
 import android.os.Build
 import android.os.Bundle
-import android.renderscript.RenderScript
 import android.widget.ImageView
 import io.github.crow_misia.libyuv.*
 
@@ -26,13 +25,9 @@ class MainActivity : Activity() {
     private lateinit var mirror2: ImageView
     private lateinit var scale2: ImageView
 
-    private lateinit var rs: RenderScript
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        rs = RenderScript.create(this)
 
         setContentView(R.layout.activity_main)
 
@@ -74,9 +69,9 @@ class MainActivity : Activity() {
             })
             it.drawRect(50f, 50f, 150f, 150f, Paint().also { p -> p.color = Color.BLACK })
         }
-        bitmap.copyPixelsToBuffer(originalBuffer.bufferABGR)
+        bitmap.copyPixelsToBuffer(originalBuffer.asBuffer())
         origin.setImageBitmap(bitmap)
-        toBitmap.setImageBitmap(originalBuffer.toBitmap(rs))
+        toBitmap.setImageBitmap(originalBuffer.asBitmap())
 
         Canvas(bitmap2).also {
             it.drawRect(0f, 0f, 1920f, 1080f, Paint().also { p ->
@@ -84,43 +79,37 @@ class MainActivity : Activity() {
             })
             it.drawRect(50f, 50f, 150f, 150f, Paint().also { p -> p.color = Color.BLACK })
         }
-        bitmap2.copyPixelsToBuffer(original2Buffer.bufferRGB565)
+        bitmap2.copyPixelsToBuffer(original2Buffer.asBuffer())
         origin2.setImageBitmap(bitmap2)
-        toBitmap2.setImageBitmap(original2Buffer.toBitmap(rs))
+        toBitmap2.setImageBitmap(original2Buffer.asBitmap())
 
         originalBuffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        convert.setImageBitmap(nv21Buffer.toBitmap(rs))
-        rotate90.setImageBitmap(nv21Rotate90Buffer.toBitmap(rs))
-        mirror.setImageBitmap(nv21MirrorBuffer.toBitmap(rs))
-        scale.setImageBitmap(nv21ScaleBuffer.toBitmap(rs))
+        convert.setImageBitmap(nv21Buffer.asBitmap())
+        rotate90.setImageBitmap(nv21Rotate90Buffer.asBitmap())
+        mirror.setImageBitmap(nv21MirrorBuffer.asBitmap())
+        scale.setImageBitmap(nv21ScaleBuffer.asBitmap())
 
         original2Buffer.convertTo(i420Buffer)
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        convert2.setImageBitmap(nv21Buffer.toBitmap(rs))
-        rotate902.setImageBitmap(nv21Rotate90Buffer.toBitmap(rs))
-        mirror2.setImageBitmap(nv21MirrorBuffer.toBitmap(rs))
-        scale2.setImageBitmap(nv21ScaleBuffer.toBitmap(rs))
+        convert2.setImageBitmap(nv21Buffer.asBitmap())
+        rotate902.setImageBitmap(nv21Rotate90Buffer.asBitmap())
+        mirror2.setImageBitmap(nv21MirrorBuffer.asBitmap())
+        scale2.setImageBitmap(nv21ScaleBuffer.asBitmap())
 
-        originalBuffer.release()
-        original2Buffer.release()
-        i420Buffer.release()
-        nv21Buffer.release()
-        rotate90Buffer.release()
-        nv21Rotate90Buffer.release()
-        nv21MirrorBuffer.release()
-        nv21ScaleBuffer.release()
-    }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    override fun onDestroy() {
-        rs.destroy()
-
-        super.onDestroy()
+        originalBuffer.close()
+        original2Buffer.close()
+        i420Buffer.close()
+        nv21Buffer.close()
+        rotate90Buffer.close()
+        nv21Rotate90Buffer.close()
+        nv21MirrorBuffer.close()
+        nv21ScaleBuffer.close()
     }
 }

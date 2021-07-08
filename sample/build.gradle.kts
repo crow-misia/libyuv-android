@@ -7,7 +7,7 @@ android {
     buildToolsVersion(Versions.buildTools)
     compileSdkVersion(Versions.compileSdk)
     defaultConfig {
-        applicationId = "com.example.libyuv"
+        applicationId = "com.github.crow_misia.libyuv"
         minSdkVersion(11)
         targetSdkVersion(Versions.targetSdk)
         versionCode = 1

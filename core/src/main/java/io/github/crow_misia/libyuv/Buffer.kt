@@ -1,15 +1,22 @@
 package io.github.crow_misia.libyuv
 
-interface Buffer {
+import java.io.Closeable
+import java.nio.Buffer
+
+interface Buffer : Closeable, BitmapConverter {
     val width: Int
 
     val height: Int
+
+    fun asBuffer(): Buffer
 
     fun asByteArray(): ByteArray
 
     fun asByteArray(dst: ByteArray)
 
+    @Deprecated("delete")
     fun retain()
 
-    fun release()
+    @Deprecated(message = "replace close method", replaceWith = ReplaceWith("close()"))
+    fun release() = close()
 }

@@ -1,25 +1,27 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Bitmap
 import java.nio.ByteBuffer
 
 /**
  * RGB12 (R444 fourcc) little endian
  */
 class Argb4444Buffer private constructor(
-    val bufferARGB4444: ByteBuffer,
-
+    internal val buffer: ByteBuffer,
     internal val strideARGB4444: Int,
-
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?
-) : Buffer {
-    private val refCountDelegate = RefCountDelegate(releaseCallback)
-    override fun retain() = refCountDelegate.retain()
-    override fun release() = refCountDelegate.release()
-
-    override fun asByteArray() = bufferARGB4444.asByteArray()
-    override fun asByteArray(dst: ByteArray) = bufferARGB4444.asByteArray(dst)
+    releaseCallback: Runnable?,
+) : AbstractBuffer(releaseCallback) {
+    override fun asBuffer() = buffer
+    override fun asByteArray() = buffer.asByteArray()
+    override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    override fun asBitmap(): Bitmap {
+        return ArgbBuffer.allocate(width, height).use {
+            convertTo(it)
+            it.asBitmap()
+        }
+    }
 
     companion object {
         @JvmStatic

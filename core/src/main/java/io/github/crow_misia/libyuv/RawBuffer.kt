@@ -1,25 +1,27 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Bitmap
 import java.nio.ByteBuffer
 
 /**
  * RGB big endian (rgb in memory)
  */
 class RawBuffer private constructor(
-    val bufferRAW: ByteBuffer,
-
+    internal val buffer: ByteBuffer,
     internal val strideRAW: Int,
-
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?
-) : Buffer {
-    private val refCountDelegate = RefCountDelegate(releaseCallback)
-    override fun retain() = refCountDelegate.retain()
-    override fun release() = refCountDelegate.release()
-
-    override fun asByteArray() = bufferRAW.asByteArray()
-    override fun asByteArray(dst: ByteArray) = bufferRAW.asByteArray(dst)
+    releaseCallback: Runnable?,
+) : AbstractBuffer(releaseCallback) {
+    override fun asBuffer() = buffer
+    override fun asByteArray() = buffer.asByteArray()
+    override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    override fun asBitmap(): Bitmap {
+        return ArgbBuffer.allocate(width, height).use {
+            convertTo(it)
+            it.asBitmap()
+        }
+    }
 
     companion object {
         @JvmStatic

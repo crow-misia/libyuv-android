@@ -1,31 +1,32 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Bitmap
 import java.nio.ByteBuffer
 
 /**
  * I444 (BT.601) YUV Format. 4:4:4 24bpp
  */
 class I444Buffer private constructor(
-    private val buffer: ByteBuffer,
-
+    internal val buffer: ByteBuffer,
     val bufferY: ByteBuffer,
     val bufferU: ByteBuffer,
     val bufferV: ByteBuffer,
-
     internal val strideY: Int,
     internal val strideU: Int,
     internal val strideV: Int,
-
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?
-) : Buffer {
-    private val refCountDelegate = RefCountDelegate(releaseCallback)
-    override fun retain() = refCountDelegate.retain()
-    override fun release() = refCountDelegate.release()
-
+    releaseCallback: Runnable?,
+) : AbstractBuffer(releaseCallback) {
+    override fun asBuffer() = buffer
     override fun asByteArray() = buffer.asByteArray()
     override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    override fun asBitmap(): Bitmap {
+        return AbgrBuffer.allocate(width, height).use {
+            convertTo(it)
+            it.asBitmap()
+        }
+    }
 
     companion object {
         @JvmStatic

@@ -1,25 +1,25 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Bitmap
+import io.github.crow_misia.libyuv.BitmapConverter.Companion.toBitmap
 import java.nio.ByteBuffer
 
 /**
  * RGB16 (RGBP fourcc) little endian
  */
 class Rgb565Buffer private constructor(
-    val bufferRGB565: ByteBuffer,
-
+    internal val buffer: ByteBuffer,
     internal val strideRGB565: Int,
-
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?
-) : Buffer {
-    private val refCountDelegate = RefCountDelegate(releaseCallback)
-    override fun retain() = refCountDelegate.retain()
-    override fun release() = refCountDelegate.release()
-
-    override fun asByteArray() = bufferRGB565.asByteArray()
-    override fun asByteArray(dst: ByteArray) = bufferRGB565.asByteArray(dst)
+    releaseCallback: Runnable?,
+) : AbstractBuffer(releaseCallback) {
+    override fun asBuffer() = buffer
+    override fun asByteArray() = buffer.asByteArray()
+    override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    override fun asBitmap(): Bitmap {
+        return buffer.toBitmap(width, height, Bitmap.Config.RGB_565)
+    }
 
     companion object {
         @JvmStatic

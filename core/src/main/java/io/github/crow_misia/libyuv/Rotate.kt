@@ -27,12 +27,12 @@ fun U420Buffer.rotate(dst: U420Buffer, rotateMode: RotateMode) {
 }
 
 fun I400Buffer.rotate(dst: I400Buffer, rotateMode: RotateMode) {
-    Yuv.rotateRotatePlane(bufferY, strideY, dst.bufferY, dst.strideY,
+    Yuv.rotateRotatePlane(buffer, strideY, dst.buffer, dst.strideY,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
 fun J400Buffer.rotate(dst: J400Buffer, rotateMode: RotateMode) {
-    Yuv.rotateRotatePlane(bufferY, strideY, dst.bufferY, dst.strideY,
+    Yuv.rotateRotatePlane(buffer, strideY, dst.buffer, dst.strideY,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
@@ -85,22 +85,22 @@ fun Nv21Buffer.rotate(dst: Nv21Buffer, rotateMode: RotateMode) {
 }
 
 fun AbgrBuffer.rotate(dst: AbgrBuffer, rotateMode: RotateMode) {
-    Yuv.rotateARGBRotate(bufferABGR, strideABGR, dst.bufferABGR, dst.strideABGR,
+    Yuv.rotateARGBRotate(buffer, strideABGR, dst.buffer, dst.strideABGR,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
 fun ArgbBuffer.rotate(dst: ArgbBuffer, rotateMode: RotateMode) {
-    Yuv.rotateARGBRotate(bufferARGB, strideARGB, dst.bufferARGB, dst.strideARGB,
+    Yuv.rotateARGBRotate(buffer, strideARGB, dst.buffer, dst.strideARGB,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
 fun BgraBuffer.rotate(dst: BgraBuffer, rotateMode: RotateMode) {
-    Yuv.rotateARGBRotate(bufferBGRA, strideBGRA, dst.bufferBGRA, dst.strideBGRA,
+    Yuv.rotateARGBRotate(buffer, strideBGRA, dst.buffer, dst.strideBGRA,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
 fun RgbaBuffer.rotate(dst: RgbaBuffer, rotateMode: RotateMode) {
-    Yuv.rotateARGBRotate(bufferRGBA, strideRGBA, dst.bufferRGBA, dst.strideRGBA,
+    Yuv.rotateARGBRotate(buffer, strideRGBA, dst.buffer, dst.strideRGBA,
         calculateWidth(this, dst, rotateMode), calculateHeight(this, dst, rotateMode), rotateMode.degrees)
 }
 
