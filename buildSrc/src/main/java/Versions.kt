@@ -1,6 +1,6 @@
 object Versions {
     const val kotlin = "1.5.10"
-    const val gradlePlugin = "4.2.1"
+    const val gradlePlugin = "4.2.2"
     const val dokkaPlugin = "1.4.32"
 
     const val ndk = "23.0.7123448"
