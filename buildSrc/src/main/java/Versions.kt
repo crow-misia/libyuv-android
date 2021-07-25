@@ -10,4 +10,8 @@ object Versions {
     const val minSdk = 9
 
     const val core = "0.10.0"
+
+    const val androidXTest = "1.4.0"
+    const val androidXTestExt = "1.1.3"
+    const val truth = "1.1.3"
 }

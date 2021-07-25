@@ -20,6 +20,7 @@ android {
     defaultConfig {
         minSdkVersion(Versions.minSdk)
         consumerProguardFiles("consumer-proguard-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -51,6 +52,12 @@ android {
     }
     ndkVersion = Versions.ndk
 
+    sourceSets {
+        getByName("androidTest").manifest {
+            srcFile("src/androidTest/AndroidManifest.xml")
+        }
+    }
+
     kotlin {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
@@ -64,6 +71,12 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib", Versions.kotlin))
+
+    androidTestImplementation(Deps.testRunner)
+    androidTestImplementation(Deps.testRules)
+    androidTestImplementation(Deps.textExtJunit)
+    androidTestImplementation(Deps.testExtTruth)
+    androidTestImplementation(Deps.truth)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
