@@ -14,16 +14,16 @@ group = Maven.groupId
 version = Versions.core
 
 android {
-    buildToolsVersion(Versions.buildTools)
-    compileSdkVersion(Versions.compileSdk)
+    buildToolsVersion = Versions.buildTools
+    compileSdk = Versions.compileSdk
 
     defaultConfig {
-        minSdkVersion(Versions.minSdk)
+        minSdk = Versions.minSdk
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions {
+    lint {
         textReport = true
         textOutput("stdout")
     }
@@ -35,12 +35,10 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-            isDebuggable = false
+        debug {
             isJniDebuggable = false
         }
-        getByName("release") {
-            isDebuggable = false
+        release {
             isJniDebuggable = false
         }
     }
