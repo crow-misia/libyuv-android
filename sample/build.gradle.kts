@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    buildToolsVersion(Versions.buildTools)
-    compileSdkVersion(Versions.compileSdk)
+    buildToolsVersion = "31.0.0"
+    compileSdk = 31
     defaultConfig {
         applicationId = "com.github.crow_misia.libyuv"
-        minSdkVersion(Versions.minSdk)
-        targetSdkVersion(Versions.targetSdk)
+        minSdk = 9
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -31,11 +31,9 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
-    ndkVersion = Versions.ndk
 }
 
 dependencies {
-    implementation(kotlin("stdlib", Versions.kotlin))
+    implementation(kotlin("stdlib"))
     implementation(project(":core"))
 }

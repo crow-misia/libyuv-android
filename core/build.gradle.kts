@@ -10,15 +10,29 @@ plugins {
     id("maven-publish")
 }
 
+object Maven {
+    const val groupId = "io.github.crow-misia.libyuv"
+    const val artifactId = "libyuv-android"
+    const val name = "libyuv-android"
+    const val desc = "LibYuv for Android"
+    const val version = "0.10.0"
+    const val siteUrl = "https://github.com/crow-misia/libyuv-android"
+    const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
+    const val licenseName = "The Apache Software License, Version 2.0"
+    const val licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    const val licenseDist = "repo"
+    val licenses = arrayOf("Apache-2.0")
+}
+
 group = Maven.groupId
-version = Versions.core
+version = Maven.version
 
 android {
-    buildToolsVersion = Versions.buildTools
-    compileSdk = Versions.compileSdk
+    buildToolsVersion = "31.0.0"
+    compileSdk = 31
 
     defaultConfig {
-        minSdk = Versions.minSdk
+        minSdk = 9
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,7 +62,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = Versions.ndk
+    ndkVersion = "22.1.7171670"
 
     sourceSets {
         getByName("androidTest").manifest {
@@ -68,13 +82,13 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", Versions.kotlin))
+    implementation(kotlin("stdlib"))
 
-    androidTestImplementation(Deps.testRunner)
-    androidTestImplementation(Deps.testRules)
-    androidTestImplementation(Deps.textExtJunit)
-    androidTestImplementation(Deps.testExtTruth)
-    androidTestImplementation(Deps.truth)
+    androidTestImplementation("androidx.test:runner:_")
+    androidTestImplementation("androidx.test:rules:_")
+    androidTestImplementation("androidx.test.ext:junit-ktx:_")
+    androidTestImplementation("androidx.test.ext:truth::_")
+    androidTestImplementation("com.google.truth:truth:_")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -89,7 +103,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins(Deps.dokkaJavadocPlugin)
+        plugins("org.jetbrains.dokka:javadoc-plugin:_")
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
@@ -111,7 +125,6 @@ afterEvaluate {
 
                 groupId = Maven.groupId
                 artifactId = Maven.artifactId
-                version = Versions.core
 
                 println("""
                     |Creating maven publication
@@ -129,10 +142,10 @@ afterEvaluate {
                     url.set(Maven.siteUrl)
 
                     scm {
-                        val scmUrl = "scm:git:${Maven.gitUrl}"
+                        val scmUrl = "scm:git:_"
                         connection.set(scmUrl)
                         developerConnection.set(scmUrl)
-                        url.set(this@pom.url)
+                        url.set(Maven.gitUrl)
                         tag.set("HEAD")
                     }
 
@@ -160,7 +173,7 @@ afterEvaluate {
             maven {
                 val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
                 val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
-                url = if (Versions.core.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                url = if (Maven.version.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
                 val sonatypeUsername: String? by project
                 val sonatypePassword: String? by project
                 credentials {
