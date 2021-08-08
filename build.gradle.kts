@@ -14,6 +14,13 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 val clean by tasks.creating(Delete::class) {
     group = "build"
     delete(rootProject.buildDir)

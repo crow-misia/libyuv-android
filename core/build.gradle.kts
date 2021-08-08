@@ -84,10 +84,10 @@ android {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    androidTestImplementation("androidx.test:runner:_")
-    androidTestImplementation("androidx.test:rules:_")
-    androidTestImplementation("androidx.test.ext:junit-ktx:_")
-    androidTestImplementation("androidx.test.ext:truth::_")
+    androidTestImplementation(AndroidX.test.runner)
+    androidTestImplementation(AndroidX.test.rules)
+    androidTestImplementation(AndroidX.test.ext.junitKtx)
+    androidTestImplementation(AndroidX.test.ext.truth)
     androidTestImplementation("com.google.truth:truth:_")
 }
 
