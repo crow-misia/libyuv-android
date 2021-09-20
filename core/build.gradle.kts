@@ -62,7 +62,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "22.1.7171670"
+    ndkVersion = "23.0.7599858"
 
     sourceSets {
         getByName("androidTest").manifest {
