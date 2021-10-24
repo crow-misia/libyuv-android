@@ -22,7 +22,8 @@ namespace libyuv {
 
 // TODO(fbarchard): clang x86 has a higher accuracy YUV to RGB.
 // Port to Visual C and other CPUs
-#if !defined(LIBYUV_DISABLE_X86) && (defined(__x86_64__) || defined(__i386__))
+#if !defined(LIBYUV_BIT_EXACT) && !defined(LIBYUV_DISABLE_X86) && \
+    (defined(__x86_64__) || defined(__i386__))
 #define ERROR_FULL 5
 #define ERROR_J420 4
 #else
@@ -608,10 +609,10 @@ static void PrintHistogram(int rh[256], int gh[256], int bh[256]) {
 
 // Step by 5 on inner loop goes from 0 to 255 inclusive.
 // Set to 1 for better converage.  3, 5 or 17 for faster testing.
-#ifdef ENABLE_SLOW_TESTS
-#define FASTSTEP 1
-#else
+#ifdef DISABLE_SLOW_TESTS
 #define FASTSTEP 5
+#else
+#define FASTSTEP 1
 #endif
 
 // BT.601 limited range.
