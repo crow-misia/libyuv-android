@@ -15,22 +15,20 @@ PLANES_3_TO_3_R(I444Rotate, y, u, v, y, u, v);
 // Rotate NV12 input and store in I420.
 PLANES_2_TO_3_R(NV12ToI420Rotate, y, uv, y, u ,v);
 
+// Convert Android420 to I420 with rotation. "rotation" can be 0, 90, 180 or 270.
+PLANES_4_TO_3_R(Android420ToI420Rotate, y, u, v, uv, y, u, v);
+
 // Rotate a plane by 0, 90, 180, or 270.
 PLANES_1_TO_1_R(RotatePlane, p, p);
 
-// Rotations for when U and V are interleaved. Deprecated
-PLANES_1_TO_2_V(RotateUV90, p, a, b);
-
-// Rotations for when U and V are interleaved. Deprecated
-PLANES_1_TO_2_V(RotateUV180, p, a, b);
-
-// Rotations for when U and V are interleaved. Deprecated
-PLANES_1_TO_2_V(RotateUV270, p, a, b);
+// Rotate UV and split into planar.
+// width and height expected to be half size for NV12
+PLANES_1_TO_2_R(SplitRotateUV, uv, u, v);
 
 // The 90 and 270 functions are based on transposes. Deprecated
 PLANES_1_TO_1_V(TransposePlane, p, p);
 
-PLANES_1_TO_2_V(TransposeUV, p, a, b);
+PLANES_1_TO_2_V(SplitTransposeUV, p, a, b);
 
 static int rotateNV12RotateInternal(
         const uint8_t *src_y, int src_stride_y,
@@ -38,23 +36,23 @@ static int rotateNV12RotateInternal(
         uint8_t *dst_y, const int dst_stride_y,
         uint8_t *dst_uv, const int dst_stride_uv,
         uint8_t *plane_u, uint8_t *plane_v,
-        const int width, const int height, const int halfwidth, const int halfheight, const int mode) {
+        const int width, const int height, const int half_width, const int half_height, const int mode) {
 
     switch (mode) {
         case kRotate90:
             RotatePlane90(src_y, src_stride_y, dst_y, dst_stride_y, width, height);
-            RotateUV90(src_uv, src_stride_uv, plane_u, halfheight, plane_v, halfheight, halfwidth, halfheight);
-            MergeUVPlane(plane_u, halfheight, plane_v, halfheight, dst_uv, dst_stride_uv, halfheight, halfwidth);
+            SplitRotateUV90(src_uv, src_stride_uv, plane_u, half_height, plane_v, half_height, half_width, half_height);
+            MergeUVPlane(plane_u, half_height, plane_v, half_height, dst_uv, dst_stride_uv, half_height, half_width);
             break;
         case kRotate270:
             RotatePlane270(src_y, src_stride_y, dst_y, dst_stride_y, width, height);
-            RotateUV270(src_uv, src_stride_uv, plane_u, halfheight, plane_v, halfheight, halfwidth, halfheight);
-            MergeUVPlane(plane_u, halfheight, plane_v, halfheight, dst_uv, dst_stride_uv, halfheight, halfwidth);
+            SplitRotateUV270(src_uv, src_stride_uv, plane_u, half_height, plane_v, half_height, half_width, half_height);
+            MergeUVPlane(plane_u, half_height, plane_v, half_height, dst_uv, dst_stride_uv, half_height, half_width);
             break;
         case kRotate180:
             RotatePlane180(src_y, src_stride_y, dst_y, dst_stride_y, width, height);
-            RotateUV180(src_uv, src_stride_uv, plane_u, halfwidth, plane_v, halfwidth, halfwidth, halfheight);
-            MergeUVPlane(plane_u, halfwidth, plane_v, halfwidth, dst_uv, dst_stride_uv, halfwidth, halfheight);
+            SplitRotateUV180(src_uv, src_stride_uv, plane_u, half_width, plane_v, half_width, half_width, half_height);
+            MergeUVPlane(plane_u, half_width, plane_v, half_width, dst_uv, dst_stride_uv, half_width, half_height);
             break;
         default:
             break;

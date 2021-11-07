@@ -583,32 +583,30 @@ internal object Yuv {
                                         dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
                                         width: Int, height: Int, rotateMode: Int)
 
+    /** Convert Android420 to I420 with rotation. "rotation" can be 0, 90, 180 or 270 */
+    external fun rotateAndroid420ToI420Rotate(srcY: ByteBuffer, srcStrideY: Int, srcUV: ByteBuffer, srcStrideUV: Int,
+                                              srcPixelStrideUV: Int,
+                                              dstY: ByteBuffer, dstStrideY: Int, dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                              width: Int, height: Int, rotateMode: Int)
+
     /** Rotate a plane by 0, 90, 180, or 270 */
     external fun rotateRotatePlane(src: ByteBuffer, srcStride: Int,
                                    dst: ByteBuffer, dstStride: Int,
                                    width: Int, height: Int, rotateMode: Int)
 
-    external fun rotateRotateUV90(src: ByteBuffer, srcStride: Int,
-                                  dstA: ByteBuffer, dstStrideA: Int, dstB: ByteBuffer, dstStrideB: Int,
-                                  width: Int, height: Int)
-
-    /** Rotations for when U and V are interleaved. Deprecated */
-    external fun rotateRotateUV180(src: ByteBuffer, srcStride: Int,
-                                   dstA: ByteBuffer, dstStrideA: Int, dstB: ByteBuffer, dstStrideB: Int,
-                                   width: Int, height: Int)
-
-    external fun rotateRotateUV270(src: ByteBuffer, srcStride: Int,
-                                   dstA: ByteBuffer, dstStrideA: Int, dstB: ByteBuffer, dstStrideB: Int,
-                                   width: Int, height: Int)
+    /** Rotate UV and split into planar. width and height expected to be half size for NV12 */
+    external fun rotateSplitRotateUV(srcUV: ByteBuffer, srcUVStride: Int,
+                                     dstU: ByteBuffer, dstStrideU: Int, dstV: ByteBuffer, dstStrideV: Int,
+                                     width: Int, height: Int, rotateMode: Int)
 
     /** The 90 and 270 functions are based on transposes. Deprecated */
     external fun rotateTransposePlane(src: ByteBuffer, srcStride: Int,
                                       dst: ByteBuffer, dstStride: Int,
                                       width: Int, height: Int)
 
-    external fun rotateTransposeUV(src: ByteBuffer, srcStride: Int,
-                                   dstA: ByteBuffer, dstStrideA: Int, dstB: ByteBuffer, dstStrideB: Int,
-                                   width: Int, height: Int)
+    external fun rotateSplitTransposeUV(src: ByteBuffer, srcStride: Int,
+                                        dstA: ByteBuffer, dstStrideA: Int, dstB: ByteBuffer, dstStrideB: Int,
+                                        width: Int, height: Int)
 
     // rotate_argb.cpp
 
