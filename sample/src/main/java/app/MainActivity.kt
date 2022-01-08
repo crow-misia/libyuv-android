@@ -1,51 +1,22 @@
 package app
 
-import android.annotation.TargetApi
-import android.app.Activity
 import android.graphics.*
-import android.os.Build
 import android.os.Bundle
-import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import app.databinding.ActivityMainBinding
 import io.github.crow_misia.libyuv.*
 
-/**
- * This activity demonstrates how to use JNI to encode and decode ogg/vorbis audio
- */
-class MainActivity : Activity() {
-    private lateinit var origin: ImageView
-    private lateinit var toBitmap: ImageView
-    private lateinit var convert: ImageView
-    private lateinit var rotate90: ImageView
-    private lateinit var mirror: ImageView
-    private lateinit var scale: ImageView
-    private lateinit var origin2: ImageView
-    private lateinit var toBitmap2: ImageView
-    private lateinit var convert2: ImageView
-    private lateinit var rotate902: ImageView
-    private lateinit var mirror2: ImageView
-    private lateinit var scale2: ImageView
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-
-        origin = findViewById(R.id.origin)
-        toBitmap = findViewById(R.id.to_bitmap)
-        convert = findViewById(R.id.convert)
-        rotate90 = findViewById(R.id.rotate90)
-        mirror = findViewById(R.id.mirror)
-        origin2 = findViewById(R.id.origin_2)
-        toBitmap2 = findViewById(R.id.to_bitmap_2)
-        convert2 = findViewById(R.id.convert_2)
-        rotate902 = findViewById(R.id.rotate90_2)
-        mirror2 = findViewById(R.id.mirror_2)
-        scale = findViewById(R.id.scale)
-        scale2 = findViewById(R.id.scale_2)
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onResume() {
         super.onResume()
 
@@ -70,8 +41,8 @@ class MainActivity : Activity() {
             it.drawRect(50f, 50f, 150f, 150f, Paint().also { p -> p.color = Color.BLACK })
         }
         bitmap.copyPixelsToBuffer(originalBuffer.asBuffer())
-        origin.setImageBitmap(bitmap)
-        toBitmap.setImageBitmap(originalBuffer.asBitmap())
+        binding.origin.setImageBitmap(bitmap)
+        binding.toBitmap.setImageBitmap(originalBuffer.asBitmap())
 
         Canvas(bitmap2).also {
             it.drawRect(0f, 0f, 1920f, 1080f, Paint().also { p ->
@@ -80,27 +51,27 @@ class MainActivity : Activity() {
             it.drawRect(50f, 50f, 150f, 150f, Paint().also { p -> p.color = Color.BLACK })
         }
         bitmap2.copyPixelsToBuffer(original2Buffer.asBuffer())
-        origin2.setImageBitmap(bitmap2)
-        toBitmap2.setImageBitmap(original2Buffer.asBitmap())
+        binding.origin2.setImageBitmap(bitmap2)
+        binding.toBitmap2.setImageBitmap(original2Buffer.asBitmap())
 
         originalBuffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        convert.setImageBitmap(nv21Buffer.asBitmap())
-        rotate90.setImageBitmap(nv21Rotate90Buffer.asBitmap())
-        mirror.setImageBitmap(nv21MirrorBuffer.asBitmap())
-        scale.setImageBitmap(nv21ScaleBuffer.asBitmap())
+        binding.convert.setImageBitmap(nv21Buffer.asBitmap())
+        binding.rotate90.setImageBitmap(nv21Rotate90Buffer.asBitmap())
+        binding.mirror.setImageBitmap(nv21MirrorBuffer.asBitmap())
+        binding.scale.setImageBitmap(nv21ScaleBuffer.asBitmap())
 
         original2Buffer.convertTo(i420Buffer)
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        convert2.setImageBitmap(nv21Buffer.asBitmap())
-        rotate902.setImageBitmap(nv21Rotate90Buffer.asBitmap())
-        mirror2.setImageBitmap(nv21MirrorBuffer.asBitmap())
-        scale2.setImageBitmap(nv21ScaleBuffer.asBitmap())
+        binding.convert2.setImageBitmap(nv21Buffer.asBitmap())
+        binding.rotate902.setImageBitmap(nv21Rotate90Buffer.asBitmap())
+        binding.mirror2.setImageBitmap(nv21MirrorBuffer.asBitmap())
+        binding.scale2.setImageBitmap(nv21ScaleBuffer.asBitmap())
 
 
         originalBuffer.close()

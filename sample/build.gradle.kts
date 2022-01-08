@@ -8,17 +8,21 @@ android {
     compileSdk = 31
     defaultConfig {
         applicationId = "com.github.crow_misia.libyuv"
-        minSdk = 9
+        minSdk = 14
         targetSdk = 31
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions {
+    lint {
         textReport = true
         textOutput("stdout")
         ignore("InvalidPackage")
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -31,9 +35,21 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
+    kotlin {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "1.8"
+            apiVersion = "1.6"
+            languageVersion = "1.6"
+        }
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
     implementation(project(":core"))
+    implementation(Kotlin.stdlib)
+
+    implementation(AndroidX.activity)
+    implementation(AndroidX.appCompat)
 }

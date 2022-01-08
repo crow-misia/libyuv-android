@@ -82,7 +82,7 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation(Kotlin.stdlib)
 
     androidTestImplementation(AndroidX.test.runner)
     androidTestImplementation(AndroidX.test.rules)
