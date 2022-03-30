@@ -28,8 +28,8 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "31.0.0"
-    compileSdk = 31
+    buildToolsVersion = "32.0.0"
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 9
@@ -39,7 +39,6 @@ android {
 
     lint {
         textReport = true
-        textOutput("stdout")
     }
 
     libraryVariants.all {
@@ -62,7 +61,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "23.1.7779620"
+    ndkVersion = "24.0.8215888"
 
     sourceSets {
         getByName("androidTest").manifest {
