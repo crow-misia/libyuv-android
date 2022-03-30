@@ -65,10 +65,6 @@ group("libyuv") {
     deps += [ ":libyuv_msa" ]
   }
 
-  if (libyuv_use_mmi) {
-    deps += [ ":libyuv_mmi" ]
-  }
-
   if (!is_ios && !libyuv_disable_jpeg) {
     # Make sure that clients of libyuv link with libjpeg. This can't go in
     # libyuv_internal because in Windows x64 builds that will generate a clang
@@ -98,6 +94,7 @@ static_library("libyuv_internal") {
     "include/libyuv/row.h",
     "include/libyuv/scale.h",
     "include/libyuv/scale_argb.h",
+    "include/libyuv/scale_rgb.h",
     "include/libyuv/scale_row.h",
     "include/libyuv/scale_uv.h",
     "include/libyuv/version.h",
@@ -134,6 +131,7 @@ static_library("libyuv_internal") {
     "source/scale_argb.cc",
     "source/scale_common.cc",
     "source/scale_gcc.cc",
+    "source/scale_rgb.cc",
     "source/scale_uv.cc",
     "source/scale_win.cc",
     "source/video_common.cc",
@@ -173,9 +171,6 @@ static_library("libyuv_internal") {
       # "-mfma",
       "-ffp-contract=fast",  # Enable fma vectorization for NEON.
     ]
-  }
-  if (!libyuv_use_mmi) {
-    defines += [ "LIBYUV_DISABLE_MMI" ]
   }
 }
 
@@ -230,22 +225,6 @@ if (libyuv_use_msa) {
   }
 }
 
-if (libyuv_use_mmi) {
-  static_library("libyuv_mmi") {
-    sources = [
-      # MMI Source Files
-      "source/compare_mmi.cc",
-      "source/rotate_mmi.cc",
-      "source/row_mmi.cc",
-      "source/scale_mmi.cc",
-    ]
-
-    deps = [ ":libyuv_internal" ]
-
-    public_configs = [ ":libyuv_config" ]
-  }
-}
-
 if (libyuv_include_tests) {
   config("libyuv_unittest_warnings_config") {
     if (!is_win) {
@@ -281,6 +260,7 @@ if (libyuv_include_tests) {
       "unit_test/rotate_argb_test.cc",
       "unit_test/rotate_test.cc",
       "unit_test/scale_argb_test.cc",
+      "unit_test/scale_rgb_test.cc",
       "unit_test/scale_test.cc",
       "unit_test/scale_uv_test.cc",
       "unit_test/unit_test.cc",
