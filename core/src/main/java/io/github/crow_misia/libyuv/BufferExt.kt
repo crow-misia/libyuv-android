@@ -7,7 +7,7 @@ internal fun ByteBuffer.asByteArray(): ByteArray {
     val results = ByteArray(capacity)
     val srcObj: Any = if (isDirect) this else array()
 
-    Yuv.memcopy(results, srcObj, capacity)
+    Yuv.memcopy(results, 0, srcObj, capacity)
     return results
 }
 
@@ -16,7 +16,7 @@ internal fun ByteBuffer.asByteArray(dst: ByteArray) {
     val srcObj: Any = if (isDirect) this else array()
     check(dst.size >= capacity) { "dst size is less than capacity" }
 
-    Yuv.memcopy(dst, srcObj, capacity)
+    Yuv.memcopy(dst, 0, srcObj, capacity)
 }
 
 internal fun createByteBuffer(capacity: Int): ByteBuffer {

@@ -1,22 +1,28 @@
 package io.github.crow_misia.libyuv
 
+import java.io.ByteArrayOutputStream
 import java.io.Closeable
-import java.nio.Buffer
+import java.nio.ByteBuffer
 
 interface Buffer : Closeable, BitmapConverter {
+    /**
+     * Planes.
+     */
+    val planes: Array<Plane>
+
+    /**
+     * Image width.
+     */
     val width: Int
 
+    /**
+     * Image height.
+     */
     val height: Int
 
-    fun asBuffer(): Buffer
-
+    fun asBuffer(): ByteBuffer
     fun asByteArray(): ByteArray
-
     fun asByteArray(dst: ByteArray)
-
-    @Deprecated("delete")
-    fun retain()
-
-    @Deprecated(message = "replace close method", replaceWith = ReplaceWith("close()"))
-    fun release() = close()
+    fun write(stream: ByteArrayOutputStream)
+    fun write(buffer: ByteBuffer)
 }

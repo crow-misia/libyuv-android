@@ -15,7 +15,7 @@ object Maven {
     const val artifactId = "libyuv-android"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"
-    const val version = "0.16.0"
+    const val version = "0.17.0"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
@@ -82,6 +82,8 @@ android {
 
 dependencies {
     implementation(Kotlin.stdlib)
+    implementation(AndroidX.annotation)
+    implementation(AndroidX.camera.core)
 
     androidTestImplementation(AndroidX.test.runner)
     androidTestImplementation(AndroidX.test.rules)

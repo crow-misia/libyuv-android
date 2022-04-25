@@ -1,21 +1,22 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
+import android.media.Image
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * ARGB little endian (bgra in memory)
  */
 class ArgbBuffer private constructor(
-    internal val buffer: ByteBuffer,
-    internal val strideARGB: Int,
+    buffer: ByteBuffer?,
+    val plane: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?,
-) : AbstractBuffer(releaseCallback) {
-    override fun asBuffer() = buffer
-    override fun asByteArray() = buffer.asByteArray()
-    override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    releaseCallback: Runnable? = null,
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
     override fun asBitmap(): Bitmap {
         return AbgrBuffer.allocate(width, height).use {
             convertTo(it)
@@ -35,7 +36,12 @@ class ArgbBuffer private constructor(
         fun allocate(width: Int, height: Int): ArgbBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
-            return ArgbBuffer(buffer, stride, width, height) {
+            return ArgbBuffer(
+                buffer = buffer,
+                plane = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+            ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
@@ -44,7 +50,51 @@ class ArgbBuffer private constructor(
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): ArgbBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
-            return ArgbBuffer(buffer.sliceRange(0, capacity), stride, width, height, releaseCallback)
+            val sliceBuffer = buffer.sliceRange(0, capacity)
+            return ArgbBuffer(
+                buffer = buffer,
+                plane = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                releaseCallback = releaseCallback,
+            )
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        fun wrap(plane: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): ArgbBuffer {
+            return ArgbBuffer(
+                buffer = plane.buffer,
+                plane = plane,
+                width = width,
+                height = height,
+                releaseCallback = releaseCallback,
+            )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
+        @JvmStatic
+        @JvmName("from")
+        fun Image.toArgbBuffer(): ArgbBuffer {
+            val plane = planes[0]
+            return ArgbBuffer(
+                buffer = plane.buffer,
+                plane = PlaneNative(plane),
+                width = width,
+                height = height,
+            )
+        }
+
+        @JvmStatic
+        @JvmName("from")
+        fun ImageProxy.toArgbBuffer(): ArgbBuffer {
+            val plane = planes[0]
+            return ArgbBuffer(
+                buffer = plane.buffer,
+                plane = PlaneProxy(plane),
+                width = width,
+                height = height,
+            )
         }
     }
 }

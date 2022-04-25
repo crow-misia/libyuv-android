@@ -8,7 +8,7 @@ android {
     compileSdk = 32
     defaultConfig {
         applicationId = "com.github.crow_misia.libyuv"
-        minSdk = 14
+        minSdk = 21
         targetSdk = 32
         versionCode = 1
         versionName = "1.0.0"

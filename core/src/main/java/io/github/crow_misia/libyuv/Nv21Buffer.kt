@@ -1,24 +1,23 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
+import android.media.Image
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * NV21 YUV Format. 4:2:0 12bpp
  */
 class Nv21Buffer private constructor(
-    internal val buffer: ByteBuffer,
-    val bufferY: ByteBuffer,
-    val bufferVU: ByteBuffer,
-    internal val strideY: Int,
-    internal val strideVU: Int,
+    buffer: ByteBuffer?,
+    val planeY: Plane,
+    val planeVU: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable?,
-) : AbstractBuffer(releaseCallback) {
-    override fun asBuffer() = buffer
-    override fun asByteArray() = buffer.asByteArray()
-    override fun asByteArray(dst: ByteArray) = buffer.asByteArray(dst)
+    releaseCallback: Runnable? = null,
+) : AbstractBuffer(buffer, arrayOf(planeY, planeVU), releaseCallback) {
     override fun asBitmap(): Bitmap {
         return AbgrBuffer.allocate(width, height).use {
             convertTo(it)
@@ -39,7 +38,13 @@ class Nv21Buffer private constructor(
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityVU)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
-            return Nv21Buffer(buffer, bufferY, bufferVU, strideY, strideVU, width, height) {
+            return Nv21Buffer(
+                buffer = buffer,
+                planeY = PlanePrimitive(strideY, bufferY),
+                planeVU = PlanePrimitive(strideVU, bufferVU),
+                width = width,
+                height = height,
+            ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
@@ -49,7 +54,52 @@ class Nv21Buffer private constructor(
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Nv21Buffer {
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
-            return Nv21Buffer(buffer.duplicate(), bufferY, bufferVU, strideY, strideVU, width, height, releaseCallback)
+            return Nv21Buffer(
+                buffer = buffer,
+                planeY = PlanePrimitive(strideY, bufferY),
+                planeVU = PlanePrimitive(strideVU, bufferVU),
+                width = width,
+                height = height,
+                releaseCallback = releaseCallback,
+            )
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): Nv21Buffer {
+            return Nv21Buffer(
+                buffer = null,
+                planeY = planeY,
+                planeVU = planeVU,
+                width = width,
+                height = height,
+                releaseCallback = releaseCallback,
+            )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.KITKAT)
+        @JvmStatic
+        @JvmName("from")
+        fun Image.toNv21Buffer(): Nv21Buffer {
+            return Nv21Buffer(
+                buffer = null,
+                planeY = PlaneNative(planes[0]),
+                planeVU = PlaneNative(planes[1]),
+                width = width,
+                height = height,
+            )
+        }
+
+        @JvmStatic
+        @JvmName("from")
+        fun ImageProxy.toNv21Buffer(): Nv21Buffer {
+            return Nv21Buffer(
+                buffer = null,
+                planeY = PlaneProxy(planes[0]),
+                planeVU = PlaneProxy(planes[1]),
+                width = width,
+                height = height,
+            )
         }
     }
 }
