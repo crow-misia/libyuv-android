@@ -106,6 +106,86 @@ fun J400Buffer.rotate(dst: J400Buffer, rotateMode: RotateMode) {
     )
 }
 
+fun I422Buffer.rotate(dst: I422Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI422Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
+fun J422Buffer.rotate(dst: J422Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI422Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
+fun H422Buffer.rotate(dst: H422Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI422Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
+fun U422Buffer.rotate(dst: U422Buffer, rotateMode: RotateMode) {
+    Yuv.rotateI422Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
 fun I444Buffer.rotate(dst: I444Buffer, rotateMode: RotateMode) {
     Yuv.rotateI444Rotate(
         srcY = planeY.buffer,
@@ -214,6 +294,38 @@ fun Nv12Buffer.rotate(dst: Nv12Buffer, rotateMode: RotateMode) {
         dstStrideY = dst.planeY.rowStride,
         dstUV = dst.planeUV.buffer,
         dstStrideUV = dst.planeUV.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
+fun Nv12Buffer.rotate(dst: Nv21Buffer, rotateMode: RotateMode) {
+    Yuv.rotateNV12ToNV21Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcUV = planeUV.buffer,
+        srcStrideUV = planeUV.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstVU = dst.planeVU.buffer,
+        dstStrideVU = dst.planeVU.rowStride,
+        width = calculateWidth(this, dst, rotateMode),
+        height = calculateHeight(this, dst, rotateMode),
+        rotateMode = rotateMode.degrees,
+    )
+}
+
+fun Nv21Buffer.rotate(dst: Nv12Buffer, rotateMode: RotateMode) {
+    Yuv.rotateNV12ToNV21Rotate(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcUV = planeVU.buffer,
+        srcStrideUV = planeVU.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstVU = dst.planeUV.buffer,
+        dstStrideVU = dst.planeUV.rowStride,
         width = calculateWidth(this, dst, rotateMode),
         height = calculateHeight(this, dst, rotateMode),
         rotateMode = rotateMode.degrees,

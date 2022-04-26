@@ -206,6 +206,94 @@ fun U444Buffer.scale(dst: U444Buffer, filterMode: FilterMode) {
     )
 }
 
+fun I422Buffer.scale(dst: I422Buffer, filterMode: FilterMode) {
+    Yuv.scaleI422Scale(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        srcWidth = width,
+        srcHeight = height,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        dstWidth = dst.width,
+        dstHeight = dst.height,
+        filterMode = filterMode.mode,
+    )
+}
+
+fun J422Buffer.scale(dst: J422Buffer, filterMode: FilterMode) {
+    Yuv.scaleI422Scale(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        srcWidth = width,
+        srcHeight = height,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        dstWidth = dst.width,
+        dstHeight = dst.height,
+        filterMode = filterMode.mode,
+    )
+}
+
+fun H422Buffer.scale(dst: H422Buffer, filterMode: FilterMode) {
+    Yuv.scaleI422Scale(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        srcWidth = width,
+        srcHeight = height,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        dstWidth = dst.width,
+        dstHeight = dst.height,
+        filterMode = filterMode.mode,
+    )
+}
+
+fun U422Buffer.scale(dst: U422Buffer, filterMode: FilterMode) {
+    Yuv.scaleI422Scale(
+        srcY = planeY.buffer,
+        srcStrideY = planeY.rowStride,
+        srcU = planeU.buffer,
+        srcStrideU = planeU.rowStride,
+        srcV = planeV.buffer,
+        srcStrideV = planeV.rowStride,
+        srcWidth = width,
+        srcHeight = height,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        dstWidth = dst.width,
+        dstHeight = dst.height,
+        filterMode = filterMode.mode,
+    )
+}
+
 fun Nv12Buffer.scale(dst: Nv12Buffer, filterMode: FilterMode) {
     Yuv.scaleNV12Scale(
         srcY = planeY.buffer,

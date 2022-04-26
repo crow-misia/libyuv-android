@@ -350,6 +350,22 @@ fun RawBuffer.convertTo(dst: I420Buffer) {
 }
 
 @JvmName("convert")
+fun RawBuffer.convertTo(dst: J420Buffer) {
+    Yuv.convertRAWToJ420(
+        srcRAW = plane.buffer,
+        srcStrideRAW = plane.rowStride,
+        dstY = dst.planeY.buffer,
+        dstStrideY = dst.planeY.rowStride,
+        dstU = dst.planeU.buffer,
+        dstStrideU = dst.planeU.rowStride,
+        dstV = dst.planeV.buffer,
+        dstStrideV = dst.planeV.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
 fun Rgb565Buffer.convertTo(dst: I420Buffer) {
     Yuv.convertRGB565ToI420(
         srcRGB565 = plane.buffer,
@@ -424,7 +440,43 @@ fun RawBuffer.convertTo(dst: J400Buffer) {
 // convert_argb
 
 @JvmName("convert")
+fun AbgrBuffer.convertTo(dst: AbgrBuffer) {
+    Yuv.convertARGBCopy(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstARGB = dst.plane.buffer,
+        dstStrideARGB = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
 fun ArgbBuffer.convertTo(dst: ArgbBuffer) {
+    Yuv.convertARGBCopy(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstARGB = dst.plane.buffer,
+        dstStrideARGB = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
+fun BgraBuffer.convertTo(dst: BgraBuffer) {
+    Yuv.convertARGBCopy(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstARGB = dst.plane.buffer,
+        dstStrideARGB = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
+fun RgbaBuffer.convertTo(dst: RgbaBuffer) {
     Yuv.convertARGBCopy(
         srcARGB = plane.buffer,
         srcStrideARGB = plane.rowStride,
@@ -1524,6 +1576,30 @@ fun ArgbBuffer.convertTo(dst: RgbaBuffer) {
 }
 
 @JvmName("convert")
+fun AbgrBuffer.convertTo(dst: Rgb24Buffer) {
+    Yuv.convertARGBToRAW(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstRAW = dst.plane.buffer,
+        dstStrideRAW = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
+fun AbgrBuffer.convertTo(dst: RawBuffer) {
+    Yuv.convertARGBToRGB24(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstRGB24 = dst.plane.buffer,
+        dstStrideRGB24 = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("convert")
 fun ArgbBuffer.convertTo(dst: Rgb24Buffer) {
     Yuv.convertARGBToRGB24(
         srcARGB = plane.buffer,
@@ -2032,6 +2108,18 @@ fun RawBuffer.convertTo(dst: Rgb24Buffer) {
         srcStrideRAW = plane.rowStride,
         dstRGB24 = dst.plane.buffer,
         dstStrideRGB24 = dst.plane.rowStride,
+        width = min(width, dst.width),
+        height = min(height, dst.height),
+    )
+}
+
+@JvmName("copyAlpha")
+fun ArgbBuffer.copyAlphaTo(dst: ArgbBuffer) {
+    Yuv.planerARGBCopyAlpha(
+        srcARGB = plane.buffer,
+        srcStrideARGB = plane.rowStride,
+        dstARGB = dst.plane.buffer,
+        dstStrideARGB = dst.plane.rowStride,
         width = min(width, dst.width),
         height = min(height, dst.height),
     )

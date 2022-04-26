@@ -284,6 +284,20 @@ internal object Yuv {
         height: Int
     )
 
+    /** RGB big endian (rgb in memory) to J420 */
+    external fun convertRAWToJ420(
+        srcRAW: ByteBuffer,
+        srcStrideRAW: Int,
+        dstY: ByteBuffer,
+        dstStrideY: Int,
+        dstU: ByteBuffer,
+        dstStrideU: Int,
+        dstV: ByteBuffer,
+        dstStrideV: Int,
+        width: Int,
+        height: Int
+    )
+
     /** RGB16 (RGBP fourcc) little endian to I420 */
     external fun convertRGB565ToI420(
         srcRGB565: ByteBuffer,
@@ -1319,6 +1333,25 @@ internal object Yuv {
         rotateMode: Int
     )
 
+    /** Rotate I422 frame */
+    external fun rotateI422Rotate(
+        srcY: ByteBuffer,
+        srcStrideY: Int,
+        srcU: ByteBuffer,
+        srcStrideU: Int,
+        srcV: ByteBuffer,
+        srcStrideV: Int,
+        dstY: ByteBuffer,
+        dstStrideY: Int,
+        dstU: ByteBuffer,
+        dstStrideU: Int,
+        dstV: ByteBuffer,
+        dstStrideV: Int,
+        width: Int,
+        height: Int,
+        rotateMode: Int
+    )
+
     /** Rotate I444 frame */
     external fun rotateI444Rotate(
         srcY: ByteBuffer,
@@ -1418,6 +1451,27 @@ internal object Yuv {
     )
 
     external fun scaleI420Scale(
+        srcY: ByteBuffer,
+        srcStrideY: Int,
+        srcU: ByteBuffer,
+        srcStrideU: Int,
+        srcV: ByteBuffer,
+        srcStrideV: Int,
+        srcWidth: Int,
+        srcHeight: Int,
+        dstY: ByteBuffer,
+        dstStrideY: Int,
+        dstU: ByteBuffer,
+        dstStrideU: Int,
+        dstV: ByteBuffer,
+        dstStrideV: Int,
+        dstWidth: Int,
+        dstHeight: Int,
+        filterMode: Int
+    )
+
+
+    external fun scaleI422Scale(
         srcY: ByteBuffer,
         srcStrideY: Int,
         srcU: ByteBuffer,
@@ -1611,6 +1665,41 @@ internal object Yuv {
         width: Int, height: Int
     )
 
+    /** Copy Alpha channel of ARGB to alpha of ARGB */
+    external fun planerARGBCopyAlpha(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int
+    )
+
+    /** Extract the alpha channel from ARGB */
+    external fun planerARGBExtractAlpha(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstA: ByteBuffer, dstStrideA: Int,
+        width: Int, height: Int
+    )
+
+    /** Copy Y channel to Alpha of ARGB */
+    external fun planerARGBCopyYToAlpha(
+        srcY: ByteBuffer, srcStrideY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int
+    )
+
+    /** Convert unattentuated ARGB to preattenuated ARGB */
+    external fun planerARGBAttenuate(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int
+    )
+
+    /** Convert preattentuated ARGB to unattenuated ARGB */
+    external fun planerARGBUnattenuate(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int
+    )
+
     // memcopy.cpp
 
     external fun memcopy(
@@ -1634,4 +1723,10 @@ internal object Yuv {
         width: Int, height: Int, rotateMode: Int
     )
 
+    /** Rotate NV12 to NV21 frame */
+    external fun rotateNV12ToNV21Rotate(
+        srcY: ByteBuffer, srcStrideY: Int, srcUV: ByteBuffer, srcStrideUV: Int,
+        dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int, rotateMode: Int
+    )
 }

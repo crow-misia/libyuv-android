@@ -20,6 +20,12 @@ PLANES_3_TO_3(I422ToI420, y, u, v, y, u, v);
 // Convert I422 to I444.
 PLANES_3_TO_3(I422ToI444, y, u, v, y, u, v);
 
+// Convert I422 to I210.
+
+// Convert MM21 to NV12.
+
+// Convert MM21 to I420.
+
 // Convert I422 to NV21.
 PLANES_3_TO_2(I422ToNV21, y, u, v, y, vu);
 
@@ -69,7 +75,7 @@ PLANES_3_TO_3(I420Copy, y, u, v, y, u, v);
 // I010ToI410
 
 // Convert I012 to I412
-// I010ToI410
+// #define I012ToI412 I010ToI410
 
 // Convert I210 to I410
 // I210ToI410
@@ -162,6 +168,9 @@ PLANES_1_TO_3(RGB24ToJ420, rgb24, y, u, v);
 
 // RGB big endian (rgb in memory) to I420.
 PLANES_1_TO_3(RAWToI420, raw, y, u, v);
+
+// RGB big endian (rgb in memory) to J420.
+PLANES_1_TO_3(RAWToJ420, raw, y, u, v);
 
 // RGB16 (RGBP fourcc) little endian to I420.
 PLANES_1_TO_3(RGB565ToI420, rgb565, y, u, v);

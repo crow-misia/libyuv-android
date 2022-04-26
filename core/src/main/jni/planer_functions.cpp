@@ -15,6 +15,12 @@ extern "C" {
 // Set a plane of data to a 32 bit value.
 // SetPlane
 
+// Convert a plane of tiles of 16 x H to linear.
+// DetilePlane
+
+// Convert a UV plane of tiles of 16 x H into linear U and V planes.
+// DetileSplitUVPlane
+
 // Split interleaved UV plane into separate U and V planes.
 // SplitUVPlane
 
@@ -51,6 +57,18 @@ extern "C" {
 // Merge separate R, G, B and A planes into one interleaved ARGB plane.
 // MergeARGBPlane
 
+// Merge separate 'depth' bit R, G and B planes stored in lsb
+// into one interleaved XR30 plane.
+// MergeXR30Plane
+
+// Merge separate 'depth' bit R, G, B and A planes stored in lsb
+// into one interleaved AR64 plane.
+// MergeAR64Plane
+
+// Merge separate 'depth' bit R, G, B and A planes stored in lsb
+// into one interleaved ARGB plane.
+// MergeARGB16To8Plane
+
 // Copy I400.  Supports inverting. duplicate I400Copy
 // PLANES_1_TO_1(I400ToI400, y, y);
 
@@ -63,6 +81,10 @@ PLANES_3_TO_3(I422Copy, y, u, v, y, u, v);
 // Copy I444 to I444.
 // #define I444ToI444 I444Copy
 PLANES_3_TO_3(I444Copy, y, u, v, y, u, v);
+
+// Copy I210 to I210.
+// #define I210ToI210 I210Copy
+// I210Copy
 
 // Copy NV12. Supports inverting.
 PLANES_2_TO_2(NV12Copy, y, vu, y, uv);
@@ -167,10 +189,10 @@ PLANES_1_TO_1(RAWToRGB24, raw, rgb24);
 // ARGBCopy
 
 // Copy Alpha channel of ARGB to alpha of ARGB.
-PLANES_1_TO_1(ARGBCopyAlpha, argb, a);
+PLANES_1_TO_1(ARGBCopyAlpha, argb, argb);
 
 // Extract the alpha channel from ARGB.
-// ARGBExtractAlpha
+PLANES_1_TO_1(ARGBExtractAlpha, argb, a);
 
 // Copy Y channel to Alpha of ARGB.
 PLANES_1_TO_1(ARGBCopyYToAlpha, y, argb);
@@ -208,4 +230,40 @@ PLANES_1_TO_1(ARGBAttenuate, argb, argb);
 // Convert preattentuated ARGB to unattenuated ARGB.
 PLANES_1_TO_1(ARGBUnattenuate, argb, argb);
 
+// Blur ARGB image.
+// ARGBBlur
+
+// Gaussian 5x5 blur a float plane.
+// GaussPlane_F32
+
+// Multiply ARGB image by ARGB value.
+// ARGBShade
+
+// Interpolate between two images using specified amount of interpolation
+// (0 to 255) and store to destination.
+// InterpolatePlane
+
+// Interpolate between two ARGB images using specified amount of interpolation
+// Internally calls InterpolatePlane with width * 4 (bpp).
+// ARGBInterpolate
+
+// Interpolate between two YUV images using specified amount of interpolation
+// Internally calls InterpolatePlane on each plane where the U and V planes
+// are half width and half height.
+// I420Interpolate
+
+// Shuffle ARGB channel order.  e.g. BGRA to ARGB.
+// ARGBShuffle
+
+// Shuffle AR64 channel order.  e.g. AR64 to AB64.
+// AR64Shuffle
+
+// Sobel ARGB effect with planar output.
+// ARGBSobelToPlane
+
+// Sobel ARGB effect.
+// ARGBSobel
+
+// Sobel ARGB effect w/ Sobel X, Sobel, Sobel Y in ARGB.
+// ARGBSobelXY
 }

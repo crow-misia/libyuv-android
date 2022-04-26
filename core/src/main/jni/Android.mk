@@ -17,7 +17,8 @@ LOCAL_SRC_FILES := \
     rotate.cpp \
     rotate_argb.cpp \
     scale.cpp \
-    scale_argb.cpp
+    scale_argb.cpp \
+    scale_uv.cpp
 
 LOCAL_EXPORT_C_INCLUDES := \
     $(LOCAL_PATH)/nativehelper \

@@ -76,10 +76,10 @@ PLANES_1_TO_3(ARGBToJ420, argb, y, u, v);
 PLANES_1_TO_3(ARGBToJ422, argb, y, u, v);
 
 // Convert ARGB to J400. (JPeg full range)
-PLANES_1_TO_1(ARGBToJ400, argb, y);
+PLANES_1_TO_1(ARGBToJ400, argb, yj);
 
 // Convert RGBA to J400. (JPeg full range)
-PLANES_1_TO_1(RGBAToJ400, rgba, y);
+PLANES_1_TO_1(RGBAToJ400, rgba, yj);
 
 // Convert ARGB to I400.
 PLANES_1_TO_1(ARGBToI400, argb, y);
@@ -104,5 +104,8 @@ PLANES_1_TO_2(ABGRToNV21, abgr, y, vu);
 
 // Convert ARGB To UYVY.
 // ARGBToUYVY
+
+// RAW to JNV21 full range NV21
+// RAWToJNV21
 
 }

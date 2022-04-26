@@ -345,8 +345,14 @@ PLANES_3_TO_1(I420ToARGB4444, y, u, v, argb4444);
 // Convert I420 to AR30
 // I420ToAR30
 
+// Convert I420 to AB30.
+// I420ToAB30
+
 // Convert H420 to AR30
 // H420ToAR30
+
+// Convert H420 to AB30.
+// H420ToAB30
 
 // Convert I420 to ARGB with matrix.
 // I420ToARGBMatrix
@@ -465,6 +471,48 @@ PLANES_3_TO_1(I420ToARGB4444, y, u, v, argb4444);
 
 // Convert I400 (grey) to ARGB.  Reverse of ARGBToI400.
 // I400ToARGBMatrix
+
+// Convert I420 to ARGB with matrix and UV filter mode.
+// I420ToARGBMatrixFilter
+
+// Convert I422 to ARGB with matrix and UV filter mode.
+// I422ToARGBMatrixFilter
+
+// Convert I010 to AR30 with matrix and UV filter mode.
+// I010ToAR30MatrixFilter
+
+// Convert I210 to AR30 with matrix and UV filter mode.
+// I210ToAR30MatrixFilter
+
+// Convert I010 to ARGB with matrix and UV filter mode.
+// I010ToARGBMatrixFilter
+
+// Convert I210 to ARGB with matrix and UV filter mode.
+// I210ToARGBMatrixFilter
+
+// Convert I420 with Alpha to attenuated ARGB with matrix and UV filter mode.
+// I420AlphaToARGBMatrixFilter
+
+// Convert I422 with Alpha to attenuated ARGB with matrix and UV filter mode.
+// I422AlphaToARGBMatrixFilter
+
+// Convert I010 with Alpha to attenuated ARGB with matrix and UV filter mode.
+// I010AlphaToARGBMatrixFilter
+
+// Convert I210 with Alpha to attenuated ARGB with matrix and UV filter mode.
+// I210AlphaToARGBMatrixFilter
+
+// Convert P010 to ARGB with matrix and UV filter mode.
+// P010ToARGBMatrixFilter
+
+// Convert P210 to ARGB with matrix and UV filter mode.
+// P210ToARGBMatrixFilter
+
+// Convert P010 to AR30 with matrix and UV filter mode.
+// P010ToAR30MatrixFilter
+
+// Convert P210 to AR30 with matrix and UV filter mode.
+// P210ToAR30MatrixFilter
 
 // Convert camera sample to ARGB with cropping, rotation and vertical flip.
 // ConvertToARGB
