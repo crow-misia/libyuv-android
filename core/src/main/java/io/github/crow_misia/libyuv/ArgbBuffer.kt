@@ -49,6 +49,8 @@ class ArgbBuffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): ArgbBuffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return ArgbBuffer(

@@ -55,6 +55,8 @@ class H422Buffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): H422Buffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
             return H422Buffer(

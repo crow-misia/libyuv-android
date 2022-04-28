@@ -46,6 +46,8 @@ class Yuv24Buffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Yuv24Buffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Yuv24Buffer(

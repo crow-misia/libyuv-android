@@ -52,6 +52,8 @@ class Nv12Buffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Nv12Buffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
             val (bufferY, bufferUV) = buffer.slice(capacityY, capacityUV)
             return Nv12Buffer(

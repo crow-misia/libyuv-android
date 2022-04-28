@@ -47,6 +47,8 @@ class I400Buffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): I400Buffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (strideY, capacity) = getStrideWithCapacity(width, height)
             val bufferY = buffer.sliceRange(0, capacity)
             return I400Buffer(

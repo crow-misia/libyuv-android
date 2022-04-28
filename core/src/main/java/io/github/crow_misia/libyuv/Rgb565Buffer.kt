@@ -47,6 +47,8 @@ class Rgb565Buffer private constructor(
         @JvmStatic
         @JvmOverloads
         fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Rgb565Buffer {
+            check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
+
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Rgb565Buffer(
