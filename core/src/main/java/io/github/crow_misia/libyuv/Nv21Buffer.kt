@@ -18,13 +18,6 @@ class Nv21Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable? = null,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeVU), releaseCallback) {
-    override fun asBitmap(): Bitmap {
-        return AbgrBuffer.allocate(width, height).use {
-            convertTo(it)
-            it.asBitmap()
-        }
-    }
-
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {

@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream
 import java.io.Closeable
 import java.nio.ByteBuffer
 
-interface Buffer : Closeable, BitmapConverter {
+interface Buffer : Closeable {
     /**
      * Planes.
      */

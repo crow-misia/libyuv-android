@@ -17,10 +17,6 @@ class Yuv24Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable? = null,
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
-    override fun asBitmap(): Bitmap {
-        throw UnsupportedOperationException()
-    }
-
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {

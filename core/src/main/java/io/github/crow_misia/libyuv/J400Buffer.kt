@@ -17,13 +17,6 @@ class J400Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable? = null,
 ) : AbstractBuffer(buffer, arrayOf(planeYJ), releaseCallback) {
-    override fun asBitmap(): Bitmap {
-        return ArgbBuffer.allocate(width, height).use {
-            convertTo(it)
-            it.asBitmap()
-        }
-    }
-
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {

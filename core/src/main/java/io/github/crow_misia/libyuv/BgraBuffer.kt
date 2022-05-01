@@ -17,13 +17,6 @@ class BgraBuffer private constructor(
     override val height: Int,
     releaseCallback: Runnable? = null,
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
-    override fun asBitmap(): Bitmap {
-        return ArgbBuffer.allocate(width, height).use {
-            convertTo(it)
-            it.asBitmap()
-        }
-    }
-
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {

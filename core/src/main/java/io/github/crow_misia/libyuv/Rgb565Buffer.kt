@@ -17,7 +17,7 @@ class Rgb565Buffer private constructor(
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable? = null,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter {
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.RGB_565)
     }

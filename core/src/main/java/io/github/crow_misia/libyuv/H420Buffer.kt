@@ -19,13 +19,6 @@ class H420Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable? = null,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
-    override fun asBitmap(): Bitmap {
-        return AbgrBuffer.allocate(width, height).use { buf ->
-            convertTo(buf)
-            buf.asBitmap()
-        }
-    }
-
     companion object {
         @JvmStatic
         fun getStrideWithCapacity(width: Int, height: Int): IntArray {
