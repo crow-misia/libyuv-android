@@ -1,16 +1,11 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * J400 (jpeg grey) YUV Format. 4:0:0 8bpp
  */
-class J400Buffer private constructor(
+class J400Buffer internal constructor(
     buffer: ByteBuffer?,
     val planeYJ: Plane,
     override val width: Int,
@@ -65,29 +60,6 @@ class J400Buffer private constructor(
             )
         }
 
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toJ400Buffer(): J400Buffer {
-            val plane = planes[0]
-            return J400Buffer(
-                buffer = plane.buffer,
-                planeYJ = PlaneNative(plane),
-                width = width,
-                height = height,
-            )
-        }
 
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toJ400Buffer(): J400Buffer {
-            val plane = planes[0]
-            return J400Buffer(
-                buffer = plane.buffer,
-                planeYJ = PlaneProxy(plane),
-                width = width,
-                height = height,
-            )
-        }
     }
 }

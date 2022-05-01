@@ -1,16 +1,11 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * U444 (BT.2020) YUV Format. 4:4:4 24bpp
  */
-class U444Buffer private constructor(
+class U444Buffer internal constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     val planeU: Plane,
@@ -72,33 +67,6 @@ class U444Buffer private constructor(
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,
-            )
-        }
-
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toU444Buffer(): U444Buffer {
-            return U444Buffer(
-                buffer = null,
-                planeY = PlaneNative(planes[0]),
-                planeU = PlaneNative(planes[1]),
-                planeV = PlaneNative(planes[2]),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toU444Buffer(): U444Buffer {
-            return U444Buffer(
-                buffer = null,
-                planeY = PlaneProxy(planes[0]),
-                planeU = PlaneProxy(planes[1]),
-                planeV = PlaneProxy(planes[2]),
-                width = width,
-                height = height,
             )
         }
     }

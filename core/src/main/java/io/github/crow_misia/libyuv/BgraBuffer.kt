@@ -1,10 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
@@ -64,31 +59,6 @@ class BgraBuffer private constructor(
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,
-            )
-        }
-
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toBgraBuffer(): BgraBuffer {
-            val plane = planes[0]
-            return BgraBuffer(
-                buffer = plane.buffer,
-                plane = PlaneNative(plane),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toBgraBuffer(): BgraBuffer {
-            val plane = planes[0]
-            return BgraBuffer(
-                buffer = plane.buffer,
-                plane = PlaneProxy(plane),
-                width = width,
-                height = height,
             )
         }
     }

@@ -1,17 +1,13 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import io.github.crow_misia.libyuv.BitmapConverter.Companion.toBitmap
 import java.nio.ByteBuffer
 
 /**
  * ABGR little endian (rgba in memory).
  */
-class AbgrBuffer private constructor(
+class AbgrBuffer internal constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,
@@ -69,31 +65,6 @@ class AbgrBuffer private constructor(
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,
-            )
-        }
-
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toAbgrBuffer(): AbgrBuffer {
-            val plane = planes[0]
-            return AbgrBuffer(
-                buffer = plane.buffer,
-                plane = PlaneNative(plane),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toAbgrBuffer(): AbgrBuffer {
-            val plane = planes[0]
-            return AbgrBuffer(
-                buffer = plane.buffer,
-                plane = PlaneProxy(plane),
-                width = width,
-                height = height,
             )
         }
     }

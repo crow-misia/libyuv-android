@@ -1,16 +1,11 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * RGB15 (RGBO fourcc) little endian
  */
-class Argb1555Buffer private constructor(
+class Argb1555Buffer internal constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,
@@ -64,31 +59,6 @@ class Argb1555Buffer private constructor(
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,
-            )
-        }
-
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toArgb1555Buffer(): Argb1555Buffer {
-            val plane = planes[0]
-            return Argb1555Buffer(
-                buffer = plane.buffer,
-                plane = PlaneNative(plane),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toArgb1555Buffer(): Argb1555Buffer {
-            val plane = planes[0]
-            return Argb1555Buffer(
-                buffer = plane.buffer,
-                plane = PlaneProxy(plane),
-                width = width,
-                height = height,
             )
         }
     }

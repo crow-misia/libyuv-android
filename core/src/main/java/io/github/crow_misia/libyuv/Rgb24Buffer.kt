@@ -1,16 +1,11 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * RGB little endian (bgr in memory)
  */
-class Rgb24Buffer private constructor(
+class Rgb24Buffer internal constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,
@@ -64,31 +59,6 @@ class Rgb24Buffer private constructor(
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,
-            )
-        }
-
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toRgb24Buffer(): Rgb24Buffer {
-            val plane = planes[0]
-            return Rgb24Buffer(
-                buffer = plane.buffer,
-                plane = PlaneNative(plane),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toRgb24Buffer(): Rgb24Buffer {
-            val plane = planes[0]
-            return Rgb24Buffer(
-                buffer = plane.buffer,
-                plane = PlaneProxy(plane),
-                width = width,
-                height = height,
             )
         }
     }

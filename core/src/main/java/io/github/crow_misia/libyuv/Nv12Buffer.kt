@@ -1,16 +1,11 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Bitmap
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 /**
  * NV12 YUV Format. 4:2:0 12bpp
  */
-class Nv12Buffer private constructor(
+class Nv12Buffer internal constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     val planeUV: Plane,
@@ -72,29 +67,5 @@ class Nv12Buffer private constructor(
             )
         }
 
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.toNv12Buffer(): Nv12Buffer {
-            return Nv12Buffer(
-                buffer = null,
-                planeY = PlaneNative(planes[0]),
-                planeUV = PlaneNative(planes[1]),
-                width = width,
-                height = height,
-            )
-        }
-
-        @JvmStatic
-        @JvmName("from")
-        fun ImageProxy.toNv12Buffer(): Nv12Buffer {
-            return Nv12Buffer(
-                buffer = null,
-                planeY = PlaneProxy(planes[0]),
-                planeUV = PlaneProxy(planes[1]),
-                width = width,
-                height = height,
-            )
-        }
     }
 }
