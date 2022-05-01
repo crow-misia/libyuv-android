@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * YUV 24bpp
  */
-class Yuv24Buffer internal constructor(
+class Yuv24Buffer private constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,

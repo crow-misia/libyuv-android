@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * I400 (grey) YUV Format. 4:0:0 8bpp
  */
-class I400Buffer internal constructor(
+class I400Buffer private constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     override val width: Int,

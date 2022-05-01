@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * J400 (jpeg grey) YUV Format. 4:0:0 8bpp
  */
-class J400Buffer internal constructor(
+class J400Buffer private constructor(
     buffer: ByteBuffer?,
     val planeYJ: Plane,
     override val width: Int,
@@ -50,10 +50,10 @@ class J400Buffer internal constructor(
 
         @JvmStatic
         @JvmOverloads
-        fun wrap(planeY: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): J400Buffer {
+        fun wrap(planeYJ: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): J400Buffer {
             return J400Buffer(
-                buffer = planeY.buffer,
-                planeYJ = planeY,
+                buffer = planeYJ.buffer,
+                planeYJ = planeYJ,
                 width = width,
                 height = height,
                 releaseCallback = releaseCallback,

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * RGBA little endian (abgr in memory)
  */
-class RgbaBuffer internal constructor(
+class RgbaBuffer private constructor(
     buffer: ByteBuffer,
     val plane: Plane,
     override val width: Int,

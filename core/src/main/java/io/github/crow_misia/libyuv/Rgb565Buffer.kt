@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 /**
  * RGB16 (RGBP fourcc) little endian
  */
-class Rgb565Buffer internal constructor(
+class Rgb565Buffer private constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,

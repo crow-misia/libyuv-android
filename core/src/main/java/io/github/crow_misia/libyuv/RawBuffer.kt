@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * RGB big endian (rgb in memory)
  */
-class RawBuffer internal constructor(
+class RawBuffer private constructor(
     buffer: ByteBuffer?,
     val plane: Plane,
     override val width: Int,

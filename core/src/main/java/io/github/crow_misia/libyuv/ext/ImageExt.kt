@@ -43,8 +43,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toAbgrBuffer(): AbgrBuffer {
         val plane = planes[0]
-        return AbgrBuffer(
-            buffer = plane.buffer,
+        return AbgrBuffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -60,8 +59,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toArgb1555Buffer(): Argb1555Buffer {
         val plane = planes[0]
-        return Argb1555Buffer(
-            buffer = plane.buffer,
+        return Argb1555Buffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -77,8 +75,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toArgb4444Buffer(): Argb4444Buffer {
         val plane = planes[0]
-        return Argb4444Buffer(
-            buffer = plane.buffer,
+        return Argb4444Buffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -94,8 +91,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toArgbBuffer(): ArgbBuffer {
         val plane = planes[0]
-        return ArgbBuffer(
-            buffer = plane.buffer,
+        return ArgbBuffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -111,8 +107,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toBgraBuffer(): BgraBuffer {
         val plane = planes[0]
-        return BgraBuffer(
-            buffer = plane.buffer,
+        return BgraBuffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -127,8 +122,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toH420Buffer(): H420Buffer {
-        return H420Buffer(
-            buffer = null,
+        return H420Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -145,8 +139,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toH422Buffer(): H422Buffer {
-        return H422Buffer(
-            buffer = null,
+        return H422Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -163,8 +156,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toH444Buffer(): H444Buffer {
-        return H444Buffer(
-            buffer = null,
+        return H444Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -182,8 +174,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toI400Buffer(): I400Buffer {
         val plane = planes[0]
-        return I400Buffer(
-            buffer = plane.buffer,
+        return I400Buffer.wrap(
             planeY = PlaneNative(plane),
             width = width,
             height = height,
@@ -198,8 +189,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toI420Buffer(): I420Buffer {
-        return I420Buffer(
-            buffer = null,
+        return I420Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -216,8 +206,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toI422Buffer(): I422Buffer {
-        return I422Buffer(
-            buffer = null,
+        return I422Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -234,8 +223,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toI444Buffer(): I444Buffer {
-        return I444Buffer(
-            buffer = null,
+        return I444Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -253,8 +241,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toJ400Buffer(): J400Buffer {
         val plane = planes[0]
-        return J400Buffer(
-            buffer = plane.buffer,
+        return J400Buffer.wrap(
             planeYJ = PlaneNative(plane),
             width = width,
             height = height,
@@ -269,8 +256,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toJ420Buffer(): J420Buffer {
-        return J420Buffer(
-            buffer = null,
+        return J420Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -287,8 +273,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toJ422Buffer(): J422Buffer {
-        return J422Buffer(
-            buffer = null,
+        return J422Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -305,8 +290,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toJ444Buffer(): J444Buffer {
-        return J444Buffer(
-            buffer = null,
+        return J444Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -323,8 +307,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toNv12Buffer(): Nv12Buffer {
-        return Nv12Buffer(
-            buffer = null,
+        return Nv12Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeUV = PlaneNative(planes[1]),
             width = width,
@@ -340,8 +323,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toNv21Buffer(): Nv21Buffer {
-        return Nv21Buffer(
-            buffer = null,
+        return Nv21Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeVU = PlaneNative(planes[1]),
             width = width,
@@ -358,8 +340,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toRawBuffer(): RawBuffer {
         val plane = planes[0]
-        return RawBuffer(
-            buffer = plane.buffer,
+        return RawBuffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -375,8 +356,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toRgb24Buffer(): Rgb24Buffer {
         val plane = planes[0]
-        return Rgb24Buffer(
-            buffer = plane.buffer,
+        return Rgb24Buffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -392,8 +372,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toRgb565Buffer(): Rgb565Buffer {
         val plane = planes[0]
-        return Rgb565Buffer(
-            buffer = plane.buffer,
+        return Rgb565Buffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -409,8 +388,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toRgbaBuffer(): RgbaBuffer {
         val plane = planes[0]
-        return RgbaBuffer(
-            buffer = plane.buffer,
+        return RgbaBuffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,
@@ -425,8 +403,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toU420Buffer(): U420Buffer {
-        return U420Buffer(
-            buffer = null,
+        return U420Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -443,8 +420,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toU422Buffer(): U422Buffer {
-        return U422Buffer(
-            buffer = null,
+        return U422Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -461,8 +437,7 @@ object ImageExt {
     @JvmStatic
     @JvmName("from")
     fun Image.toU444Buffer(): U444Buffer {
-        return U444Buffer(
-            buffer = null,
+        return U444Buffer.wrap(
             planeY = PlaneNative(planes[0]),
             planeU = PlaneNative(planes[1]),
             planeV = PlaneNative(planes[2]),
@@ -480,8 +455,7 @@ object ImageExt {
     @JvmName("from")
     fun Image.toYuv24Buffer(): Yuv24Buffer {
         val plane = planes[0]
-        return Yuv24Buffer(
-            buffer = plane.buffer,
+        return Yuv24Buffer.wrap(
             plane = PlaneNative(plane),
             width = width,
             height = height,

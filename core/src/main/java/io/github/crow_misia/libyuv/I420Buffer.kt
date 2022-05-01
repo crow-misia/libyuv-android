@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * I420 (BT.601) YUV Format. 4:2:0 12bpp
  */
-class I420Buffer internal constructor(
+class I420Buffer private constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     val planeU: Plane,

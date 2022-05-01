@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * H444 (BT.709) YUV Format. 4:4:4 24bpp
  */
-class H444Buffer internal constructor(
+class H444Buffer private constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     val planeU: Plane,

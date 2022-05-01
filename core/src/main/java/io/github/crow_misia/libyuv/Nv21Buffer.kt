@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 /**
  * NV21 YUV Format. 4:2:0 12bpp
  */
-class Nv21Buffer internal constructor(
+class Nv21Buffer private constructor(
     buffer: ByteBuffer?,
     val planeY: Plane,
     val planeVU: Plane,
