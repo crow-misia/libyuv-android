@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="io.github.crow_misia.libyuv"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest package="io.github.crow_misia.libyuv">
 
-    <application tools:overrideLibrary="androidx.camera.core" />
+    <application />
 
 </manifest>
