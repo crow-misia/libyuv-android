@@ -12,17 +12,15 @@ class U444Buffer private constructor(
     val planeV: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<U444Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val capacity = width * height
             return intArrayOf(width, capacity, width, capacity, width, capacity)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): U444Buffer {
+        override fun allocate(width: Int, height: Int): U444Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
@@ -38,9 +36,7 @@ class U444Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): U444Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): U444Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
@@ -52,13 +48,11 @@ class U444Buffer private constructor(
                 planeV = PlanePrimitive(strideV, bufferV),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): U444Buffer {
+        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): U444Buffer {
             return U444Buffer(
                 buffer = null,
                 planeY = planeY,
@@ -66,7 +60,7 @@ class U444Buffer private constructor(
                 planeV = planeV,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

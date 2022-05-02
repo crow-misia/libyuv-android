@@ -1,7 +1,6 @@
 package io.github.crow_misia.libyuv
 
 import java.io.ByteArrayOutputStream
-import java.lang.UnsupportedOperationException
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicReference
 
@@ -38,7 +37,7 @@ abstract class AbstractBuffer(
         var offset = 0
         planes.forEach { plane ->
             val size = plane.buffer.capacity()
-            Yuv.memcopy(dst, offset, plane.buffer, size)
+            plane.buffer.get(dst, offset, size)
             offset += size
         }
     }

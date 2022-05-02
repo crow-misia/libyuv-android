@@ -10,18 +10,16 @@ class RawBuffer private constructor(
     val plane: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<RawBuffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width * 3
             val capacity = stride * height
             return intArrayOf(stride, capacity)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): RawBuffer {
+        override fun allocate(width: Int, height: Int): RawBuffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
             return RawBuffer(
@@ -34,9 +32,7 @@ class RawBuffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): RawBuffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): RawBuffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (stride, capacity) = getStrideWithCapacity(width, height)
@@ -45,19 +41,17 @@ class RawBuffer private constructor(
                 plane = PlanePrimitive(stride, buffer.sliceRange(0, capacity)),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(plane: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): RawBuffer {
+        fun wrap(plane: Plane, width: Int, height: Int): RawBuffer {
             return RawBuffer(
                 buffer = plane.buffer,
                 plane = plane,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

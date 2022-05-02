@@ -10,16 +10,14 @@ class I400Buffer private constructor(
     val planeY: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<I400Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             return intArrayOf(width, width * height)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): I400Buffer {
+        override fun allocate(width: Int, height: Int): I400Buffer {
             val (strideY, capacity) = getStrideWithCapacity(width, height)
             val bufferY = createByteBuffer(capacity)
             return I400Buffer(
@@ -32,9 +30,7 @@ class I400Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): I400Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): I400Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacity) = getStrideWithCapacity(width, height)
@@ -44,19 +40,17 @@ class I400Buffer private constructor(
                 planeY = PlanePrimitive(strideY, bufferY),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeY: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): I400Buffer {
+        fun wrap(planeY: Plane, width: Int, height: Int): I400Buffer {
             return I400Buffer(
                 buffer = planeY.buffer,
                 planeY = planeY,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

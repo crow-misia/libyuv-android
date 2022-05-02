@@ -11,18 +11,16 @@ class Nv21Buffer private constructor(
     val planeVU: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeVU), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<Nv21Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val capacityY = width * height
             val capacityVU = (width + 1).shr(1) * height
             return intArrayOf(width, capacityY, width, capacityVU)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): Nv21Buffer {
+        override fun allocate(width: Int, height: Int): Nv21Buffer {
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityVU)
             val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
@@ -37,9 +35,7 @@ class Nv21Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Nv21Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Nv21Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
@@ -50,20 +46,18 @@ class Nv21Buffer private constructor(
                 planeVU = PlanePrimitive(strideVU, bufferVU),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): Nv21Buffer {
+        fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int): Nv21Buffer {
             return Nv21Buffer(
                 buffer = null,
                 planeY = planeY,
                 planeVU = planeVU,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

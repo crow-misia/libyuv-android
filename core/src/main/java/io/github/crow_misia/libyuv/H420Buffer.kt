@@ -12,19 +12,17 @@ class H420Buffer private constructor(
     val planeV: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<H420Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)
             val capacity = width * height
             val halfCapacity = (halfWidth + 1).shr(1) * height
             return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): H420Buffer {
+        override fun allocate(width: Int, height: Int): H420Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
             val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
@@ -40,9 +38,7 @@ class H420Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): H420Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): H420Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
@@ -54,13 +50,11 @@ class H420Buffer private constructor(
                 planeV = PlanePrimitive(strideV, bufferV),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): H420Buffer {
+        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): H420Buffer {
             return H420Buffer(
                 buffer = null,
                 planeY = planeY,
@@ -68,7 +62,7 @@ class H420Buffer private constructor(
                 planeV = planeV,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         val nv21Rotate90Buffer = Nv21Buffer.allocate(height, width)
         val nv21MirrorBuffer = Nv21Buffer.allocate(height, width)
         val nv21ScaleBuffer = Nv21Buffer.allocate(100, 100)
+        val forBitmapBuffer = AbgrBuffer.allocate(width, height)
+        val forBitmapRotateBuffer = AbgrBuffer.allocate(height, width)
+        val forBitmapScaleBuffer = AbgrBuffer.allocate(100, 100)
 
         // dummy draw
         Canvas(bitmap).also {
@@ -58,20 +61,30 @@ class MainActivity : AppCompatActivity() {
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        binding.convert.setImageBitmap(nv21Buffer.asBitmap())
-        binding.rotate90.setImageBitmap(nv21Rotate90Buffer.asBitmap())
-        binding.mirror.setImageBitmap(nv21MirrorBuffer.asBitmap())
-        binding.scale.setImageBitmap(nv21ScaleBuffer.asBitmap())
+
+        nv21Buffer.convertTo(forBitmapBuffer)
+        binding.convert.setImageBitmap(forBitmapBuffer.asBitmap())
+        nv21Rotate90Buffer.convertTo(forBitmapRotateBuffer)
+        binding.rotate90.setImageBitmap(forBitmapRotateBuffer.asBitmap())
+        nv21MirrorBuffer.convertTo(forBitmapBuffer)
+        binding.mirror.setImageBitmap(forBitmapBuffer.asBitmap())
+        nv21MirrorBuffer.convertTo(forBitmapScaleBuffer)
+        binding.scale.setImageBitmap(forBitmapScaleBuffer.asBitmap())
 
         original2Buffer.convertTo(i420Buffer)
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
-        binding.convert2.setImageBitmap(nv21Buffer.asBitmap())
-        binding.rotate902.setImageBitmap(nv21Rotate90Buffer.asBitmap())
-        binding.mirror2.setImageBitmap(nv21MirrorBuffer.asBitmap())
-        binding.scale2.setImageBitmap(nv21ScaleBuffer.asBitmap())
+
+        nv21Buffer.convertTo(forBitmapBuffer)
+        binding.convert2.setImageBitmap(forBitmapBuffer.asBitmap())
+        nv21Rotate90Buffer.convertTo(forBitmapRotateBuffer)
+        binding.rotate902.setImageBitmap(forBitmapRotateBuffer.asBitmap())
+        nv21MirrorBuffer.convertTo(forBitmapBuffer)
+        binding.mirror2.setImageBitmap(forBitmapBuffer.asBitmap())
+        nv21ScaleBuffer.convertTo(forBitmapScaleBuffer)
+        binding.scale2.setImageBitmap(forBitmapScaleBuffer.asBitmap())
 
 
         originalBuffer.close()

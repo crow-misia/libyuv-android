@@ -10,18 +10,16 @@ class Argb1555Buffer private constructor(
     val plane: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<Argb1555Buffer> {
+        internal fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width.shl(1)
             val capacity = stride * height
             return intArrayOf(stride, capacity)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): Argb1555Buffer {
+        override fun allocate(width: Int, height: Int): Argb1555Buffer {
             val (stride, capacity) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacity)
             return Argb1555Buffer(
@@ -34,9 +32,7 @@ class Argb1555Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Argb1555Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Argb1555Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (stride, capacity) = getStrideWithCapacity(width, height)
@@ -46,19 +42,17 @@ class Argb1555Buffer private constructor(
                 plane = PlanePrimitive(stride, sliceBuffer),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(plane: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): Argb1555Buffer {
+        fun wrap(plane: Plane, width: Int, height: Int): Argb1555Buffer {
             return Argb1555Buffer(
                 buffer = plane.buffer,
                 plane = plane,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
     }

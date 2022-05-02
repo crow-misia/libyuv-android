@@ -11,18 +11,16 @@ class Nv12Buffer private constructor(
     val planeUV: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeUV), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<Nv12Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val capacityY = width * height
             val capacityUV = (width + 1).shr(1) * height
             return intArrayOf(width, capacityY, width, capacityUV)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): Nv12Buffer {
+        override fun allocate(width: Int, height: Int): Nv12Buffer {
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityUV)
             val (bufferY, bufferUV) = buffer.slice(capacityY, capacityUV)
@@ -37,9 +35,7 @@ class Nv12Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): Nv12Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Nv12Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
@@ -50,20 +46,18 @@ class Nv12Buffer private constructor(
                 planeUV = PlanePrimitive(strideUV, bufferUV),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeY: Plane, planeUV: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): Nv12Buffer {
+        fun wrap(planeY: Plane, planeUV: Plane, width: Int, height: Int): Nv12Buffer {
             return Nv12Buffer(
                 buffer = null,
                 planeY = planeY,
                 planeUV = planeUV,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 

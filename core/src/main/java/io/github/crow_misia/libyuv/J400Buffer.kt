@@ -10,16 +10,14 @@ class J400Buffer private constructor(
     val planeYJ: Plane,
     override val width: Int,
     override val height: Int,
-    releaseCallback: Runnable? = null,
+    releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeYJ), releaseCallback) {
-    companion object {
-        @JvmStatic
-        fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<J400Buffer> {
+        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             return intArrayOf(width, width * height)
         }
 
-        @JvmStatic
-        fun allocate(width: Int, height: Int): J400Buffer {
+        override fun allocate(width: Int, height: Int): J400Buffer {
             val (strideY, capacity) = getStrideWithCapacity(width, height)
             val bufferY = createByteBuffer(capacity)
             return J400Buffer(
@@ -32,9 +30,7 @@ class J400Buffer private constructor(
             }
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(buffer: ByteBuffer, width: Int, height: Int, releaseCallback: Runnable? = null): J400Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): J400Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacity) = getStrideWithCapacity(width, height)
@@ -44,19 +40,17 @@ class J400Buffer private constructor(
                 planeYJ = PlanePrimitive(strideY, bufferY),
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
-        @JvmStatic
-        @JvmOverloads
-        fun wrap(planeYJ: Plane, width: Int, height: Int, releaseCallback: Runnable? = null): J400Buffer {
+        fun wrap(planeYJ: Plane, width: Int, height: Int): J400Buffer {
             return J400Buffer(
                 buffer = planeYJ.buffer,
                 planeYJ = planeYJ,
                 width = width,
                 height = height,
-                releaseCallback = releaseCallback,
+                releaseCallback = null,
             )
         }
 
