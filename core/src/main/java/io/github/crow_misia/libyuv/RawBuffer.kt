@@ -8,11 +8,11 @@ import kotlin.math.min
  */
 class RawBuffer private constructor(
     buffer: ByteBuffer?,
-    val plane: Plane,
+    override val plane: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer24<RawBuffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertRAWToI420(
             srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
@@ -26,7 +26,7 @@ class RawBuffer private constructor(
     fun convertTo(dst: J400Buffer) {
         Yuv.convertRAWToJ400(
             srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstYJ = dst.planeYJ.buffer, dstStrideYJ = dst.planeYJ.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -60,14 +60,6 @@ class RawBuffer private constructor(
     fun convertTo(dst: Rgb24Buffer) {
         Yuv.planerRAWToRGB24(
             srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun mirrorTo(dst: RawBuffer) {
-        Yuv.planerRGB24Mirror(
-            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
             dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )

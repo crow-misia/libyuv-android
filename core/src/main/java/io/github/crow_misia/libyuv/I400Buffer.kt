@@ -8,19 +8,11 @@ import kotlin.math.min
  */
 class I400Buffer private constructor(
     buffer: ByteBuffer?,
-    val planeY: Plane,
+    override val planeY: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback) {
-    fun convertTo(dst: I400Buffer) {
-        Yuv.convertI400Copy(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
+) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback), BufferX400<I400Buffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertI400ToI420(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -54,34 +46,6 @@ class I400Buffer private constructor(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun mirrorTo(dst: I400Buffer) {
-        Yuv.planerI400Mirror(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun rotate(dst: I400Buffer, rotateMode: RotateMode) {
-        Yuv.rotateRotatePlane(
-            src = planeY.buffer, srcStride = planeY.rowStride,
-            dst = dst.planeY.buffer, dstStride = dst.planeY.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
-            rotateMode = rotateMode.degrees,
-        )
-    }
-
-    fun scale(dst: I400Buffer, filterMode: FilterMode) {
-        Yuv.scaleScalePlane(
-            src = planeY.buffer, srcStride = planeY.rowStride,
-            srcWidth = width, srcHeight = height,
-            dst = dst.planeY.buffer, dstStride = dst.planeY.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            filterMode = filterMode.mode,
         )
     }
 

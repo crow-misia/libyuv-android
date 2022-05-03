@@ -7,11 +7,11 @@ import java.nio.ByteBuffer
  */
 class Yuv24Buffer private constructor(
     buffer: ByteBuffer?,
-    val plane: Plane,
+    override val plane: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
     companion object Factory : BufferFactory<Yuv24Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width * 3

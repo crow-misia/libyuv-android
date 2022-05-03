@@ -1,6 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -9,11 +8,11 @@ import kotlin.math.min
  */
 class ArgbBuffer private constructor(
     buffer: ByteBuffer?,
-    val plane: Plane,
+    override val plane: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer32<ArgbBuffer>, BufferFirstAlpha {
     fun convertTo(dst: I400Buffer) {
         Yuv.convertARGBToI400(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
@@ -55,7 +54,7 @@ class ArgbBuffer private constructor(
     fun convertTo(dst: J400Buffer) {
         Yuv.convertARGBToJ400(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstYJ = dst.planeYJ.buffer, dstStrideYJ = dst.planeYJ.rowStride,
+            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -102,14 +101,6 @@ class ArgbBuffer private constructor(
         Yuv.convertARGBToABGR(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
             dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun convertTo(dst: ArgbBuffer) {
-        Yuv.convertARGBCopy(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -170,53 +161,6 @@ class ArgbBuffer private constructor(
         )
     }
 
-    fun mirrorTo(dst: ArgbBuffer) {
-        Yuv.planerARGBMirror(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun copyAlphaTo(dst: ArgbBuffer) {
-        Yuv.planerARGBCopyAlpha(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun rotate(dst: ArgbBuffer, rotateMode: RotateMode) {
-        Yuv.rotateARGBRotate(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
-            rotateMode = rotateMode.degrees,
-        )
-    }
-
-    fun scale(dst: ArgbBuffer, filterMode: FilterMode) {
-        Yuv.scaleARGBScale(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            filterMode = filterMode.mode,
-        )
-    }
-
-    fun scaleClip(dst: ArgbBuffer, rect: Rect, filterMode: FilterMode) {
-        Yuv.scaleARGBScaleClip(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            clipX = rect.left, clipY = rect.top,
-            clipWidth = rect.width(), clipHeight = rect.height(),
-            filterMode = filterMode.mode,
-        )
-    }
 
     companion object Factory : BufferFactory<ArgbBuffer> {
         internal fun getStrideWithCapacity(width: Int, height: Int): IntArray {

@@ -1,6 +1,14 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Bitmap
 import java.nio.ByteBuffer
+
+internal fun ByteBuffer.toBitmap(width: Int, height: Int, config: Bitmap.Config): Bitmap {
+    return Bitmap.createBitmap(width, height, config).also {
+        clear()
+        it.copyPixelsFromBuffer(this)
+    }
+}
 
 internal fun ByteBuffer.asByteArray(): ByteArray {
     val capacity = capacity()

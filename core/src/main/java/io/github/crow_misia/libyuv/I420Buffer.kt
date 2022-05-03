@@ -8,31 +8,19 @@ import kotlin.math.min
  */
 class I420Buffer private constructor(
     buffer: ByteBuffer?,
-    val planeY: Plane,
-    val planeU: Plane,
-    val planeV: Plane,
+    override val planeY: Plane,
+    override val planeU: Plane,
+    override val planeV: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<I420Buffer> {
     fun convertTo(dst: I400Buffer) {
         Yuv.planerI420ToI400(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
             srcU = planeU.buffer, srcStrideU = planeU.rowStride,
             srcV = planeV.buffer, srcStrideV = planeV.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun convertTo(dst: I420Buffer) {
-        Yuv.convertI420Copy(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -170,46 +158,6 @@ class I420Buffer private constructor(
             srcV = planeV.buffer, srcStrideV = planeV.rowStride,
             dstARGB4444 = dst.plane.buffer, dstStrideARGB4444 = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun mirrorTo(dst: I420Buffer) {
-        Yuv.planerI420Mirror(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun rotate(dst: I420Buffer, rotateMode: RotateMode) {
-        Yuv.rotateI420Rotate(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
-            rotateMode = rotateMode.degrees,
-        )
-    }
-
-    fun scale(dst: I420Buffer, filterMode: FilterMode) {
-        Yuv.scaleI420Scale(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            filterMode = filterMode.mode,
         )
     }
 

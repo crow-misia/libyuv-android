@@ -1,7 +1,6 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
-import io.github.crow_misia.libyuv.BitmapConverter.Companion.toBitmap
 import java.nio.ByteBuffer
 import kotlin.math.min
 

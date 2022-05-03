@@ -1,8 +1,6 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
-import android.graphics.Rect
-import io.github.crow_misia.libyuv.BitmapConverter.Companion.toBitmap
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -11,11 +9,11 @@ import kotlin.math.min
  */
 class AbgrBuffer private constructor(
     buffer: ByteBuffer?,
-    val plane: Plane,
+    override val plane: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter {
+) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter, Buffer32<AbgrBuffer>, BufferFirstAlpha {
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.ARGB_8888)
     }
@@ -48,14 +46,6 @@ class AbgrBuffer private constructor(
         )
     }
 
-    fun convertTo(dst: AbgrBuffer) {
-        Yuv.convertARGBCopy(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertABGRToARGB(
             srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
@@ -77,46 +67,6 @@ class AbgrBuffer private constructor(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
             dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun mirrorTo(dst: AbgrBuffer) {
-        Yuv.planerARGBMirror(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun rotate(dst: AbgrBuffer, rotateMode: RotateMode) {
-        Yuv.rotateARGBRotate(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
-            rotateMode = rotateMode.degrees,
-        )
-    }
-
-    fun scale(dst: AbgrBuffer, filterMode: FilterMode) {
-        Yuv.scaleARGBScale(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            filterMode = filterMode.mode,
-        )
-    }
-
-    fun scaleClip(dst: AbgrBuffer, rect: Rect, filterMode: FilterMode) {
-        Yuv.scaleARGBScaleClip(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            clipX = rect.left, clipY = rect.top,
-            clipWidth = rect.width(), clipHeight = rect.height(),
-            filterMode = filterMode.mode,
         )
     }
 

@@ -1,8 +1,6 @@
 package io.github.crow_misia.libyuv
 
-import android.content.Context
 import android.graphics.*
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test

@@ -8,13 +8,13 @@ import kotlin.math.min
  */
 class I444Buffer private constructor(
     buffer: ByteBuffer?,
-    val planeY: Plane,
-    val planeU: Plane,
-    val planeV: Plane,
+    override val planeY: Plane,
+    override val planeU: Plane,
+    override val planeV: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
+) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<I444Buffer> {
     fun convertTo(dst: I400Buffer) {
         Yuv.convertI400Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -25,18 +25,6 @@ class I444Buffer private constructor(
 
     fun convertTo(dst: I420Buffer) {
         Yuv.convertI444ToI420(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun convertTo(dst: I444Buffer) {
-        Yuv.planerI444Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
             srcU = planeU.buffer, srcStrideU = planeU.rowStride,
             srcV = planeV.buffer, srcStrideV = planeV.rowStride,
@@ -86,34 +74,6 @@ class I444Buffer private constructor(
             srcV = planeV.buffer, srcStrideV = planeV.rowStride,
             dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
-    fun rotate(dst: I444Buffer, rotateMode: RotateMode) {
-        Yuv.rotateI444Rotate(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
-            rotateMode = rotateMode.degrees,
-        )
-    }
-
-    fun scale(dst: I444Buffer, filterMode: FilterMode) {
-        Yuv.scaleI444Scale(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            srcWidth = width, srcHeight = height,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            dstWidth = dst.width, dstHeight = dst.height,
-            filterMode = filterMode.mode,
         )
     }
 

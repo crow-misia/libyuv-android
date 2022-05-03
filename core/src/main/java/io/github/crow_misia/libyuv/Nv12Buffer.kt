@@ -115,8 +115,8 @@ class Nv12Buffer private constructor(
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
             dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
+            width = rotateMode.calculateWidth(this, dst),
+            height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
         )
     }
@@ -127,8 +127,8 @@ class Nv12Buffer private constructor(
             srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
+            width = rotateMode.calculateWidth(this, dst),
+            height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
         )
     }
@@ -139,8 +139,8 @@ class Nv12Buffer private constructor(
             srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride,
-            width = calculateWidth(this, dst, rotateMode),
-            height = calculateHeight(this, dst, rotateMode),
+            width = rotateMode.calculateWidth(this, dst),
+            height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
         )
     }
