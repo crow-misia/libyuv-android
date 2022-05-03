@@ -22,16 +22,6 @@ interface BufferX420<BUFFER : BufferX420<BUFFER>> : Buffer {
         )
     }
 
-    fun convertTo(dst: BufferX400<*>) {
-        Yuv.planerI420ToI400(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
     fun mirrorTo(dst: BUFFER) {
         Yuv.planerI420Mirror(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,

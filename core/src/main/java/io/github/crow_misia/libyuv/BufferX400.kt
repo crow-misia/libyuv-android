@@ -5,10 +5,8 @@ import kotlin.math.min
 /**
  * YUV(4:0:0 8bpp) Buffer.
  */
-interface BufferX400<BUFFER : BufferX400<BUFFER>> : Buffer {
-    val planeY: Plane
-
-    fun convertTo(dst: BUFFER) {
+interface BufferX400<BUFFER : BufferX400<BUFFER, BUFFERX420>, BUFFERX420 : BufferX420<BUFFERX420>> : BufferY<BUFFER> {
+    fun convertTo(dst: BUFFERX420) {
         Yuv.convertI400Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,

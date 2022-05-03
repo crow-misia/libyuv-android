@@ -14,7 +14,7 @@ class J444Buffer private constructor(
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<J444Buffer> {
+) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<J444Buffer>, BufferY<J400Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertJ444ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,

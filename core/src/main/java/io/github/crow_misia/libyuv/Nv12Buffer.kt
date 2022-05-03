@@ -8,20 +8,12 @@ import kotlin.math.min
  */
 class Nv12Buffer private constructor(
     buffer: ByteBuffer?,
-    val planeY: Plane,
+    override val planeY: Plane,
     val planeUV: Plane,
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeUV), releaseCallback) {
-    fun convertTo(dst: I400Buffer) {
-        Yuv.convertI400Copy(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
+) : AbstractBuffer(buffer, arrayOf(planeY, planeUV), releaseCallback), BufferY<I400Buffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertNV12ToI420(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,

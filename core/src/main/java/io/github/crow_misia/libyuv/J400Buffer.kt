@@ -12,17 +12,7 @@ class J400Buffer private constructor(
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer> {
-    fun convertTo(dst: J420Buffer) {
-        Yuv.convertI400ToI420(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
-            width = min(width, dst.width), height = min(height, dst.height),
-        )
-    }
-
+) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertJ400ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
