@@ -1,6 +1,7 @@
 package io.github.crow_misia.libyuv
 
 import java.nio.ByteBuffer
+import kotlin.math.min
 
 /**
  * RGB little endian (bgr in memory)
@@ -12,6 +13,50 @@ class Rgb24Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+    fun convertTo(dst: I420Buffer) {
+        Yuv.convertRGB24ToI420(
+            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: J400Buffer) {
+        Yuv.convertRGB24ToJ400(
+            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
+            dstYJ = dst.planeYJ.buffer, dstStrideYJ = dst.planeYJ.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: J420Buffer) {
+        Yuv.convertRGB24ToJ420(
+            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: ArgbBuffer) {
+        Yuv.convertRGB24ToARGB(
+            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun mirrorTo(dst: Rgb24Buffer) {
+        Yuv.planerRGB24Mirror(
+            srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     companion object Factory : BufferFactory<Rgb24Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width * 3

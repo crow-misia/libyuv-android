@@ -1,6 +1,7 @@
 package io.github.crow_misia.libyuv
 
 import java.nio.ByteBuffer
+import kotlin.math.min
 
 /**
  * I400 (grey) YUV Format. 4:0:0 8bpp
@@ -12,6 +13,78 @@ class I400Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback) {
+    fun convertTo(dst: I400Buffer) {
+        Yuv.convertI400Copy(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: I420Buffer) {
+        Yuv.convertI400ToI420(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Nv21Buffer) {
+        Yuv.convertI400ToNV21(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Nv12Buffer) {
+        Yuv.convertI400ToNV21(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstVU = dst.planeUV.buffer, dstStrideVU = dst.planeUV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: ArgbBuffer) {
+        Yuv.convertI400ToARGB(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun mirrorTo(dst: I400Buffer) {
+        Yuv.planerI400Mirror(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun rotate(dst: I400Buffer, rotateMode: RotateMode) {
+        Yuv.rotateRotatePlane(
+            src = planeY.buffer, srcStride = planeY.rowStride,
+            dst = dst.planeY.buffer, dstStride = dst.planeY.rowStride,
+            width = calculateWidth(this, dst, rotateMode),
+            height = calculateHeight(this, dst, rotateMode),
+            rotateMode = rotateMode.degrees,
+        )
+    }
+
+    fun scale(dst: I400Buffer, filterMode: FilterMode) {
+        Yuv.scaleScalePlane(
+            src = planeY.buffer, srcStride = planeY.rowStride,
+            srcWidth = width, srcHeight = height,
+            dst = dst.planeY.buffer, dstStride = dst.planeY.rowStride,
+            dstWidth = dst.width, dstHeight = dst.height,
+            filterMode = filterMode.mode,
+        )
+    }
+
     companion object Factory : BufferFactory<I400Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             return intArrayOf(width, width * height)

@@ -1,6 +1,7 @@
 package io.github.crow_misia.libyuv
 
 import java.nio.ByteBuffer
+import kotlin.math.min
 
 /**
  * U422 (BT.2020) YUV Format. 4:2:2 16bpp
@@ -14,6 +15,54 @@ class U422Buffer private constructor(
     override val height: Int,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback) {
+    fun convertTo(dst: ArgbBuffer) {
+        Yuv.convertU422ToARGB(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: AbgrBuffer) {
+        Yuv.convertU422ToABGR(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun rotate(dst: U422Buffer, rotateMode: RotateMode) {
+        Yuv.rotateI422Rotate(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = calculateWidth(this, dst, rotateMode),
+            height = calculateHeight(this, dst, rotateMode),
+            rotateMode = rotateMode.degrees,
+        )
+    }
+
+    fun scale(dst: U422Buffer, filterMode: FilterMode) {
+        Yuv.scaleI422Scale(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            srcWidth = width, srcHeight = height,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            dstWidth = dst.width, dstHeight = dst.height,
+            filterMode = filterMode.mode,
+        )
+    }
+
     companion object Factory : BufferFactory<U422Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)

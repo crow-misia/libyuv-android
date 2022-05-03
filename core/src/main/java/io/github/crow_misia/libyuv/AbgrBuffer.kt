@@ -1,8 +1,10 @@
 package io.github.crow_misia.libyuv
 
 import android.graphics.Bitmap
+import android.graphics.Rect
 import io.github.crow_misia.libyuv.BitmapConverter.Companion.toBitmap
 import java.nio.ByteBuffer
+import kotlin.math.min
 
 /**
  * ABGR little endian (rgba in memory).
@@ -16,6 +18,106 @@ class AbgrBuffer private constructor(
 ) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter {
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.ARGB_8888)
+    }
+
+    fun convertTo(dst: I420Buffer) {
+        Yuv.convertABGRToI420(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Nv12Buffer) {
+        Yuv.convertABGRToNV12(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Nv21Buffer) {
+        Yuv.convertABGRToNV21(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: AbgrBuffer) {
+        Yuv.convertARGBCopy(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: ArgbBuffer) {
+        Yuv.convertABGRToARGB(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Rgb24Buffer) {
+        Yuv.convertARGBToRAW(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: RawBuffer) {
+        Yuv.convertARGBToRGB24(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun mirrorTo(dst: AbgrBuffer) {
+        Yuv.planerARGBMirror(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun rotate(dst: AbgrBuffer, rotateMode: RotateMode) {
+        Yuv.rotateARGBRotate(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = calculateWidth(this, dst, rotateMode),
+            height = calculateHeight(this, dst, rotateMode),
+            rotateMode = rotateMode.degrees,
+        )
+    }
+
+    fun scale(dst: AbgrBuffer, filterMode: FilterMode) {
+        Yuv.scaleARGBScale(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            srcWidth = width, srcHeight = height,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            dstWidth = dst.width, dstHeight = dst.height,
+            filterMode = filterMode.mode,
+        )
+    }
+
+    fun scaleClip(dst: AbgrBuffer, rect: Rect, filterMode: FilterMode) {
+        Yuv.scaleARGBScaleClip(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            srcWidth = width, srcHeight = height,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            dstWidth = dst.width, dstHeight = dst.height,
+            clipX = rect.left, clipY = rect.top,
+            clipWidth = rect.width(), clipHeight = rect.height(),
+            filterMode = filterMode.mode,
+        )
     }
 
     companion object Factory : BufferFactory<AbgrBuffer> {
