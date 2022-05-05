@@ -24,9 +24,9 @@ PLANES_3_TO_2(I420ToNV12, y, u, v, y, uv);
 
 PLANES_3_TO_2(I420ToNV21, y, u, v, y, vu);
 
-// I420ToYUY2
+PLANES_3_TO_1(I420ToYUY2, y, u, v, yuy2);
 
-// I420ToUYVY
+PLANES_3_TO_1(I420ToUYVY, y, u, v, uyvy);
 
 // Convert I420 to specified format.
 // ConvertFromI420

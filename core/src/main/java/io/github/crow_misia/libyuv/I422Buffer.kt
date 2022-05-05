@@ -100,6 +100,26 @@ class I422Buffer private constructor(
         )
     }
 
+    fun convertTo(dst: Yuy2Buffer) {
+        Yuv.planerI422ToYUY2(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstYUY2 = dst.plane.buffer, dstStrideYUY2 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: UyvyBuffer) {
+        Yuv.planerI422ToUYVY(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstUYVY = dst.plane.buffer, dstStrideUYVY = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     companion object Factory : BufferFactory<I422Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)

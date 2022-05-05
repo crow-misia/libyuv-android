@@ -151,6 +151,46 @@ class I420Buffer private constructor(
         )
     }
 
+    fun convertTo(dst: Ar30Buffer) {
+        Yuv.convertI420ToAR30(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstAR30 = dst.plane.buffer, dstStrideAR30 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Ab30Buffer) {
+        Yuv.convertI420ToAB30(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Yuy2Buffer) {
+        Yuv.convertI420ToYUY2(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstYUY2 = dst.plane.buffer, dstStrideYUY2 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: UyvyBuffer) {
+        Yuv.convertI420ToUYVY(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstUYVY = dst.plane.buffer, dstStrideUYVY = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     companion object Factory : BufferFactory<I420Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)

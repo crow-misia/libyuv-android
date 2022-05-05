@@ -65,6 +65,26 @@ class H420Buffer private constructor(
         )
     }
 
+    fun convertTo(dst: Ar30Buffer) {
+        Yuv.convertH420ToAR30(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstAR30 = dst.plane.buffer, dstStrideAR30 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Ab30Buffer) {
+        Yuv.convertH420ToAB30(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     companion object Factory : BufferFactory<H420Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)

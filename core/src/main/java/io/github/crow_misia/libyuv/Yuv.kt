@@ -123,6 +123,40 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert YUY2 to I420 */
+    external fun convertYUY2ToI420(
+        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert UYVY to I420 */
+    external fun convertUYVYToI420(
+        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert AYUV to NV12 */
+    external fun convertAYUVToNV12(
+        srcAYUV: ByteBuffer, srcStrideAYUV: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstUV: ByteBuffer, dstStrideUV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert AYUV to NV21 */
+    external fun convertAYUVToNV21(
+        srcAYUV: ByteBuffer, srcStrideAYUV: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int,
+    )
+
     /** ARGB little endian (bgra in memory) to I420 */
     external fun convertARGBToI420(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
@@ -520,6 +554,20 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert YUY2 to ARGB */
+    external fun convertYUY2ToARGB(
+        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert UYVY to ARGB */
+    external fun convertUYVYToARGB(
+        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
     /** BGRA little endian (argb in memory) to ARGB */
     external fun convertBGRAToARGB(
         srcBGRA: ByteBuffer, srcStrideBGRA: Int,
@@ -580,6 +628,27 @@ internal object Yuv {
     external fun convertARGB4444ToARGB(
         srcARGB4444: ByteBuffer, srcStrideARGB4444: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert AR30 To ARGB */
+    external fun convertAR30ToARGB(
+        srcAR30: ByteBuffer, srcStrideAR30: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert AR30 To ABGR */
+    external fun convertAR30ToABGR(
+        srcAR30: ByteBuffer, srcStrideAR30: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert AR30 To AB30 */
+    external fun convertAR30ToAB30(
+        srcAR30: ByteBuffer, srcStrideAR30: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: Int,
         width: Int, height: Int,
     )
 
@@ -762,6 +831,42 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert I420 to AR30 */
+    external fun convertI420ToAR30(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstAR30: ByteBuffer, dstStrideAR30: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I420 to AB30 */
+    external fun convertI420ToAB30(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert H420 to AR30 */
+    external fun convertH420ToAR30(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstAR30: ByteBuffer, dstStrideAR30: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert H420 to AB30 */
+    external fun convertH420ToAB30(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: Int,
+        width: Int, height: Int,
+    )
+
     // convert_from.cpp
 
     /** Convert I420 to I422 */
@@ -810,6 +915,24 @@ internal object Yuv {
         srcV: ByteBuffer, srcStrideV: Int,
         dstY: ByteBuffer, dstStrideY: Int,
         dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I420 to YUY2 */
+    external fun convertI420ToYUY2(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I420 to UYVY */
+    external fun convertI420ToUYVY(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
         width: Int, height: Int,
     )
 
@@ -959,6 +1082,20 @@ internal object Yuv {
         srcABGR: ByteBuffer, srcStrideABGR: Int,
         dstY: ByteBuffer, dstStrideY: Int,
         dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ARGB To YUY2 */
+    external fun convertARGBToYUY2(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ARGB To UYVY */
+    external fun convertARGBToUYVY(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
         width: Int, height: Int,
     )
 
@@ -1261,6 +1398,24 @@ internal object Yuv {
     external fun planerARGBCopyYToAlpha(
         srcY: ByteBuffer, srcStrideY: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I422 to YUY2 */
+    external fun planerI422ToYUY2(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I422 to UYVY */
+    external fun planerI422ToUYVY(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
         width: Int, height: Int,
     )
 

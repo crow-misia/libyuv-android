@@ -49,6 +49,14 @@ class Rgb24Buffer private constructor(
         )
     }
 
+    fun convertTo(dst: RawBuffer) {
+        Yuv.planerRAWToRGB24(
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     companion object Factory : BufferFactory<Rgb24Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width * 3

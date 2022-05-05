@@ -161,6 +161,21 @@ class ArgbBuffer private constructor(
         )
     }
 
+    fun convertTo(dst: Yuy2Buffer) {
+        Yuv.convertARGBToYUY2(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstYUY2 = dst.plane.buffer, dstStrideYUY2 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: UyvyBuffer) {
+        Yuv.convertARGBToUYVY(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstUYVY = dst.plane.buffer, dstStrideUYVY = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
 
     companion object Factory : BufferFactory<ArgbBuffer> {
         internal fun getStrideWithCapacity(width: Int, height: Int): IntArray {

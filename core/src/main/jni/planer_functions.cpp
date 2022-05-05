@@ -93,14 +93,14 @@ PLANES_2_TO_2(NV12Copy, y, vu, y, uv);
 // NV21Copy
 
 // Convert YUY2 to I422.
-// YUY2ToI422
+PLANES_1_TO_3(YUY2ToI422, yuy2, y, u, v);
 
 // Convert UYVY to I422.
-// UYVYToI422
+PLANES_1_TO_3(UYVYToI422, uyvy, y, u, v);
 
-// YUY2ToNV12
+PLANES_1_TO_2(YUY2ToNV12, yuy2, y, uv);
 
-// UYVYToNV12
+PLANES_1_TO_2(UYVYToNV12, uyvy, y, uv);
 
 // Convert NV21 to NV12.
 PLANES_2_TO_2(NV21ToNV12, y, vu, y, uv);
@@ -219,10 +219,10 @@ PLANES_1_TO_1(ARGBCopyYToAlpha, y, argb);
 // ARGBSubtract
 
 // Convert I422 to YUY2.
-// I422ToYUY2
+PLANES_3_TO_1(I422ToYUY2, y, u, v, yuy2);
 
 // Convert I422 to UYVY.
-// I422ToUYVY
+PLANES_3_TO_1(I422ToUYVY, y, u, v, uyvy);
 
 // Convert unattentuated ARGB to preattenuated ARGB.
 PLANES_1_TO_1(ARGBAttenuate, argb, argb);

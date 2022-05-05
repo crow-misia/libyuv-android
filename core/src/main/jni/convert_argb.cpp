@@ -165,17 +165,17 @@ PLANES_2_TO_1(NV21ToRGB24, y, vu, rgb24);
 // Convert NV21 to YUV24.
 PLANES_2_TO_1(NV21ToYUV24, y, vu, yuv24);
 
-// Convert NV12 to RAW
+// Convert NV12 to RAW.
 PLANES_2_TO_1(NV12ToRAW, y, uv, raw);
 
-// Convert NV21 to RAW
+// Convert NV21 to RAW.
 PLANES_2_TO_1(NV21ToRAW, y, vu, raw);
 
 // Convert YUY2 to ARGB.
-// YUY2ToARGB
+PLANES_1_TO_1(YUY2ToARGB, yuy2, argb);
 
 // Convert UYVY to ARGB.
-// UYVYToARGB
+PLANES_1_TO_1(UYVYToARGB, uyvy, argb);
 
 // Convert I010 to AR30.
 // I010ToAR30
@@ -245,13 +245,13 @@ PLANES_1_TO_1(ARGB4444ToARGB, argb4444, argb);
 // #define AB30ToAR30 AR30ToAB30
 
 // Convert AR30 To ARGB.
-// AR30ToARGB
+PLANES_1_TO_1(AR30ToARGB, ar30, argb);
 
 // Convert AR30 To ABGR.
-// AR30ToABGR
+PLANES_1_TO_1(AR30ToABGR, ar30, abgr);
 
 // Convert AR30 To AB30.
-// AR30ToAB30
+PLANES_1_TO_1(AR30ToAB30, ar30, ab30);
 
 // Convert AR64 to ARGB.
 // AR64ToARGB
@@ -343,16 +343,16 @@ PLANES_3_TO_1(I420ToARGB1555, y, u, v, argb1555);
 PLANES_3_TO_1(I420ToARGB4444, y, u, v, argb4444);
 
 // Convert I420 to AR30
-// I420ToAR30
+PLANES_3_TO_1(I420ToAR30, y, u, v, ar30);
 
 // Convert I420 to AB30.
-// I420ToAB30
+PLANES_3_TO_1(I420ToAB30, y, u, v, ab30);
 
 // Convert H420 to AR30
-// H420ToAR30
+PLANES_3_TO_1(H420ToAR30, y, u, v, ar30);
 
 // Convert H420 to AB30.
-// H420ToAB30
+PLANES_3_TO_1(H420ToAB30, y, u, v, ab30);
 
 // Convert I420 to ARGB with matrix.
 // I420ToARGBMatrix

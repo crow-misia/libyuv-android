@@ -134,16 +134,16 @@ PLANES_2_TO_3(NV21ToI420, y, vu, y, u, v);
 // #define P216ToP416 P210ToP410
 
 // Convert YUY2 to I420.
-// YUY2ToI420
+PLANES_1_TO_3(YUY2ToI420, yuy2, y, u, v);
 
 // Convert UYVY to I420.
-// UYVYToI420
+PLANES_1_TO_3(UYVYToI420, uyvy, y, u, v);
 
 // Convert AYUV to NV12.
-// AYUVToNV12
+PLANES_1_TO_2(AYUVToNV12, ayuv, y, uv);
 
 // Convert AYUV to NV21.
-// AYUVToNV21
+PLANES_1_TO_2(AYUVToNV21, ayuv, y, vu);
 
 // Convert Android420 to I420.
 // Android420ToI420

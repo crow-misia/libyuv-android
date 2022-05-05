@@ -100,10 +100,10 @@ PLANES_1_TO_2(ABGRToNV12, abgr, y, uv);
 PLANES_1_TO_2(ABGRToNV21, abgr, y, vu);
 
 // Convert ARGB To YUY2.
-// ARGBToYUY2
+PLANES_1_TO_1(ARGBToYUY2, argb, yuy2);
 
 // Convert ARGB To UYVY.
-// ARGBToUYVY
+PLANES_1_TO_1(ARGBToUYVY, argb, uyvy);
 
 // RAW to JNV21 full range NV21
 // RAWToJNV21
