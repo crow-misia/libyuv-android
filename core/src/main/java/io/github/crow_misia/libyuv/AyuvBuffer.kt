@@ -17,7 +17,7 @@ class AyuvBuffer private constructor(
         Yuv.convertAYUVToNV12(
             srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstUV = dst.planeY.buffer, dstStrideUV = dst.planeUV.rowStride,
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -26,7 +26,7 @@ class AyuvBuffer private constructor(
         Yuv.convertAYUVToNV21(
             srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstVU = dst.planeY.buffer, dstStrideVU = dst.planeVU.rowStride,
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }

@@ -19,8 +19,18 @@ class UyvyBuffer private constructor(
         Yuv.convertUYVYToI420(
             srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeY.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeY.buffer, dstStrideV = dst.planeV.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: I422Buffer) {
+        Yuv.planerUYVYToI422(
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -29,6 +39,15 @@ class UyvyBuffer private constructor(
         Yuv.convertUYVYToARGB(
             srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: Nv12Buffer) {
+        Yuv.planerUYVYToNV12(
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }

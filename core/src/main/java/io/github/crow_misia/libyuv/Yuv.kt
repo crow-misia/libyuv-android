@@ -1313,6 +1313,40 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert YUY2 to I422 */
+    external fun planerYUY2ToI422(
+        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert UYVY to I422 */
+    external fun planerUYVYToI422(
+        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert YUY2 to NV12 */
+    external fun planerYUY2ToNV12(
+        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstUV: ByteBuffer, dstStrideUV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert UYVY to NV12 */
+    external fun planerUYVYToNV12(
+        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstUV: ByteBuffer, dstStrideUV: Int,
+        width: Int, height: Int,
+    )
+
     /** Convert NV21 to NV12 */
     external fun planerNV21ToNV12(
         srcY: ByteBuffer, srcStrideY: Int,
