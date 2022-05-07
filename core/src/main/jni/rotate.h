@@ -120,7 +120,7 @@
     SRC_PLANE(S1); \
     SRC_PLANE(S2); \
     SRC_PLANE(S3); \
-    DECLARE_STRIDE(j_src_pixel_stride_##S4, src_pixel_stride_##S4); \
+    DECLARE_STRIDE(j_src_pixel_stride_##S4, src_pixel_stride_##S4,); \
     DST_PLANE(D1); \
     DST_PLANE(D2); \
     DST_PLANE(D3); \

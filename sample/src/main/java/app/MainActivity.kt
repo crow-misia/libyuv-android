@@ -2,6 +2,7 @@ package app
 
 import android.graphics.*
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import app.databinding.ActivityMainBinding
 import io.github.crow_misia.libyuv.*
@@ -124,9 +125,25 @@ class MainActivity : AppCompatActivity() {
         i422Buffer.convertTo(forBitmapBuffer)
         binding.convert9.setImageBitmap(forBitmapBuffer.asBitmap())
 
+        Log.i(TAG, "I422 Y Buffer DJB2 Hash %d".format(i422Buffer.planeY.hashDjb2()))
+
         uyvyBuffer.convertTo(i422Buffer)
         i422Buffer.convertTo(forBitmapBuffer)
         binding.convert10.setImageBitmap(forBitmapBuffer.asBitmap())
+
+        Log.i(TAG, "I422 Y Buffer DJB2 Hash %d".format(i422Buffer.planeY.hashDjb2()))
+
+        Canvas(bitmap2).also {
+            it.drawRect(0f, 0f, 1f, 1f, Paint().also { p -> p.color = Color.BLACK })
+        }
+        bitmap2.copyPixelsToBuffer(original2Buffer.asBuffer())
+        original2Buffer.convertTo(argbBuffer)
+        argbBuffer.convertTo(nv12Buffer)
+        Log.i(TAG, "Hamming Distance I422:NV12 Y Buffer %d".format(i422Buffer.planeY.hammingDistance(nv12Buffer.planeY)))
+        Log.i(TAG, "Sum Square Error I422:NV12 Y Buffer %d".format(i422Buffer.planeY.computeSumSquareError(nv12Buffer.planeY, 1920, 1080)))
+        Log.i(TAG, "Sum Square Error NV12:I422 Y Buffer %d".format(nv12Buffer.planeY.computeSumSquareError(i422Buffer.planeY, 1920, 1080)))
+        Log.i(TAG, "Frame PSNR NV12:I422 Y Buffer %f".format(nv12Buffer.planeY.calculateFramePsnr(i422Buffer.planeY, 1920, 1080)))
+        Log.i(TAG, "Frame SSIM NV12:I422 Y Buffer %f".format(nv12Buffer.planeY.calculateFrameSsim(i422Buffer.planeY, 1920, 1080)))
 
         originalBuffer.close()
         original2Buffer.close()
@@ -143,5 +160,9 @@ class MainActivity : AppCompatActivity() {
         nv21Rotate90Buffer.close()
         nv21MirrorBuffer.close()
         nv21ScaleBuffer.close()
+    }
+
+    companion object {
+        const val TAG = "MainActivity"
     }
 }

@@ -1467,6 +1467,57 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    // compare.cpp
+
+    /** Compute a hash for specified memory. Seed of 5381 recommended. */
+    external fun hashDjb2(src: ByteBuffer, count: Long, seed: Long): Long
+
+    /** Compute Hamming Distance */
+    external fun computeHammingDistance(srcA: ByteBuffer, srcB: ByteBuffer, count: Int): ByteArray
+
+    /** Compute Sum Square Error Plane */
+    external fun computeSumSquareErrorPlane(
+        srcA: ByteBuffer, srcStrideA: Int,
+        srcB: ByteBuffer, srcStrideB: Int,
+        width: Int, height: Int,
+    ): ByteArray
+
+    /** Calculate Frame PSNR. */
+    external fun calcFramePsnr(
+        srcA: ByteBuffer, srcStrideA: Int,
+        srcB: ByteBuffer, srcStrideB: Int,
+        width: Int, height: Int,
+    ): Double
+
+    /** Calculate Frame PSNR. */
+    external fun calcI420Psnr(
+        srcYA: ByteBuffer, srcStrideYA: Int,
+        srcUA: ByteBuffer, srcStrideUA: Int,
+        srcVA: ByteBuffer, srcStrideVA: Int,
+        srcYB: ByteBuffer, srcStrideYB: Int,
+        srcUB: ByteBuffer, srcStrideUB: Int,
+        srcVB: ByteBuffer, srcStrideVB: Int,
+        width: Int, height: Int,
+    ): Double
+
+    /** Calculate Frame SSIM. */
+    external fun calcFrameSsim(
+        srcA: ByteBuffer, srcStrideA: Int,
+        srcB: ByteBuffer, srcStrideB: Int,
+        width: Int, height: Int,
+    ): Double
+
+    /** Calculate Frame SSIM. */
+    external fun calcI420Ssim(
+        srcYA: ByteBuffer, srcStrideYA: Int,
+        srcUA: ByteBuffer, srcStrideUA: Int,
+        srcVA: ByteBuffer, srcStrideVA: Int,
+        srcYB: ByteBuffer, srcStrideYB: Int,
+        srcUB: ByteBuffer, srcStrideUB: Int,
+        srcVB: ByteBuffer, srcStrideVB: Int,
+        width: Int, height: Int,
+    ): Double
+
     // memcopy.cpp
 
     external fun memcopy(dst: Any, dstOffset: Int, src: Any, srcLength: Int)

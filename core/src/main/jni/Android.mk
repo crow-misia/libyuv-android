@@ -5,6 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libyuv
 
 LOCAL_SRC_FILES := \
+    compare.cpp \
     convert.cpp \
     convert_argb.cpp \
     convert_from.cpp \
