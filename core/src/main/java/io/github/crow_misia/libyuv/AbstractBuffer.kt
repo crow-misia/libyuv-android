@@ -1,6 +1,7 @@
 package io.github.crow_misia.libyuv
 
 import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicReference
 
@@ -42,7 +43,7 @@ abstract class AbstractBuffer(
         }
     }
 
-    override fun write(stream: ByteArrayOutputStream) {
+    override fun write(stream: OutputStream) {
         planes.forEach {
             stream.write(it.buffer.asByteArray())
         }

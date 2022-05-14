@@ -82,8 +82,8 @@ class ConvertTest {
     private fun <SRC : Buffer, DESC: Buffer> writeImage(filename: String, srcGenerate: () -> SRC, convert: (SRC) -> DESC) {
         srcGenerate().use { srcBuffer ->
             convert(srcBuffer).use { descBuffer ->
-                File(parentDir, filename).outputStream().use {
-                    it.write(descBuffer.asByteArray())
+                File(parentDir, filename).outputStream().buffered().use {
+                    descBuffer.write(it)
                 }
             }
         }

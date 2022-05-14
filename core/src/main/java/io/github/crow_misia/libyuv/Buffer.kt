@@ -2,6 +2,7 @@ package io.github.crow_misia.libyuv
 
 import java.io.ByteArrayOutputStream
 import java.io.Closeable
+import java.io.OutputStream
 import java.nio.ByteBuffer
 
 interface Buffer : Closeable {
@@ -23,6 +24,6 @@ interface Buffer : Closeable {
     fun asBuffer(): ByteBuffer
     fun asByteArray(): ByteArray
     fun asByteArray(dst: ByteArray)
-    fun write(stream: ByteArrayOutputStream)
+    fun write(stream: OutputStream)
     fun write(buffer: ByteBuffer)
 }
