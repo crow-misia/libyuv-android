@@ -3,6 +3,7 @@ package io.github.crow_misia.libyuv
 import android.graphics.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -89,6 +90,7 @@ class ConvertTest {
         }
     }
 
+    private val tempForMultipleCalls = ByteArray(512 * 512 * 4)
     private fun generateBitmap(): ArgbBuffer {
         val buffer = ArgbBuffer.allocate(512, 512)
         val colorGenerator = ColorGenerator(512)
@@ -101,6 +103,16 @@ class ConvertTest {
             }
         }
         bitmap.copyPixelsToBuffer(buffer.asBuffer())
+
+        // Never crash due to multiple calls.
+        bitmap.copyPixelsToBuffer(buffer.asBuffer())
+
+        assertThat(buffer.asByteArray()).isNotNull()
+        assertThat(buffer.asByteArray()).isNotNull()
+
+        assertThat(buffer.asByteArray(tempForMultipleCalls)).isEqualTo(512 * 512 * 4)
+        assertThat(buffer.asByteArray(tempForMultipleCalls)).isEqualTo(512 * 512 * 4)
+
         return buffer
     }
 }

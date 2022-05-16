@@ -26,32 +26,42 @@ abstract class AbstractBuffer(
     }
 
     override fun asByteArray(): ByteArray {
-        val capacity = planes.sumOf { it.buffer.capacity() }
-        val buffer = ByteArray(capacity)
+        val size = planes.sumOf {
+            it.buffer.position(0)
+            it.buffer.limit()
+        }
+        val buffer = ByteArray(size)
 
         asByteArray(buffer)
 
         return buffer
     }
 
-    override fun asByteArray(dst: ByteArray) {
+    override fun asByteArray(dst: ByteArray): Int {
         var offset = 0
         planes.forEach { plane ->
-            val size = plane.buffer.capacity()
-            plane.buffer.get(dst, offset, size)
+            val buffer = plane.buffer
+            buffer.position(0)
+            val size = minOf(buffer.limit(), dst.size)
+            buffer.get(dst, offset, size)
             offset += size
         }
+        return offset
     }
 
-    override fun write(stream: OutputStream) {
+    override fun write(dst: OutputStream): Int {
+        var ret = 0
         planes.forEach {
-            stream.write(it.buffer.asByteArray())
+            val data = it.buffer.asByteArray()
+            dst.write(data)
+            ret += data.size
         }
+        return ret
     }
 
-    override fun write(buffer: ByteBuffer) {
+    override fun write(dst: ByteBuffer) {
         planes.forEach {
-            buffer.put(it.buffer)
+            dst.put(it.buffer)
         }
     }
 }

@@ -21,9 +21,36 @@ interface Buffer : Closeable {
      */
     val height: Int
 
+    /**
+     * Get as ByteBuffer.
+     */
     fun asBuffer(): ByteBuffer
+
+    /**
+     * Get as Byte Array.
+     */
     fun asByteArray(): ByteArray
-    fun asByteArray(dst: ByteArray)
-    fun write(stream: OutputStream)
-    fun write(buffer: ByteBuffer)
+
+    /**
+     * Get as Byte Array.
+     *
+     * @param dst destination Byte Array
+     * @return output data size
+     */
+    fun asByteArray(dst: ByteArray): Int
+
+    /**
+     * Write image data.
+     *
+     * @param dst destination OutputStream
+     * @return output data size
+     */
+    fun write(dst: OutputStream): Int
+
+    /**
+     * Write image data.
+     *
+     * @param buffer destination ByteBuffer
+     */
+    fun write(dst: ByteBuffer)
 }
