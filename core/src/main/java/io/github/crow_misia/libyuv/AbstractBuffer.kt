@@ -41,8 +41,9 @@ abstract class AbstractBuffer(
         var offset = 0
         planes.forEach { plane ->
             val buffer = plane.buffer
+            val remain = dst.size - offset
             buffer.position(0)
-            val size = minOf(buffer.limit(), dst.size)
+            val size = minOf(buffer.remaining(), remain)
             buffer.get(dst, offset, size)
             offset += size
         }
