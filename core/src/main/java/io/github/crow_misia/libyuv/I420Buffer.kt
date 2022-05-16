@@ -14,7 +14,7 @@ class I420Buffer private constructor(
     override val width: Int,
     override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<I420Buffer> {
+) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<I420Buffer>, BufferY<I400Buffer> {
     fun convertTo(dst: I422Buffer) {
         Yuv.convertI420ToI422(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
