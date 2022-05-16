@@ -108,8 +108,8 @@ class ConvertTest {
         // Never crash due to multiple calls.
         bitmap.copyPixelsToBuffer(buffer.asBuffer())
 
-        assertThat(buffer.asByteArray()).isNotNull()
-        assertThat(buffer.asByteArray()).isNotNull()
+        assertThat(buffer.asByteArray().size).isEqualTo(512 * 512 * 4)
+        assertThat(buffer.asByteArray().size).isEqualTo(512 * 512 * 4)
 
         assertThat(buffer.asByteArray(tempForMultipleCalls)).isEqualTo(512 * 512 * 4)
         assertThat(buffer.asByteArray(tempForMultipleCalls)).isEqualTo(512 * 512 * 4)

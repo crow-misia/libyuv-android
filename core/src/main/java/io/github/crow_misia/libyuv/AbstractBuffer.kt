@@ -21,7 +21,7 @@ abstract class AbstractBuffer(
         planes = emptyArray()
     }
 
-    override fun asBuffer() = buffer?.also { it.clear() } ?: run {
+    override fun asBuffer() = buffer?.also { it.position(0) } ?: run {
         throw UnsupportedOperationException("Cannot operate it because it is converted from multi plane.")
     }
 
