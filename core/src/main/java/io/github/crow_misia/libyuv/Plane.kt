@@ -64,6 +64,7 @@ sealed interface Plane {
             return PlaneNative(this)
         }
 
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         @JvmStatic
         @JvmName("from")
         fun ImageProxy.PlaneProxy.asPlane(): Plane {
@@ -82,6 +83,7 @@ internal class PlaneNative(
         get() = plane.rowStride
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 internal class PlaneProxy(
     private val proxy: ImageProxy.PlaneProxy,
 ) : Plane {
