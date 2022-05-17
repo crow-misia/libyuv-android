@@ -1,6 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicReference
@@ -22,14 +21,16 @@ abstract class AbstractBuffer(
     }
 
     override fun asBuffer() = buffer?.also { it.position(0) } ?: run {
-        throw UnsupportedOperationException("Cannot operate it because it is converted from multi plane.")
+        val size = planes.sumOf { it.buffer.limit() }
+        val buffer = ByteBuffer.allocateDirect(size).also {
+            buffer = it
+        }
+        write(buffer)
+        return buffer
     }
 
     override fun asByteArray(): ByteArray {
-        val size = planes.sumOf {
-            it.buffer.position(0)
-            it.buffer.limit()
-        }
+        val size = planes.sumOf { it.buffer.limit() }
         val buffer = ByteArray(size)
 
         asByteArray(buffer)
@@ -42,20 +43,22 @@ abstract class AbstractBuffer(
         planes.forEach { plane ->
             val buffer = plane.buffer
             val remain = dst.size - offset
-            buffer.position(0)
-            val size = minOf(buffer.remaining(), remain)
-            buffer.get(dst, offset, size)
+            val size = minOf(buffer.limit(), remain)
+            buffer.copy(dst, offset, 0, size)
             offset += size
         }
         return offset
     }
 
     override fun write(dst: OutputStream): Int {
+        val tmpBufferSize = planes.maxOf { it.buffer.limit() }
+        val tmpBuffer = ByteArray(tmpBufferSize)
         var ret = 0
         planes.forEach {
-            val data = it.buffer.asByteArray()
-            dst.write(data)
-            ret += data.size
+            val size = it.buffer.limit()
+            it.buffer.copy(tmpBuffer, 0, 0, size)
+            dst.write(tmpBuffer, 0, size)
+            ret += size
         }
         return ret
     }

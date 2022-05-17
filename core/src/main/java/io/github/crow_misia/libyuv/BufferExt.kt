@@ -5,26 +5,16 @@ import java.nio.ByteBuffer
 
 internal fun ByteBuffer.toBitmap(width: Int, height: Int, config: Bitmap.Config): Bitmap {
     return Bitmap.createBitmap(width, height, config).also {
-        clear()
+        position(0)
         it.copyPixelsFromBuffer(this)
     }
 }
 
-internal fun ByteBuffer.asByteArray(): ByteArray {
-    val capacity = capacity()
-    val results = ByteArray(capacity)
+internal fun ByteBuffer.copy(dst: ByteArray, dstOffset: Int = 0, srcOffset: Int = 0, length: Int = limit()) {
     val srcObj: Any = if (isDirect) this else array()
+    check(dst.size >= length) { "dst size is less than length" }
 
-    Yuv.memcopy(results, 0, srcObj, capacity)
-    return results
-}
-
-internal fun ByteBuffer.asByteArray(dst: ByteArray) {
-    val capacity = capacity()
-    val srcObj: Any = if (isDirect) this else array()
-    check(dst.size >= capacity) { "dst size is less than capacity" }
-
-    Yuv.memcopy(dst, 0, srcObj, capacity)
+    Yuv.memcopy(dst, dstOffset, srcObj, srcOffset, length)
 }
 
 internal fun createByteBuffer(capacity: Int): ByteBuffer {
@@ -32,28 +22,42 @@ internal fun createByteBuffer(capacity: Int): ByteBuffer {
 }
 
 internal fun ByteBuffer.sliceRange(offset: Int, length: Int): ByteBuffer {
-    limit(offset + length)
-    position(offset)
+    execute { _, _ ->
+        position(offset)
+        limit(offset + length)
 
-    val result = slice()
-    clear()
-
-    return result
+        return slice()
+    }
 }
 
 internal fun ByteBuffer.slice(vararg sliceLengths: Int): Array<ByteBuffer> {
-    clear()
-    limit(0)
-    val results = arrayOfNulls<ByteBuffer>(sliceLengths.size)
-    for (i in sliceLengths.indices) {
-        val sliceLength = sliceLengths[i]
-        position(limit())
-        limit(limit() + sliceLength)
-        results[i] = slice()
+    execute { _, limit ->
+        var offset = 0
+        val results = arrayOfNulls<ByteBuffer>(sliceLengths.size)
+        sliceLengths.forEachIndexed { i, sliceLength ->
+            position(offset)
+            offset += sliceLength
+            limit(offset)
+            results[i] = slice()
+        }
+        check(offset <= limit) { "buffer limit is bigger than expected" }
+
+        return results.requireNoNulls()
     }
-    check(capacity() == limit()) { "buffer capacity is bigger than expected" }
-    clear()
-    return results.requireNoNulls()
+}
+
+internal inline fun <T> ByteBuffer.execute(func: (position: Int, limit: Int) -> T): T {
+    // backup
+    val previousPosition = position()
+    val previousLimit = limit()
+
+    try {
+        return func(previousPosition, previousLimit)
+    } finally {
+        // restore
+        position(previousPosition)
+        limit(previousLimit)
+    }
 }
 
 @Suppress("NOTHING_TO_INLINE")

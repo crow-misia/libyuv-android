@@ -86,6 +86,7 @@ class ConvertTest {
                 File(parentDir, filename).outputStream().buffered().use {
                     descBuffer.write(it)
                 }
+                assertThat(File(parentDir, filename).readBytes()).isEqualTo(descBuffer.asByteArray())
             }
         }
     }

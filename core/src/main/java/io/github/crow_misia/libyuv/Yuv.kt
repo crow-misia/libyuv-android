@@ -1520,7 +1520,7 @@ internal object Yuv {
 
     // memcopy.cpp
 
-    external fun memcopy(dst: Any, dstOffset: Int, src: Any, srcLength: Int)
+    external fun memcopy(dst: Any, dstOffset: Int, src: Any, srcOffset: Int, length: Int)
 
     // original
 
