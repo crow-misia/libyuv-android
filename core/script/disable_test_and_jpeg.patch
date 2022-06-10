@@ -16,7 +16,7 @@ diff -ur a/Android.mk b/Android.mk
  
  LOCAL_CFLAGS += $(common_CFLAGS)
  LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
-@@ -75,36 +66,4 @@
+@@ -75,37 +66,4 @@
  
  include $(CLEAR_VARS)
  
@@ -46,6 +46,7 @@ diff -ur a/Android.mk b/Android.mk
 -    unit_test/rotate_argb_test.cc \
 -    unit_test/rotate_test.cc      \
 -    unit_test/scale_argb_test.cc  \
+-    unit_test/scale_rgb_test.cc   \
 -    unit_test/scale_test.cc       \
 -    unit_test/scale_uv_test.cc    \
 -    unit_test/unit_test.cc        \
