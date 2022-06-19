@@ -38,15 +38,14 @@ android {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
             jvmTarget = "1.8"
-            apiVersion = "1.6"
-            languageVersion = "1.6"
+            apiVersion = "1.7"
+            languageVersion = "1.7"
         }
     }
 }
 
 dependencies {
     implementation(project(":core"))
-    implementation(Kotlin.stdlib)
 
     implementation(AndroidX.activity)
     implementation(AndroidX.appCompat)

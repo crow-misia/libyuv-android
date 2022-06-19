@@ -28,7 +28,7 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "32.0.0"
+    buildToolsVersion = "33.0.0"
     compileSdk = 32
 
     defaultConfig {
@@ -72,22 +72,20 @@ android {
     kotlin {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
-            javaParameters = true
             jvmTarget = "1.8"
-            apiVersion = "1.6"
-            languageVersion = "1.6"
+            apiVersion = "1.7"
+            languageVersion = "1.7"
         }
     }
 }
 
 dependencies {
-    implementation(Kotlin.stdlib)
     implementation(AndroidX.annotation)
     implementation(AndroidX.camera.core)
 
     androidTestImplementation(AndroidX.test.runner)
     androidTestImplementation(AndroidX.test.rules)
-    androidTestImplementation(AndroidX.test.ext.junitKtx)
+    androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
     androidTestImplementation("com.google.truth:truth:_")
 }
@@ -143,7 +141,7 @@ afterEvaluate {
                     url.set(Maven.siteUrl)
 
                     scm {
-                        val scmUrl = "scm:git:_"
+                        val scmUrl = "scm:git:${Maven.gitUrl}"
                         connection.set(scmUrl)
                         developerConnection.set(scmUrl)
                         url.set(Maven.gitUrl)
