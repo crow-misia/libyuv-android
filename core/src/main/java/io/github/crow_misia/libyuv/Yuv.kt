@@ -1151,7 +1151,9 @@ internal object Yuv {
     /** Convert Android420 to I420 with rotation. "rotation" can be 0, 90, 180 or 270 */
     external fun rotateAndroid420ToI420Rotate(
         srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int, srcPixelStrideUV: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        srcPixelStrideUV: Int,
         dstY: ByteBuffer, dstStrideY: Int,
         dstU: ByteBuffer, dstStrideU: Int,
         dstV: ByteBuffer, dstStrideV: Int,
