@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    buildToolsVersion = "32.0.0"
+    buildToolsVersion = "33.0.0"
     compileSdk = 32
     defaultConfig {
         applicationId = "com.github.crow_misia.libyuv"
