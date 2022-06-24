@@ -66,7 +66,7 @@ sealed interface Plane {
 
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         @JvmStatic
-        @JvmName("from")
+        @JvmName("fromProxy")
         fun ImageProxy.PlaneProxy.asPlane(): Plane {
             return PlaneProxy(this)
         }
