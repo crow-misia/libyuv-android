@@ -66,6 +66,24 @@ class MainActivity : AppCompatActivity() {
         binding.origin2.setImageBitmap(bitmap2)
         binding.toBitmap2.setImageBitmap(original2Buffer.asBitmap())
 
+        val dummyI420Buffer = I420Buffer.allocate(width, height).also {
+            it.drawRect(0, 0, 1920, 1080, 235, 128, 128)
+            it.drawRect(0, 0, 1024, 768, 43, 239, 114)
+        }
+        val dummy2I420Buffer = I420Buffer.allocate(width, height).also {
+            it.drawRect(0, 0, 1920, 1080, 81, 90, 240)
+        }
+        val dummyAlphaBuffer = I400Buffer.allocate(width, height).also {
+            it.setValue(64)
+        }
+        val dummyARGBBuffer = ArgbBuffer.allocate(width, height).also {
+            original2Buffer.convertTo(it)
+            it.drawGray(100, 100, 1024, 768)
+        }
+        val dummy2ARGBBuffer = ArgbBuffer.allocate(width, height).also {
+            it.drawRect(0, 0, 1920, 1080, 0xff0000ff)
+        }
+
         originalBuffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
@@ -81,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         binding.scale.setImageBitmap(forBitmapScaleBuffer.asBitmap())
 
         original2Buffer.convertTo(i420Buffer)
+        i420Buffer.drawRect(20, 20, 300, 300, 81, 90, 240)
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
@@ -106,6 +125,8 @@ class MainActivity : AppCompatActivity() {
         binding.convert4.setImageBitmap(forBitmapBuffer.asBitmap())
 
         yuy2Buffer.convertTo(argbBuffer)
+        argbBuffer.drawGray(400, 400, 200, 200)
+        argbBuffer.drawQuantize(256 * 64, 4, 0, 0, 0, 1920, 1080)
         argbBuffer.convertTo(forBitmapBuffer)
         binding.convert5.setImageBitmap(forBitmapBuffer.asBitmap())
 
@@ -130,6 +151,15 @@ class MainActivity : AppCompatActivity() {
         uyvyBuffer.convertTo(i422Buffer)
         i422Buffer.convertTo(forBitmapBuffer)
         binding.convert10.setImageBitmap(forBitmapBuffer.asBitmap())
+
+        dummyAlphaBuffer.copyAlpha(dummyARGBBuffer)
+        argbBuffer.drawBlendFrom(dummyARGBBuffer, dummy2ARGBBuffer, 1920, 1080)
+        argbBuffer.convertTo(forBitmapBuffer)
+        binding.drawing1.setImageBitmap(forBitmapBuffer.asBitmap())
+
+        i420Buffer.drawBlendFrom(dummyI420Buffer, dummyAlphaBuffer.planeY, dummy2I420Buffer, 1920, 1080)
+        i420Buffer.convertTo(forBitmapBuffer)
+        binding.drawing2.setImageBitmap(forBitmapBuffer.asBitmap())
 
         Log.i(TAG, "I422 Y Buffer DJB2 Hash %d".format(i422Buffer.planeY.hashDjb2()))
 

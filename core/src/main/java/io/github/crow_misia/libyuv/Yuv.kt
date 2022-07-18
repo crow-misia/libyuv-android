@@ -1284,6 +1284,13 @@ internal object Yuv {
 
     // planar_functions.cpp
 
+    /** Set a plane of data to a 32 bit value. */
+    external fun planerSetPlane(
+        srcY: ByteBuffer, srcStrideY: Int,
+        width: Int, height: Int,
+        value: Int,
+    )
+
     /** Copy I422 to I422 */
     external fun planerI422Copy(
         srcY: ByteBuffer, srcStrideY: Int,
@@ -1416,6 +1423,141 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Draw a rectangle into I420 */
+    external fun planerI420Rect(
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        x: Int, y: Int,
+        width: Int, height: Int,
+        valueY: Int, valueU: Int, valueV: Int,
+    )
+
+    /** Draw a rectangle into ARGB */
+    external fun planerARGBRect(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        x: Int, y: Int,
+        width: Int, height: Int,
+        value: Long,
+    )
+
+    /** Convert ARGB to gray scale ARGB */
+    external fun planerARGBGrayTo(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Make a rectangle of ARGB gray scale */
+    external fun planerARGBGray(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    )
+
+    /** Make a rectangle of ARGB Sepia tone */
+    external fun planerARGBSepia(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    )
+
+    /** Apply a matrix rotation to each ARGB pixel */
+    external fun planerARGBColorMatrix(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        matrixARGB: ByteArray,
+        width: Int, height: Int,
+    )
+
+    /** Apply a color table each ARGB pixel */
+    external fun planerARGBColorTable(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        tableARGB: ByteArray,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    )
+
+    /** Apply a color table each ARGB pixel but preserve destination alpha */
+    external fun planerRGBColorTable(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        tableARGB: ByteArray,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    )
+
+    /** Apply a luma/color table each ARGB pixel but preserve destination alpha */
+    external fun planerARGBLumaColorTable(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        luma: ByteArray,
+        width: Int, height: Int,
+    )
+
+    /** Apply a 3 term polynomial to ARGB values */
+    external fun planerARGBPolynomial(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        poly: FloatArray,
+        width: Int, height: Int,
+    )
+
+    /** Quantize a rectangle of ARGB. Alpha unaffected */
+    external fun planerARGBQuantize(
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        scale: Int,
+        intervalSize: Int, intervalOffset: Int,
+        x: Int, y: Int,
+        width: Int, height: Int,
+    )
+
+    /** Alpha Blend ARGB images and store to destination */
+    external fun planerARGBBlend(
+        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Alpha Blend YUV images and store to destination */
+    external fun planerI420Blend(
+        srcY0: ByteBuffer, srcStrideY0: Int,
+        srcU0: ByteBuffer, srcStrideU0: Int,
+        srcV0: ByteBuffer, srcStrideV0: Int,
+        srcY1: ByteBuffer, srcStrideY1: Int,
+        srcU1: ByteBuffer, srcStrideU1: Int,
+        srcV1: ByteBuffer, srcStrideV1: Int,
+        srcA: ByteBuffer, srcStrideA: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+    )
+
+    /** Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255 */
+    external fun planerARGBMultiply(
+        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Add ARGB image with ARGB image. Saturates to 255 */
+    external fun planerARGBAdd(
+        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Subtract ARGB image with ARGB image. Saturates to 0 */
+    external fun planerARGBSubtract(
+        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
     /** Copy Alpha channel of ARGB to alpha of ARGB */
     external fun planerARGBCopyAlpha(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
@@ -1467,6 +1609,46 @@ internal object Yuv {
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
         width: Int, height: Int,
+    )
+
+    /** Blur ARGB image */
+    external fun planerARGBBlue(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+        radius: Int,
+    )
+
+    /** Multiply ARGB image by ARGB value */
+    external fun planerARGBShade(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+        value: Long,
+    )
+
+    /** Interpolate between two ARGB images using specified amount of interpolation Internally calls InterpolatePlane with width * 4 (bpp). */
+    external fun planerARGBInterpolate(
+        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+        interpolation: Int,
+    )
+
+    /** Interpolate between two YUV images using specified amount of interpolation Internally calls InterpolatePlane on each plane where the U and V planes are half width and half height */
+    external fun planerI420Interpolate(
+        srcY0: ByteBuffer, srcStrideY0: Int,
+        srcU0: ByteBuffer, srcStrideU0: Int,
+        srcV0: ByteBuffer, srcStrideV0: Int,
+        srcY1: ByteBuffer, srcStrideY1: Int,
+        srcU1: ByteBuffer, srcStrideU1: Int,
+        srcV1: ByteBuffer, srcStrideV1: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
+        width: Int, height: Int,
+        interpolation: Int,
     )
 
     // compare.cpp

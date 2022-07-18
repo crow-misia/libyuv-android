@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Color
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -188,6 +189,49 @@ class I420Buffer private constructor(
             srcV = planeV.buffer, srcStrideV = planeV.rowStride,
             dstUYVY = dst.plane.buffer, dstStrideUYVY = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun drawRect(x: Int, y: Int, width: Int, height: Int, valueY: Int, valueU: Int, valueV: Int) {
+        Yuv.planerI420Rect(
+            dstY = planeY.buffer, dstStrideY = planeY.rowStride,
+            dstU = planeU.buffer, dstStrideU = planeU.rowStride,
+            dstV = planeV.buffer, dstStrideV = planeV.rowStride,
+            x = x, y = y,
+            width = width, height = height,
+            valueY = valueY, valueU = valueU, valueV = valueV,
+        )
+    }
+
+    fun drawBlendFrom(src1: I420Buffer, srcAPlane: Plane, src2: I420Buffer, width: Int, height: Int) {
+        Yuv.planerI420Blend(
+            srcY0 = src1.planeY.buffer, srcStrideY0 = src1.planeY.rowStride,
+            srcU0 = src1.planeU.buffer, srcStrideU0 = src1.planeU.rowStride,
+            srcV0 = src1.planeV.buffer, srcStrideV0 = src1.planeV.rowStride,
+            srcY1 = src2.planeY.buffer, srcStrideY1 = src2.planeY.rowStride,
+            srcU1 = src2.planeU.buffer, srcStrideU1 = src2.planeU.rowStride,
+            srcV1 = src2.planeV.buffer, srcStrideV1 = src2.planeV.rowStride,
+            srcA = srcAPlane.buffer, srcStrideA = srcAPlane.rowStride,
+            dstY = planeY.buffer, dstStrideY = planeY.rowStride,
+            dstU = planeU.buffer, dstStrideU = planeU.rowStride,
+            dstV = planeV.buffer, dstStrideV = planeV.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+        )
+    }
+
+    fun drawInterpolateFrom(src1: I420Buffer, src2: I420Buffer, width: Int, height: Int, interpolation: Int) {
+        Yuv.planerI420Interpolate(
+            srcY0 = src1.planeY.buffer, srcStrideY0 = src1.planeY.rowStride,
+            srcU0 = src1.planeU.buffer, srcStrideU0 = src1.planeU.rowStride,
+            srcV0 = src1.planeV.buffer, srcStrideV0 = src1.planeV.rowStride,
+            srcY1 = src2.planeY.buffer, srcStrideY1 = src2.planeY.rowStride,
+            srcU1 = src2.planeU.buffer, srcStrideU1 = src2.planeU.rowStride,
+            srcV1 = src2.planeV.buffer, srcStrideV1 = src2.planeV.rowStride,
+            dstY = planeY.buffer, dstStrideY = planeY.rowStride,
+            dstU = planeU.buffer, dstStrideU = planeU.rowStride,
+            dstV = planeV.buffer, dstStrideV = planeV.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+            interpolation = interpolation,
         )
     }
 

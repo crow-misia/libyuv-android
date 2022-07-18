@@ -15,4 +15,12 @@ interface BufferY<BUFFER : BufferY<BUFFER>> : Buffer {
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
+
+    fun copyAlpha(dst: BufferFirstAlpha) {
+        Yuv.planerARGBCopyYToAlpha(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
 }

@@ -39,6 +39,10 @@ class I400Buffer private constructor(
         )
     }
 
+    fun setValue(value: Int) {
+        planeY.setValue(width, height, value)
+    }
+
     companion object Factory : BufferFactory<I400Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             return intArrayOf(width, width * height)

@@ -177,6 +177,158 @@ class ArgbBuffer private constructor(
         )
     }
 
+    fun drawRect(x: Int, y: Int, width: Int, height: Int, value: Long) {
+        Yuv.planerARGBRect(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            x = x, y = y,
+            width = width, height = height,
+            value = value,
+        )
+    }
+
+    fun drawGrayTo(dst: ArgbBuffer) {
+        Yuv.planerARGBGrayTo(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun drawGray(x: Int, y: Int, width: Int, height: Int) {
+        Yuv.planerARGBGray(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            x = x, y = y,
+            width = width, height = height,
+        )
+    }
+
+    fun drawSepia(x: Int, y: Int, width: Int, height: Int) {
+        Yuv.planerARGBSepia(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            x = x, y = y,
+            width = width, height = height,
+        )
+    }
+
+    fun drawColorMatrix(dst: ArgbBuffer, matrixARGB: ByteArray, width: Int, height: Int) {
+        Yuv.planerARGBColorMatrix(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            matrixARGB = matrixARGB,
+            width = width, height = height,
+        )
+    }
+
+    fun drawColorTable(tableARGB: ByteArray, x: Int, y: Int, width: Int, height: Int) {
+        Yuv.planerARGBColorTable(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            tableARGB = tableARGB,
+            x = x, y = y,
+            width = width, height = height,
+        )
+    }
+
+    fun drawRGBColorTable(tableARGB: ByteArray, x: Int, y: Int, width: Int, height: Int) {
+        Yuv.planerARGBColorTable(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            tableARGB = tableARGB,
+            x = x, y = y,
+            width = width, height = height,
+        )
+    }
+
+    fun drawLumaColorTable(dst: ArgbBuffer, luma: ByteArray, width: Int, height: Int) {
+        Yuv.planerARGBLumaColorTable(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            luma = luma,
+            width = width, height = height,
+        )
+    }
+
+    fun drawPolynomial(dst: ArgbBuffer, poly: FloatArray, width: Int, height: Int) {
+        Yuv.planerARGBPolynomial(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            poly = poly,
+            width = width, height = height,
+        )
+    }
+
+    fun drawQuantize(scale: Int, intervalSize: Int, intervalOffset: Int, x: Int, y: Int, width: Int, height: Int) {
+        Yuv.planerARGBQuantize(
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            scale = scale,
+            intervalSize = intervalSize, intervalOffset = intervalOffset,
+            x = x, y = y,
+            width = width, height = height,
+        )
+    }
+
+    fun drawBlendFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
+        Yuv.planerARGBBlend(
+            srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride,
+            srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride,
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+        )
+    }
+
+    fun drawMultiplyFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
+        Yuv.planerARGBMultiply(
+            srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride,
+            srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride,
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+        )
+    }
+
+    fun drawAddFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
+        Yuv.planerARGBAdd(
+            srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride,
+            srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride,
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+        )
+    }
+
+    fun drawSubtractFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
+        Yuv.planerARGBSubtract(
+            srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride,
+            srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride,
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+        )
+    }
+
+    fun drawBlue(dst: ArgbBuffer, width: Int, height: Int, radius: Int) {
+        Yuv.planerARGBBlue(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+            radius = radius,
+        )
+    }
+
+    fun drawShade(dst: ArgbBuffer, width: Int, height: Int, value: Long) {
+        Yuv.planerARGBShade(
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+            value = value,
+        )
+    }
+
+    fun drawInterpolateFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int, interpolation: Int) {
+        Yuv.planerARGBInterpolate(
+            srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride,
+            srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride,
+            dstARGB = plane.buffer, dstStrideARGB = plane.rowStride,
+            width = minOf(width, src1.width, src2.width), height = minOf(height, src1.height, src2.height),
+            interpolation = interpolation,
+        )
+    }
+
     companion object Factory : BufferFactory<ArgbBuffer> {
         internal fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width.shl(2)

@@ -56,6 +56,10 @@ sealed interface Plane {
         )
     }
 
+    fun setValue(width: Int, height: Int, value: Int) {
+        Yuv.planerSetPlane(srcY = buffer, srcStrideY = rowStride, width = width, height = height, value = value)
+    }
+
     companion object {
         @RequiresApi(Build.VERSION_CODES.KITKAT)
         @JvmStatic

@@ -13,7 +13,14 @@ extern "C" {
 // Convert8To16Plane
 
 // Set a plane of data to a 32 bit value.
-// SetPlane
+JNI_DEFINE_METHOD(void, planerSetPlane,
+                  jobject j_dst_y, const jint j_dst_stride_y,
+                  const jint width, const jint height,
+                  const jint value) {
+    DST_PLANE(y);
+
+    SetPlane(dst_y, dst_stride_y, width, height, value);
+}
 
 // Convert a plane of tiles of 16 x H to linear.
 // DetilePlane
@@ -147,34 +154,130 @@ PLANES_1_TO_1(RGB24Mirror, rgb24, rgb24);
 PLANES_1_TO_1(RAWToRGB24, raw, rgb24);
 
 // Draw a rectangle into I420.
-// I420Rect
+JNI_DEFINE_METHOD(void, planerI420Rect,
+                  jobject j_dst_y, const jint j_dst_stride_y,
+                  jobject j_dst_u, const jint j_dst_stride_u,
+                  jobject j_dst_v, const jint j_dst_stride_v,
+                  const jint x, const jint y,
+                  const jint width, const jint height,
+                  const jint value_y, const jint value_u, const jint value_v) {
+    DST_PLANE(y);
+    DST_PLANE(u);
+    DST_PLANE(v);
+
+    I420Rect(dst_y, dst_stride_y, dst_u, dst_stride_u, dst_v, dst_stride_v, x, y, width, height, value_y, value_u, value_v);
+}
 
 // Draw a rectangle into ARGB.
-// ARGBRect
+JNI_DEFINE_METHOD(void, planerARGBRect,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint x, const jint y,
+                  const jint width, const jint height,
+                  const jlong value) {
+    DST_PLANE(argb);
+
+    ARGBRect(dst_argb, dst_stride_argb, x, y, width, height, value);
+}
 
 // Convert ARGB to gray scale ARGB.
-// ARGBGrayTo
+PLANES_1_TO_1(ARGBGrayTo, argb, argb);
 
 // Make a rectangle of ARGB gray scale.
-// ARGBGray
+JNI_DEFINE_METHOD(void, planerARGBGray,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint x, const jint y,
+                  const jint width, const jint height) {
+    DST_PLANE(argb);
+
+    ARGBGray(dst_argb, dst_stride_argb, x, y, width, height);
+}
 
 // Make a rectangle of ARGB Sepia tone.
-// ARGBSepia
+JNI_DEFINE_METHOD(void, planerARGBSepia,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint x, const jint y,
+                  const jint width, const jint height) {
+    DST_PLANE(argb);
+
+    ARGBSepia(dst_argb, dst_stride_argb, x, y, width, height);
+}
 
 // Apply a matrix rotation to each ARGB pixel.
-// ARGBColorMatrix
+JNI_DEFINE_METHOD(void, planerARGBColorMatrix,
+                  const jobject j_src_argb, const jint j_src_stride_argb,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jbyteArray j_matrix_argb,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb);
+    DST_PLANE(argb);
+    jbyte *matrix_argb = env->GetByteArrayElements(j_matrix_argb, nullptr);
+
+    ARGBColorMatrix(src_argb, src_stride_argb, dst_argb, dst_stride_argb, matrix_argb, width, height);
+
+    env->ReleaseByteArrayElements(j_matrix_argb, matrix_argb, JNI_ABORT);
+}
 
 // Apply a color table each ARGB pixel.
-// ARGBColorTable
+JNI_DEFINE_METHOD(void, planerARGBColorTable,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jbyteArray j_table_argb,
+                  const jint x, const jint y,
+                  const jint width, const jint height) {
+    DST_PLANE(argb);
+    jbyte *table_argb = env->GetByteArrayElements(j_table_argb, nullptr);
+
+    ARGBColorTable(dst_argb, dst_stride_argb, reinterpret_cast<const uint8_t *>(table_argb), x, y, width, height);
+
+    env->ReleaseByteArrayElements(j_table_argb, table_argb, JNI_ABORT);
+}
 
 // Apply a color table each ARGB pixel but preserve destination alpha.
-// RGBColorTable
+JNI_DEFINE_METHOD(void, planerRGBColorTable,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jbyteArray j_table_argb,
+                  const jint x, const jint y,
+                  const jint width, const jint height) {
+    DST_PLANE(argb);
+    jbyte *table_argb = env->GetByteArrayElements(j_table_argb, nullptr);
+
+    RGBColorTable(dst_argb, dst_stride_argb, reinterpret_cast<const uint8_t *>(table_argb), x, y, width, height);
+
+    env->ReleaseByteArrayElements(j_table_argb, table_argb, JNI_ABORT);
+}
 
 // Apply a luma/color table each ARGB pixel but preserve destination alpha.
-// ARGBLumaColorTable
+JNI_DEFINE_METHOD(void, planerARGBLumaColorTable,
+                  const jobject j_src_argb, const jint j_src_stride_argb,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jbyteArray j_luma,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb);
+    DST_PLANE(argb);
+    jbyte *luma = env->GetByteArrayElements(j_luma, nullptr);
+
+    ARGBLumaColorTable(src_argb, src_stride_argb, dst_argb, dst_stride_argb,
+                       reinterpret_cast<const uint8_t *>(luma), width, height);
+
+    env->ReleaseByteArrayElements(j_luma, luma, JNI_ABORT);
+}
 
 // Apply a 3 term polynomial to ARGB values.
-// ARGBPolynomial
+JNI_DEFINE_METHOD(void, planerARGBPolynomial,
+                  const jobject j_src_argb, const jint j_src_stride_argb,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jfloatArray j_poly,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb);
+    DST_PLANE(argb);
+    jfloat *poly = env->GetFloatArrayElements(j_poly, nullptr);
+
+    ARGBPolynomial(src_argb, src_stride_argb,
+                   dst_argb, dst_stride_argb,
+                   poly,
+                   width, height);
+
+    env->ReleaseFloatArrayElements(j_poly, poly, JNI_ABORT);
+}
 
 // Convert plane of 16 bit shorts to half floats.
 // HalfFloatPlane
@@ -183,7 +286,20 @@ PLANES_1_TO_1(RAWToRGB24, raw, rgb24);
 // ByteToFloat
 
 // Quantize a rectangle of ARGB. Alpha unaffected.
-// ARGBQuantize
+JNI_DEFINE_METHOD(void, planerARGBQuantize,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint scale,
+                  const jint interval_size, const jint interval_offset,
+                  const jint dst_x, const jint dst_y,
+                  const jint width, const jint height) {
+    DST_PLANE(argb);
+
+    ARGBQuantize(dst_argb, dst_stride_argb,
+                 scale,
+                 interval_size, interval_offset,
+                 dst_x, dst_y,
+                 width, height);
+}
 
 // Copy ARGB to ARGB. duplicate
 // ARGBCopy
@@ -201,22 +317,108 @@ PLANES_1_TO_1(ARGBCopyYToAlpha, y, argb);
 // GetARGBBlend
 
 // Alpha Blend ARGB images and store to destination.
-// ARGBBlend
+JNI_DEFINE_METHOD(void, planerARGBBlend,
+                  jobject j_src_argb0, const jint j_src_stride_argb0,
+                  jobject j_src_argb1, const jint j_src_stride_argb1,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb0);
+    SRC_PLANE(argb1);
+    DST_PLANE(argb);
+
+    ARGBBlend(src_argb0, src_stride_argb0,
+              src_argb1, src_stride_argb1,
+              dst_argb, dst_stride_argb,
+              width, height);
+}
 
 // Alpha Blend plane and store to destination.
 // BlendPlane
 
 // Alpha Blend YUV images and store to destination.
-// I420Blend
+JNI_DEFINE_METHOD(void, planerI420Blend,
+                  jobject j_src_y0, const jint j_src_stride_y0,
+                  jobject j_src_u0, const jint j_src_stride_u0,
+                  jobject j_src_v0, const jint j_src_stride_v0,
+                  jobject j_src_y1, const jint j_src_stride_y1,
+                  jobject j_src_u1, const jint j_src_stride_u1,
+                  jobject j_src_v1, const jint j_src_stride_v1,
+                  jobject j_src_a, const jint j_src_stride_a,
+                  jobject j_dst_y, const jint j_dst_stride_y,
+                  jobject j_dst_u, const jint j_dst_stride_u,
+                  jobject j_dst_v, const jint j_dst_stride_v,
+                  const jint width, const jint height) {
+    SRC_PLANE(y0);
+    SRC_PLANE(u0);
+    SRC_PLANE(v0);
+    SRC_PLANE(y1);
+    SRC_PLANE(u1);
+    SRC_PLANE(v1);
+    SRC_PLANE(a);
+    DST_PLANE(y);
+    DST_PLANE(u);
+    DST_PLANE(v);
+
+    I420Blend(src_y0, src_stride_y0,
+              src_u0, src_stride_u0,
+              src_v0, src_stride_v0,
+              src_y1, src_stride_y1,
+              src_u1, src_stride_u1,
+              src_v1, src_stride_v1,
+              src_a, src_stride_a,
+              dst_y, dst_stride_y,
+              dst_u, dst_stride_u,
+              dst_v, dst_stride_v,
+              width, height);
+}
 
 // Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255.
-// ARGBMultiply
+JNI_DEFINE_METHOD(void, planerARGBMultiply,
+                  jobject j_src_argb0, const jint j_src_stride_argb0,
+                  jobject j_src_argb1, const jint j_src_stride_argb1,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb0);
+    SRC_PLANE(argb1);
+    DST_PLANE(argb);
+
+    ARGBMultiply(src_argb0, src_stride_argb0,
+              src_argb1, src_stride_argb1,
+              dst_argb, dst_stride_argb,
+              width, height);
+}
 
 // Add ARGB image with ARGB image. Saturates to 255.
-// ARGBAdd
+JNI_DEFINE_METHOD(void, planerARGBAdd,
+                  jobject j_src_argb0, const jint j_src_stride_argb0,
+                  jobject j_src_argb1, const jint j_src_stride_argb1,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb0);
+    SRC_PLANE(argb1);
+    DST_PLANE(argb);
+
+    ARGBAdd(src_argb0, src_stride_argb0,
+                 src_argb1, src_stride_argb1,
+                 dst_argb, dst_stride_argb,
+                 width, height);
+}
 
 // Subtract ARGB image (argb1) from ARGB image (argb0). Saturates to 0.
-// ARGBSubtract
+JNI_DEFINE_METHOD(void, planerARGBSubtract,
+                  jobject j_src_argb0, const jint j_src_stride_argb0,
+                  jobject j_src_argb1, const jint j_src_stride_argb1,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height) {
+    SRC_PLANE(argb0);
+    SRC_PLANE(argb1);
+    DST_PLANE(argb);
+
+    ARGBSubtract(src_argb0, src_stride_argb0,
+            src_argb1, src_stride_argb1,
+            dst_argb, dst_stride_argb,
+            width, height);
+}
 
 // Convert I422 to YUY2.
 PLANES_3_TO_1(I422ToYUY2, y, u, v, yuy2);
@@ -231,13 +433,42 @@ PLANES_1_TO_1(ARGBAttenuate, argb, argb);
 PLANES_1_TO_1(ARGBUnattenuate, argb, argb);
 
 // Blur ARGB image.
-// ARGBBlur
+JNI_DEFINE_METHOD(void, planerARGBBlur,
+                  jobject j_src_argb, const jint j_src_stride_argb,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height,
+                  const jint radius) {
+    SRC_PLANE(argb);
+    DST_PLANE(argb);
+
+    auto* dst_cumsum = static_cast<int32_t *>(malloc((size_t) width * (height + 1) * 16));
+
+    ARGBBlur(src_argb, src_stride_argb,
+             dst_argb, dst_stride_argb,
+             dst_cumsum, width,
+             width, height,
+             radius);
+
+    free(dst_cumsum);
+}
 
 // Gaussian 5x5 blur a float plane.
 // GaussPlane_F32
 
 // Multiply ARGB image by ARGB value.
-// ARGBShade
+JNI_DEFINE_METHOD(void, planerARGBShade,
+                  jobject j_src_argb, const jint j_src_stride_argb,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height,
+                  const jlong value) {
+    SRC_PLANE(argb);
+    DST_PLANE(argb);
+
+    ARGBShade(src_argb, src_stride_argb,
+             dst_argb, dst_stride_argb,
+             width, height,
+             value);
+}
 
 // Interpolate between two images using specified amount of interpolation
 // (0 to 255) and store to destination.
@@ -245,12 +476,60 @@ PLANES_1_TO_1(ARGBUnattenuate, argb, argb);
 
 // Interpolate between two ARGB images using specified amount of interpolation
 // Internally calls InterpolatePlane with width * 4 (bpp).
-// ARGBInterpolate
+JNI_DEFINE_METHOD(void, planerARGBInterpolate,
+                  jobject j_src_argb0, const jint j_src_stride_argb0,
+                  jobject j_src_argb1, const jint j_src_stride_argb1,
+                  jobject j_dst_argb, const jint j_dst_stride_argb,
+                  const jint width, const jint height,
+                  const jint interpolation) {
+    SRC_PLANE(argb0);
+    SRC_PLANE(argb1);
+    DST_PLANE(argb);
+
+    ARGBInterpolate(src_argb0, src_stride_argb0,
+                    src_argb1, src_stride_argb1,
+                    dst_argb, dst_stride_argb,
+                    width, height,
+                    interpolation);
+}
 
 // Interpolate between two YUV images using specified amount of interpolation
 // Internally calls InterpolatePlane on each plane where the U and V planes
 // are half width and half height.
-// I420Interpolate
+JNI_DEFINE_METHOD(void, planerI420Interpolate,
+                  jobject j_src_y0, const jint j_src_stride_y0,
+                  jobject j_src_u0, const jint j_src_stride_u0,
+                  jobject j_src_v0, const jint j_src_stride_v0,
+                  jobject j_src_y1, const jint j_src_stride_y1,
+                  jobject j_src_u1, const jint j_src_stride_u1,
+                  jobject j_src_v1, const jint j_src_stride_v1,
+                  jobject j_dst_y, const jint j_dst_stride_y,
+                  jobject j_dst_u, const jint j_dst_stride_u,
+                  jobject j_dst_v, const jint j_dst_stride_v,
+                  const jint width, const jint height,
+                  const jint interpolation) {
+    SRC_PLANE(y0);
+    SRC_PLANE(u0);
+    SRC_PLANE(v0);
+    SRC_PLANE(y1);
+    SRC_PLANE(u1);
+    SRC_PLANE(v1);
+    DST_PLANE(y);
+    DST_PLANE(u);
+    DST_PLANE(v);
+
+    I420Interpolate(src_y0, src_stride_y0,
+                    src_u0, src_stride_u0,
+                    src_v0, src_stride_v0,
+                    src_y1, src_stride_y1,
+                    src_u1, src_stride_u1,
+                    src_v1, src_stride_v1,
+                    dst_y, dst_stride_y,
+                    dst_u, dst_stride_u,
+                    dst_v, dst_stride_v,
+                    width, height,
+                    interpolation);
+}
 
 // Shuffle ARGB channel order.  e.g. BGRA to ARGB.
 // ARGBShuffle
