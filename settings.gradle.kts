@@ -3,5 +3,6 @@ plugins {
 }
 
 rootProject.name = "libyuv-android"
-include("core")
-include("sample")
+include(":core")
+include(":camerax")
+include(":sample")

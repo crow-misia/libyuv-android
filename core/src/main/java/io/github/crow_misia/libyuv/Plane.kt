@@ -5,12 +5,13 @@ package io.github.crow_misia.libyuv
 import android.media.Image
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
+import androidx.annotation.RestrictTo
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import kotlin.math.min
 
-sealed interface Plane {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface Plane {
     val rowStride: Int
     val buffer: ByteBuffer
 
@@ -67,13 +68,6 @@ sealed interface Plane {
         fun Image.Plane.asPlane(): Plane {
             return PlaneNative(this)
         }
-
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        @JvmStatic
-        @JvmName("fromProxy")
-        fun ImageProxy.PlaneProxy.asPlane(): Plane {
-            return PlaneProxy(this)
-        }
     }
 }
 
@@ -85,16 +79,6 @@ internal class PlaneNative(
         get() = plane.buffer
     override val rowStride: Int
         get() = plane.rowStride
-}
-
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-internal class PlaneProxy(
-    private val proxy: ImageProxy.PlaneProxy,
-) : Plane {
-    override val buffer: ByteBuffer
-        get() = proxy.buffer
-    override val rowStride: Int
-        get() = proxy.rowStride
 }
 
 internal class PlanePrimitive(

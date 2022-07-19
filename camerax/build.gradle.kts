@@ -1,4 +1,3 @@
-import com.android.build.gradle.*
 import org.jetbrains.dokka.gradle.DokkaTask
 import java.net.URI
 
@@ -12,7 +11,7 @@ plugins {
 
 object Maven {
     const val groupId = "io.github.crow-misia.libyuv"
-    const val artifactId = "core"
+    const val artifactId = "camerax"
     const val desc = "LibYuv for Android"
     const val version = "0.24.0"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
@@ -28,11 +27,11 @@ version = Maven.version
 
 android {
     buildToolsVersion = "33.0.0"
-    compileSdk = 33
+    compileSdk = 32
 
     defaultConfig {
         namespace = "io.github.crow_misia.libyuv"
-        minSdk = 9
+        minSdk = 14
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,13 +55,6 @@ android {
         }
     }
 
-    externalNativeBuild {
-        ndkBuild {
-            path(File("${projectDir}/Android.mk"))
-        }
-    }
-    ndkVersion = "25.1.8937393"
-
     sourceSets {
         getByName("androidTest").manifest {
             srcFile("src/androidTest/AndroidManifest.xml")
@@ -80,13 +72,15 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(AndroidX.annotation)
+    implementation(AndroidX.camera.core)
 
     androidTestImplementation(AndroidX.test.runner)
     androidTestImplementation(AndroidX.test.rules)
     androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
-    androidTestImplementation(libs.truth)
+    androidTestImplementation("com.google.truth:truth:_")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -101,7 +95,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins(libs.javadoc.plugin)
+        plugins("org.jetbrains.dokka:javadoc-plugin:_")
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))

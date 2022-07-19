@@ -47,6 +47,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":camerax"))
 
     implementation(AndroidX.activity)
     implementation(AndroidX.appCompat)
