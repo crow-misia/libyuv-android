@@ -64,8 +64,11 @@ abstract class AbstractBuffer(
     }
 
     override fun write(dst: ByteBuffer) {
-        planes.forEach {
-            dst.put(it.buffer)
+        planes.forEach { plane ->
+            plane.buffer.also {
+                it.position(0)
+                dst.put(it)
+            }
         }
     }
 }
