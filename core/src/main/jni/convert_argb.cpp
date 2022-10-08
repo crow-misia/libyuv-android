@@ -82,6 +82,12 @@ PLANES_3_TO_1(U444ToARGB, y, u, v, argb);
 // Convert U444 to ABGR.
 PLANES_3_TO_1(U444ToABGR, y, u, v, abgr);
 
+// Convert I444 to RGB24.
+PLANES_3_TO_1(I444ToRGB24, y, u, v, rgb24);
+
+// Convert I444 to RAW.
+PLANES_3_TO_1(I444ToRAW, y, u, v, raw);
+
 // Convert I010 to ARGB.
 // I010ToARGB
 
@@ -320,6 +326,12 @@ PLANES_3_TO_1(J420ToRGB24, y, u, v, rgb24);
 
 // Convert J420 to RAW.
 PLANES_3_TO_1(J420ToRAW, y, u, v, raw);
+
+// Convert I422 to RGB24.
+PLANES_3_TO_1(I422ToRGB24, y, u, v, rgb24);
+
+// Convert I422 to RAW.
+PLANES_3_TO_1(I422ToRAW, y, u, v, raw);
 
 // Convert I420 to RGB565
 PLANES_3_TO_1(I420ToRGB565, y, u, v, rgb565);

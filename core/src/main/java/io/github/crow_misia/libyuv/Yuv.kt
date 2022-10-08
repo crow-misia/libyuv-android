@@ -468,6 +468,24 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert I444 to RGB24 */
+    external fun convertI444ToRGB24(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I444 to RAW */
+    external fun convertI444ToRAW(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        width: Int, height: Int,
+    )
+
     /** Convert I400 (grey) to ARGB.  Reverse of ARGBToI400 */
     external fun convertI400ToARGB(
         srcY: ByteBuffer, srcStrideY: Int,
@@ -777,6 +795,24 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert I422 to RGB24 */
+    external fun convertI422ToRGB24(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I422 to RAW */
+    external fun convertI422ToRAW(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        width: Int, height: Int,
+    )
+
     /** Convert I420 to RGB565 */
     external fun convertI420ToRGB565(
         srcY: ByteBuffer, srcStrideY: Int,
@@ -1017,24 +1053,49 @@ internal object Yuv {
     /** Convert ARGB to J420. (JPeg full range I420) */
     external fun convertARGBToJ420(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstUJ: ByteBuffer, dstStrideUJ: Int,
+        dstVJ: ByteBuffer, dstStrideVJ: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J422 */
     external fun convertARGBToJ422(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstUJ: ByteBuffer, dstStrideUJ: Int,
+        dstVJ: ByteBuffer, dstStrideVJ: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J400. (JPeg full range) */
     external fun convertARGBToJ400(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ABGR to J420. (JPeg full range) */
+    external fun convertABGRToJ420(
+        srcABGR: ByteBuffer, srcStrideABGR: Int,
+        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstUJ: ByteBuffer, dstStrideUJ: Int,
+        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ABGR to J422. */
+    external fun convertABGRToJ422(
+        srcABGR: ByteBuffer, srcStrideABGR: Int,
+        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstUJ: ByteBuffer, dstStrideUJ: Int,
+        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ABGR to J400. (JPeg full range) */
+    external fun convertABGRToJ400(
+        srcABGR: ByteBuffer, srcStrideABGR: Int,
         dstYJ: ByteBuffer, dstStrideYJ: Int,
         width: Int, height: Int,
     )

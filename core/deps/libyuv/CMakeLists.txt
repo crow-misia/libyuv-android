@@ -41,8 +41,11 @@ endif()
 ADD_EXECUTABLE			( yuvconvert ${ly_base_dir}/util/yuvconvert.cc )
 TARGET_LINK_LIBRARIES	( yuvconvert ${ly_lib_static} )
 
+# this creates the yuvconstants tool
+ADD_EXECUTABLE      ( yuvconstants ${ly_base_dir}/util/yuvconstants.c )
+TARGET_LINK_LIBRARIES  ( yuvconstants ${ly_lib_static} )
 
-INCLUDE ( FindJPEG )
+find_package ( JPEG )
 if (JPEG_FOUND)
   include_directories( ${JPEG_INCLUDE_DIR} )
   target_link_libraries( yuvconvert ${JPEG_LIBRARY} )
@@ -77,6 +80,12 @@ if(TEST)
 
   if(NACL AND NACL_LIBC STREQUAL "newlib")
     target_link_libraries(libyuv_unittest glibc-compat)
+  endif()
+
+  find_library(GFLAGS_LIBRARY gflags)
+  if(NOT GFLAGS_LIBRARY STREQUAL "GFLAGS_LIBRARY-NOTFOUND")
+    target_link_libraries(libyuv_unittest gflags)
+    add_definitions(-DLIBYUV_USE_GFLAGS)
   endif()
 endif()
 

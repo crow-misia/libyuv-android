@@ -439,10 +439,14 @@ void ARGBToAR30Row_C(const uint8_t* src_argb, uint8_t* dst_ar30, int width) {
 void ARGBToAR64Row_C(const uint8_t* src_argb, uint16_t* dst_ar64, int width) {
   int x;
   for (x = 0; x < width; ++x) {
-    dst_ar64[0] = src_argb[0] * 0x0101;
-    dst_ar64[1] = src_argb[1] * 0x0101;
-    dst_ar64[2] = src_argb[2] * 0x0101;
-    dst_ar64[3] = src_argb[3] * 0x0101;
+    uint16_t b = src_argb[0] * 0x0101;
+    uint16_t g = src_argb[1] * 0x0101;
+    uint16_t r = src_argb[2] * 0x0101;
+    uint16_t a = src_argb[3] * 0x0101;
+    dst_ar64[0] = b;
+    dst_ar64[1] = g;
+    dst_ar64[2] = r;
+    dst_ar64[3] = a;
     dst_ar64 += 4;
     src_argb += 4;
   }
@@ -451,10 +455,14 @@ void ARGBToAR64Row_C(const uint8_t* src_argb, uint16_t* dst_ar64, int width) {
 void ARGBToAB64Row_C(const uint8_t* src_argb, uint16_t* dst_ab64, int width) {
   int x;
   for (x = 0; x < width; ++x) {
-    dst_ab64[0] = src_argb[2] * 0x0101;
-    dst_ab64[1] = src_argb[1] * 0x0101;
-    dst_ab64[2] = src_argb[0] * 0x0101;
-    dst_ab64[3] = src_argb[3] * 0x0101;
+    uint16_t b = src_argb[0] * 0x0101;
+    uint16_t g = src_argb[1] * 0x0101;
+    uint16_t r = src_argb[2] * 0x0101;
+    uint16_t a = src_argb[3] * 0x0101;
+    dst_ab64[0] = r;
+    dst_ab64[1] = g;
+    dst_ab64[2] = b;
+    dst_ab64[3] = a;
     dst_ab64 += 4;
     src_argb += 4;
   }
@@ -463,10 +471,14 @@ void ARGBToAB64Row_C(const uint8_t* src_argb, uint16_t* dst_ab64, int width) {
 void AR64ToARGBRow_C(const uint16_t* src_ar64, uint8_t* dst_argb, int width) {
   int x;
   for (x = 0; x < width; ++x) {
-    dst_argb[0] = src_ar64[0] >> 8;
-    dst_argb[1] = src_ar64[1] >> 8;
-    dst_argb[2] = src_ar64[2] >> 8;
-    dst_argb[3] = src_ar64[3] >> 8;
+    uint8_t b = src_ar64[0] >> 8;
+    uint8_t g = src_ar64[1] >> 8;
+    uint8_t r = src_ar64[2] >> 8;
+    uint8_t a = src_ar64[3] >> 8;
+    dst_argb[0] = b;
+    dst_argb[1] = g;
+    dst_argb[2] = r;
+    dst_argb[3] = a;
     dst_argb += 4;
     src_ar64 += 4;
   }
@@ -475,10 +487,14 @@ void AR64ToARGBRow_C(const uint16_t* src_ar64, uint8_t* dst_argb, int width) {
 void AB64ToARGBRow_C(const uint16_t* src_ab64, uint8_t* dst_argb, int width) {
   int x;
   for (x = 0; x < width; ++x) {
-    dst_argb[0] = src_ab64[2] >> 8;
-    dst_argb[1] = src_ab64[1] >> 8;
-    dst_argb[2] = src_ab64[0] >> 8;
-    dst_argb[3] = src_ab64[3] >> 8;
+    uint8_t r = src_ab64[0] >> 8;
+    uint8_t g = src_ab64[1] >> 8;
+    uint8_t b = src_ab64[2] >> 8;
+    uint8_t a = src_ab64[3] >> 8;
+    dst_argb[0] = b;
+    dst_argb[1] = g;
+    dst_argb[2] = r;
+    dst_argb[3] = a;
     dst_argb += 4;
     src_ab64 += 4;
   }
@@ -782,6 +798,7 @@ static __inline int RGB2xToVJ(uint16_t r, uint16_t g, uint16_t b) {
 #endif
 
 MAKEROWYJ(ARGB, 2, 1, 0, 4)
+MAKEROWYJ(ABGR, 0, 1, 2, 4)
 MAKEROWYJ(RGBA, 3, 2, 1, 4)
 MAKEROWYJ(RGB24, 2, 1, 0, 3)
 MAKEROWYJ(RAW, 0, 1, 2, 3)
@@ -1706,7 +1723,7 @@ static __inline void YuvPixel10_16(uint16_t y,
                                    int* r,
                                    const struct YuvConstants* yuvconstants) {
   LOAD_YUV_CONSTANTS;
-  uint32_t y32 = y << 6;
+  uint32_t y32 = (y << 6) | (y >> 4);
   u = clamp255(u >> 2);
   v = clamp255(v >> 2);
   CALC_RGB16;
@@ -1725,7 +1742,7 @@ static __inline void YuvPixel12_16(int16_t y,
                                    int* r,
                                    const struct YuvConstants* yuvconstants) {
   LOAD_YUV_CONSTANTS;
-  uint32_t y32 = y << 4;
+  uint32_t y32 = (y << 4) | (y >> 8);
   u = clamp255(u >> 4);
   v = clamp255(v >> 4);
   CALC_RGB16;
@@ -1843,6 +1860,23 @@ void I444ToARGBRow_C(const uint8_t* src_y,
     src_u += 1;
     src_v += 1;
     rgb_buf += 4;  // Advance 1 pixel.
+  }
+}
+
+void I444ToRGB24Row_C(const uint8_t* src_y,
+                      const uint8_t* src_u,
+                      const uint8_t* src_v,
+                      uint8_t* rgb_buf,
+                      const struct YuvConstants* yuvconstants,
+                      int width) {
+  int x;
+  for (x = 0; x < width; ++x) {
+    YuvPixel(src_y[0], src_u[0], src_v[0], rgb_buf + 0, rgb_buf + 1,
+             rgb_buf + 2, yuvconstants);
+    src_y += 1;
+    src_u += 1;
+    src_v += 1;
+    rgb_buf += 3;  // Advance 1 pixel.
   }
 }
 
@@ -2731,6 +2765,27 @@ void DetileSplitUVRow_C(const uint8_t* src_uv,
   }
 }
 
+void DetileToYUY2_C(const uint8_t* src_y,
+                    ptrdiff_t src_y_tile_stride,
+                    const uint8_t* src_uv,
+                    ptrdiff_t src_uv_tile_stride,
+                    uint8_t* dst_yuy2,
+                    int width) {
+  for (int x = 0; x < width - 15; x += 16) {
+    for (int i = 0; i < 8; i++) {
+      dst_yuy2[0] = src_y[0];
+      dst_yuy2[1] = src_uv[0];
+      dst_yuy2[2] = src_y[1];
+      dst_yuy2[3] = src_uv[1];
+      dst_yuy2 += 4;
+      src_y += 2;
+      src_uv += 2;
+    }
+    src_y += src_y_tile_stride - 16;
+    src_uv += src_uv_tile_stride - 16;
+  }
+}
+
 void SplitRGBRow_C(const uint8_t* src_rgb,
                    uint8_t* dst_r,
                    uint8_t* dst_g,
@@ -3040,6 +3095,21 @@ void YUY2ToUVRow_C(const uint8_t* src_yuy2,
     src_yuy2 += 4;
     dst_u += 1;
     dst_v += 1;
+  }
+}
+
+// Filter 2 rows of YUY2 UV's (422) into UV (NV12).
+void YUY2ToNVUVRow_C(const uint8_t* src_yuy2,
+                     int src_stride_yuy2,
+                     uint8_t* dst_uv,
+                     int width) {
+  // Output a row of UV values, filtering 2 rows of YUY2.
+  int x;
+  for (x = 0; x < width; x += 2) {
+    dst_uv[0] = (src_yuy2[1] + src_yuy2[src_stride_yuy2 + 1] + 1) >> 1;
+    dst_uv[1] = (src_yuy2[3] + src_yuy2[src_stride_yuy2 + 3] + 1) >> 1;
+    src_yuy2 += 4;
+    dst_uv += 2;
   }
 }
 
@@ -4017,6 +4087,32 @@ void I422ToRGB24Row_AVX2(const uint8_t* src_y,
     src_y += twidth;
     src_u += twidth / 2;
     src_v += twidth / 2;
+    dst_rgb24 += twidth * 3;
+    width -= twidth;
+  }
+}
+#endif
+
+#if defined(HAS_I444TORGB24ROW_AVX2)
+void I444ToRGB24Row_AVX2(const uint8_t* src_y,
+                         const uint8_t* src_u,
+                         const uint8_t* src_v,
+                         uint8_t* dst_rgb24,
+                         const struct YuvConstants* yuvconstants,
+                         int width) {
+  // Row buffer for intermediate ARGB pixels.
+  SIMD_ALIGNED(uint8_t row[MAXTWIDTH * 4]);
+  while (width > 0) {
+    int twidth = width > MAXTWIDTH ? MAXTWIDTH : width;
+    I444ToARGBRow_AVX2(src_y, src_u, src_v, row, yuvconstants, twidth);
+#if defined(HAS_ARGBTORGB24ROW_AVX2)
+    ARGBToRGB24Row_AVX2(row, dst_rgb24, twidth);
+#else
+    ARGBToRGB24Row_SSSE3(row, dst_rgb24, twidth);
+#endif
+    src_y += twidth;
+    src_u += twidth;
+    src_v += twidth;
     dst_rgb24 += twidth * 3;
     width -= twidth;
   }

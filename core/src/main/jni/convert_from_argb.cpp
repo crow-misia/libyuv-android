@@ -70,13 +70,22 @@ PLANES_1_TO_3(ARGBToI422, argb, y, u, v);
 // ARGBToI420
 
 // Convert ARGB to J420. (JPeg full range I420)
-PLANES_1_TO_3(ARGBToJ420, argb, y, u, v);
+PLANES_1_TO_3(ARGBToJ420, argb, yj, uj, vj);
 
 // Convert ARGB to J422.
-PLANES_1_TO_3(ARGBToJ422, argb, y, u, v);
+PLANES_1_TO_3(ARGBToJ422, argb, yj, uj, vj);
 
 // Convert ARGB to J400. (JPeg full range)
 PLANES_1_TO_1(ARGBToJ400, argb, yj);
+
+// Convert ABGR to J420. (JPeg full range I420)
+PLANES_1_TO_3(ABGRToJ420, abgr, yj, uj, vj);
+
+// Convert ABGR to J422.
+PLANES_1_TO_3(ABGRToJ422, abgr, yj, uj, vj);
+
+// Convert ABGR to J400. (JPeg full range)
+PLANES_1_TO_1(ABGRToJ400, abgr, yj);
 
 // Convert RGBA to J400. (JPeg full range)
 PLANES_1_TO_1(RGBAToJ400, rgba, yj);

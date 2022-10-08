@@ -28,6 +28,34 @@ class AbgrBuffer private constructor(
         )
     }
 
+    fun convertTo(dst: J400Buffer) {
+        Yuv.convertABGRToJ400(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: J420Buffer) {
+        Yuv.convertABGRToJ420(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
+            dstUJ = dst.planeU.buffer, dstStrideUJ = dst.planeU.rowStride,
+            dstVJ = dst.planeV.buffer, dstStrideVJ = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: J422Buffer) {
+        Yuv.convertABGRToJ422(
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
+            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
+            dstUJ = dst.planeU.buffer, dstStrideUJ = dst.planeU.rowStride,
+            dstVJ = dst.planeV.buffer, dstStrideVJ = dst.planeV.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     fun convertTo(dst: Nv12Buffer) {
         Yuv.convertABGRToNV12(
             srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,

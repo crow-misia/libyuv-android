@@ -90,6 +90,26 @@ class I422Buffer private constructor(
         )
     }
 
+    fun convertTo(dst: Rgb24Buffer) {
+        Yuv.convertI422ToRGB24(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
+    fun convertTo(dst: RawBuffer) {
+        Yuv.convertI422ToRAW(
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride,
+            width = min(width, dst.width), height = min(height, dst.height),
+        )
+    }
+
     fun convertTo(dst: Rgb565Buffer) {
         Yuv.convertI422ToRGB565(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
