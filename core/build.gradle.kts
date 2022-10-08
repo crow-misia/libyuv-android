@@ -29,9 +29,10 @@ version = Maven.version
 
 android {
     buildToolsVersion = "33.0.0"
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
+        namespace = "io.github.crow_misia.libyuv"
         minSdk = 14
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -61,7 +62,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "25.0.8775105"
+    ndkVersion = "25.1.8937393"
 
     sourceSets {
         getByName("androidTest").manifest {
@@ -69,13 +70,11 @@ android {
         }
     }
 
-    kotlin {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
-            jvmTarget = "1.8"
-            apiVersion = "1.7"
-            languageVersion = "1.7"
-        }
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
+        jvmTarget = "1.8"
+        apiVersion = "1.7"
+        languageVersion = "1.7"
     }
 }
 
@@ -87,7 +86,7 @@ dependencies {
     androidTestImplementation(AndroidX.test.rules)
     androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
-    androidTestImplementation("com.google.truth:truth:_")
+    androidTestImplementation(libs.truth)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -102,7 +101,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins("org.jetbrains.dokka:javadoc-plugin:_")
+        plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))

@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="io.github.crow_misia.libyuv">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="32"
         tools:overrideLibrary="androidx.camera.core, androidx.test.core, androidx.test.monitor, androidx.test.runner, androidx.test.rules, androidx.test.ext.junit, androidx.test.ext.junit.ktx, androidx.test.ext.truth, androidx.test.services.storage" />

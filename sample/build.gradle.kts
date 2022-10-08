@@ -5,11 +5,12 @@ plugins {
 
 android {
     buildToolsVersion = "33.0.0"
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
+        namespace = "app"
         applicationId = "com.github.crow_misia.libyuv"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
