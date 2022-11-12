@@ -2,15 +2,15 @@
 
 [plugins]
 
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.7.20" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.7.21" }
 
-gradle = { id = "gradle", version = "7.3.0" }
+gradle = { id = "gradle", version = "7.3.1" }
 
 [versions]
 
-kotlin = "1.7.20"
+kotlin = "1.7.21"
 
-androidx-databinding = "7.3.0"
+androidx-databinding = "7.3.1"
 
 androidx-test-runner = "1.5.0-beta01"
 
@@ -30,17 +30,17 @@ androidx-appcompat = "1.6.0-rc01"
 
 [libraries]
 
-dokka-gradle-plugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.10"
+dokka-gradle-plugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
 
 org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.8"
 
 truth = "com.google.truth:truth:_"
 
-dokka-analysis = "org.jetbrains.dokka:dokka-analysis:1.7.10"
+dokka-analysis = "org.jetbrains.dokka:dokka-analysis:1.7.20"
 
-dokka-base = "org.jetbrains.dokka:dokka-base:1.7.10"
+dokka-base = "org.jetbrains.dokka:dokka-base:1.7.20"
 
-javadoc-plugin = "org.jetbrains.dokka:javadoc-plugin:1.7.10"
+javadoc-plugin = "org.jetbrains.dokka:javadoc-plugin:1.7.20"
 
 viewbinding = { group = "androidx.databinding", name = "viewbinding", version.ref = "androidx-databinding" }
 
