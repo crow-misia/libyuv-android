@@ -301,8 +301,8 @@ class ArgbBuffer private constructor(
         )
     }
 
-    fun drawBlue(dst: ArgbBuffer, width: Int, height: Int, radius: Int) {
-        Yuv.planerARGBBlue(
+    fun drawBlur(dst: ArgbBuffer, width: Int, height: Int, radius: Int) {
+        Yuv.planerARGBBlur(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),

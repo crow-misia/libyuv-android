@@ -445,7 +445,7 @@ JNI_DEFINE_METHOD(void, planerARGBBlur,
 
     ARGBBlur(src_argb, src_stride_argb,
              dst_argb, dst_stride_argb,
-             dst_cumsum, width,
+             dst_cumsum, dst_stride_argb,
              width, height,
              radius);
 

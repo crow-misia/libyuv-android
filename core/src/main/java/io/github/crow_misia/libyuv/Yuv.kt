@@ -1673,7 +1673,7 @@ internal object Yuv {
     )
 
     /** Blur ARGB image */
-    external fun planerARGBBlue(
+    external fun planerARGBBlur(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
         width: Int, height: Int,
