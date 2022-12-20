@@ -609,16 +609,36 @@ void DetileRow_NEON(const uint8_t* src,
                     int width) {
   asm volatile(
       "1:                                        \n"
-      "vld1.16     {q0}, [%0], %3                \n"  // load 16 bytes
+      "vld1.8      {q0}, [%0], %3                \n"  // load 16 bytes
       "subs        %2, %2, #16                   \n"  // 16 processed per loop
       "pld         [%0, #1792]                   \n"
-      "vst1.16     {q0}, [%1]!                   \n"  // store 16 bytes
+      "vst1.8      {q0}, [%1]!                   \n"  // store 16 bytes
       "bgt         1b                            \n"
       : "+r"(src),            // %0
         "+r"(dst),            // %1
         "+r"(width)           // %2
       : "r"(src_tile_stride)  // %3
       : "cc", "memory", "q0"  // Clobber List
+  );
+}
+
+// Reads 16 byte Y's of 16 bits from tile and writes out 16 Y's.
+void DetileRow_16_NEON(const uint16_t* src,
+                       ptrdiff_t src_tile_stride,
+                       uint16_t* dst,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "vld1.16     {q0, q1}, [%0], %3            \n"  // load 16 pixels
+      "subs        %2, %2, #16                   \n"  // 16 processed per loop
+      "pld         [%0, #3584]                   \n"
+      "vst1.16     {q0, q1}, [%1]!               \n"  // store 16 pixels
+      "bgt         1b                            \n"
+      : "+r"(src),                  // %0
+        "+r"(dst),                  // %1
+        "+r"(width)                 // %2
+      : "r"(src_tile_stride * 2)    // %3
+      : "cc", "memory", "q0", "q1"  // Clobber List
   );
 }
 
@@ -655,9 +675,9 @@ void DetileToYUY2_NEON(const uint8_t* src_y,
                        int width) {
   asm volatile(
       "1:                                        \n"
-      "vld1.8      q0, [%0], %4                  \n"  // Load 16 Y
+      "vld1.8      {q0}, [%0], %4                \n"  // Load 16 Y
       "pld         [%0, #1792]                   \n"
-      "vld1.8      q1, [%1], %5                  \n"  // Load 8 UV
+      "vld1.8      {q1}, [%1], %5                \n"  // Load 8 UV
       "pld         [%1, #1792]                   \n"
       "subs        %3, %3, #16                   \n"
       "vst2.8      {q0, q1}, [%2]!               \n"
@@ -681,8 +701,8 @@ void DetileToYUY2_NEON(const uint8_t* src_y,
                        int width) {
   asm volatile(
       "1:                                        \n"
-      "vld1.8      q0, [%0], %4                  \n"  // Load 16 Y
-      "vld1.8      q1, [%1], %5                  \n"  // Load 8 UV
+      "vld1.8      {q0}, [%0], %4                \n"  // Load 16 Y
+      "vld1.8      {q1}, [%1], %5                \n"  // Load 8 UV
       "subs        %3, %3, #16                   \n"
       "pld         [%0, #1792]                   \n"
       "vzip.8      q0, q1                        \n"
@@ -699,6 +719,60 @@ void DetileToYUY2_NEON(const uint8_t* src_y,
   );
 }
 #endif
+
+void UnpackMT2T_NEON(const uint8_t* src, uint16_t* dst, size_t size) {
+  const uint8_t* src_lower_bits = src;
+  const uint8_t* src_upper_bits = src + 16;
+  asm volatile(
+      "1:                                        \n"
+      "vld4.8      {d1, d3, d5, d7}, [%1]!       \n"  // Load 32 bytes of upper
+                                                      // bits.
+      "vld1.8      {d6}, [%0]!                   \n"  // Load 8 bytes of lower
+                                                      // bits.
+      "vshl.u8     d4, d6, #2                    \n"  // Align lower bits.
+      "vshl.u8     d2, d6, #4                    \n"
+      "vshl.u8     d0, d6, #6                    \n"
+      "vzip.u8     d0, d1                        \n"  // Zip lower and upper
+                                                      // bits together.
+      "vzip.u8     d2, d3                        \n"
+      "vzip.u8     d4, d5                        \n"
+      "vzip.u8     d6, d7                        \n"
+      "vsri.u16    q0, q0, #10                   \n"  // Copy upper 6 bits into
+                                                      // lower 6 bits for better
+                                                      // accuracy in
+                                                      // conversions.
+      "vsri.u16    q1, q1, #10                   \n"
+      "vsri.u16    q2, q2, #10                   \n"
+      "vsri.u16    q3, q3, #10                   \n"
+      "vst4.16     {d0, d2, d4, d6}, [%2]!       \n"  // Store 32 pixels
+      "vst4.16     {d1, d3, d5, d7}, [%2]!       \n"
+      "vld4.8      {d1, d3, d5, d7}, [%1]!       \n"  // Process last 32 pixels
+                                                      // in the block
+      "vld1.8      {d6}, [%0]!                   \n"
+      "vshl.u8     d4, d6, #2                    \n"
+      "vshl.u8     d2, d6, #4                    \n"
+      "vshl.u8     d0, d6, #6                    \n"
+      "vzip.u8     d0, d1                        \n"
+      "vzip.u8     d2, d3                        \n"
+      "vzip.u8     d4, d5                        \n"
+      "vzip.u8     d6, d7                        \n"
+      "vsri.u16    q0, q0, #10                   \n"
+      "vsri.u16    q1, q1, #10                   \n"
+      "vsri.u16    q2, q2, #10                   \n"
+      "vsri.u16    q3, q3, #10                   \n"
+      "vst4.16     {d0, d2, d4, d6}, [%2]!       \n"
+      "vst4.16     {d1, d3, d5, d7}, [%2]!       \n"
+      "mov         %0, %1                        \n"
+      "add         %1, %0, #16                   \n"
+      "subs        %3, %3, #80                   \n"
+      "bgt         1b                            \n"
+      : "+r"(src_lower_bits),  // %0
+        "+r"(src_upper_bits),  // %1
+        "+r"(dst),             // %2
+        "+r"(size)             // %3
+      :
+      : "cc", "memory", "q0", "q1", "q2", "q3");
+}
 
 // Reads 16 U's and V's and writes out 16 pairs of UV.
 void MergeUVRow_NEON(const uint8_t* src_u,

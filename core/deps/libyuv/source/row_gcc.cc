@@ -1210,6 +1210,7 @@ void ARGBToAR64Row_AVX2(const uint8_t* src_argb,
       "lea         0x40(%1),%1                   \n"
       "sub         $0x8,%2                       \n"
       "jg          1b                            \n"
+      "vzeroupper                                \n"
       : "+r"(src_argb),  // %0
         "+r"(dst_ar64),  // %1
         "+r"(width)      // %2
@@ -1237,6 +1238,7 @@ void ARGBToAB64Row_AVX2(const uint8_t* src_argb,
       "lea         0x40(%1),%1                   \n"
       "sub         $0x8,%2                       \n"
       "jg          1b                            \n"
+      "vzeroupper                                \n"
       : "+r"(src_argb),             // %0
         "+r"(dst_ab64),             // %1
         "+r"(width)                 // %2
@@ -1265,6 +1267,7 @@ void AR64ToARGBRow_AVX2(const uint16_t* src_ar64,
       "lea         0x20(%1),%1                   \n"
       "sub         $0x8,%2                       \n"
       "jg          1b                            \n"
+      "vzeroupper                                \n"
       : "+r"(src_ar64),  // %0
         "+r"(dst_argb),  // %1
         "+r"(width)      // %2
@@ -1293,6 +1296,7 @@ void AB64ToARGBRow_AVX2(const uint16_t* src_ab64,
       "lea         0x20(%1),%1                   \n"
       "sub         $0x8,%2                       \n"
       "jg          1b                            \n"
+      "vzeroupper                                \n"
       : "+r"(src_ab64),          // %0
         "+r"(dst_argb),          // %1
         "+r"(width)              // %2
@@ -1457,9 +1461,8 @@ void ARGBToYRow_AVX2(const uint8_t* src_argb, uint8_t* dst_y, int width) {
       "vbroadcastf128 %3,%%ymm4                  \n"
       "vbroadcastf128 %4,%%ymm5                  \n"
       "vbroadcastf128 %5,%%ymm7                  \n"
-      "vmovdqu     %6,%%ymm6                     \n"
-
-      LABELALIGN RGBTOY_AVX2(ymm7)
+      "vmovdqu     %6,%%ymm6                     \n" LABELALIGN RGBTOY_AVX2(
+      ymm7) "vzeroupper                                \n"
       : "+r"(src_argb),         // %0
         "+r"(dst_y),            // %1
         "+r"(width)             // %2
@@ -1479,9 +1482,8 @@ void ABGRToYRow_AVX2(const uint8_t* src_abgr, uint8_t* dst_y, int width) {
       "vbroadcastf128 %3,%%ymm4                  \n"
       "vbroadcastf128 %4,%%ymm5                  \n"
       "vbroadcastf128 %5,%%ymm7                  \n"
-      "vmovdqu     %6,%%ymm6                     \n"
-
-      LABELALIGN RGBTOY_AVX2(ymm7)
+      "vmovdqu     %6,%%ymm6                     \n" LABELALIGN RGBTOY_AVX2(
+      ymm7) "vzeroupper                                \n"
       : "+r"(src_abgr),         // %0
         "+r"(dst_y),            // %1
         "+r"(width)             // %2
@@ -1500,9 +1502,8 @@ void ARGBToYJRow_AVX2(const uint8_t* src_argb, uint8_t* dst_y, int width) {
   asm volatile(
       "vbroadcastf128 %3,%%ymm4                  \n"
       "vbroadcastf128 %4,%%ymm5                  \n"
-      "vmovdqu     %5,%%ymm6                     \n"
-
-      LABELALIGN RGBTOY_AVX2(ymm5)
+      "vmovdqu     %5,%%ymm6                     \n" LABELALIGN RGBTOY_AVX2(
+      ymm5) "vzeroupper                                \n"
       : "+r"(src_argb),         // %0
         "+r"(dst_y),            // %1
         "+r"(width)             // %2
@@ -1520,9 +1521,8 @@ void ABGRToYJRow_AVX2(const uint8_t* src_abgr, uint8_t* dst_y, int width) {
   asm volatile(
       "vbroadcastf128 %3,%%ymm4                  \n"
       "vbroadcastf128 %4,%%ymm5                  \n"
-      "vmovdqu     %5,%%ymm6                     \n"
-
-      LABELALIGN RGBTOY_AVX2(ymm5)
+      "vmovdqu     %5,%%ymm6                     \n" LABELALIGN RGBTOY_AVX2(
+      ymm5) "vzeroupper                                \n"
       : "+r"(src_abgr),         // %0
         "+r"(dst_y),            // %1
         "+r"(width)             // %2
@@ -1540,9 +1540,7 @@ void RGBAToYJRow_AVX2(const uint8_t* src_rgba, uint8_t* dst_y, int width) {
   asm volatile(
       "vbroadcastf128 %3,%%ymm4                  \n"
       "vbroadcastf128 %4,%%ymm5                  \n"
-      "vmovdqu     %5,%%ymm6                     \n"
-
-      LABELALIGN RGBTOY_AVX2(
+      "vmovdqu     %5,%%ymm6                     \n" LABELALIGN RGBTOY_AVX2(
       ymm5) "vzeroupper                                \n"
       : "+r"(src_rgba),         // %0
         "+r"(dst_y),            // %1
@@ -5030,6 +5028,51 @@ void DetileRow_SSE2(const uint8_t* src,
 }
 #endif  // HAS_DETILEROW_SSE2
 
+#ifdef HAS_DETILEROW_16_SSE2
+void DetileRow_16_SSE2(const uint16_t* src,
+                       ptrdiff_t src_tile_stride,
+                       uint16_t* dst,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "movdqu      (%0),%%xmm0                   \n"
+      "movdqu      0x10(%0),%%xmm1               \n"
+      "lea         (%0,%3,2),%0                  \n"
+      "movdqu      %%xmm0,(%1)                   \n"
+      "movdqu      %%xmm1,0x10(%1)               \n"
+      "lea         0x20(%1),%1                   \n"
+      "sub         $0x10,%2                      \n"
+      "jg          1b                            \n"
+      : "+r"(src),            // %0
+        "+r"(dst),            // %1
+        "+r"(width)           // %2
+      : "r"(src_tile_stride)  // %3
+      : "cc", "memory", "xmm0", "xmm1");
+}
+#endif  // HAS_DETILEROW_SSE2
+
+#ifdef HAS_DETILEROW_16_AVX
+void DetileRow_16_AVX(const uint16_t* src,
+                      ptrdiff_t src_tile_stride,
+                      uint16_t* dst,
+                      int width) {
+  asm volatile(
+      "1:                                        \n"
+      "vmovdqu     (%0),%%ymm0                   \n"
+      "lea         (%0,%3,2),%0                  \n"
+      "vmovdqu     %%ymm0,(%1)                   \n"
+      "lea         0x20(%1),%1                   \n"
+      "sub         $0x10,%2                      \n"
+      "jg          1b                            \n"
+      "vzeroupper                                \n"
+      : "+r"(src),            // %0
+        "+r"(dst),            // %1
+        "+r"(width)           // %2
+      : "r"(src_tile_stride)  // %3
+      : "cc", "memory", "xmm0");
+}
+#endif  // HAS_DETILEROW_AVX
+
 #ifdef HAS_DETILETOYUY2_SSE2
 // Read 16 Y, 8 UV, and write 8 YUYV.
 void DetileToYUY2_SSE2(const uint8_t* src_y,
@@ -6456,6 +6499,7 @@ void CopyRow_AVX(const uint8_t* src, uint8_t* dst, int width) {
       "lea         0x40(%1),%1                   \n"
       "sub         $0x40,%2                      \n"
       "jg          1b                            \n"
+      "vzeroupper                                \n"
       : "+r"(src),   // %0
         "+r"(dst),   // %1
         "+r"(width)  // %2

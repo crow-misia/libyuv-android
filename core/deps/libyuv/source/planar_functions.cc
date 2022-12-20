@@ -385,6 +385,7 @@ int I420ToI400(const uint8_t* src_y,
 }
 
 // Copy NV12. Supports inverting.
+LIBYUV_API
 int NV12Copy(const uint8_t* src_y,
              int src_stride_y,
              const uint8_t* src_uv,
@@ -418,6 +419,7 @@ int NV12Copy(const uint8_t* src_y,
 }
 
 // Copy NV21. Supports inverting.
+LIBYUV_API
 int NV21Copy(const uint8_t* src_y,
              int src_stride_y,
              const uint8_t* src_vu,
@@ -911,31 +913,31 @@ int NV21ToNV12(const uint8_t* src_y,
   return 0;
 }
 
+// Test if tile_height is a power of 2 (16 or 32)
+#define IS_POWEROFTWO(x) (!((x) & ((x)-1)))
+
 // Detile a plane of data
 // tile width is 16 and assumed.
 // tile_height is 16 or 32 for MM21.
 // src_stride_y is bytes per row of source ignoring tiling. e.g. 640
 // TODO: More detile row functions.
-
 LIBYUV_API
-void DetilePlane(const uint8_t* src_y,
-                 int src_stride_y,
-                 uint8_t* dst_y,
-                 int dst_stride_y,
-                 int width,
-                 int height,
-                 int tile_height) {
+int DetilePlane(const uint8_t* src_y,
+                int src_stride_y,
+                uint8_t* dst_y,
+                int dst_stride_y,
+                int width,
+                int height,
+                int tile_height) {
   const ptrdiff_t src_tile_stride = 16 * tile_height;
   int y;
   void (*DetileRow)(const uint8_t* src, ptrdiff_t src_tile_stride, uint8_t* dst,
                     int width) = DetileRow_C;
-  assert(src_stride_y >= 0);
-  assert(tile_height > 0);
-  assert(src_stride_y > 0);
-
-  if (width <= 0 || height == 0) {
-    return;
+  if (!src_y || !dst_y || width <= 0 || height == 0 ||
+      !IS_POWEROFTWO(tile_height)) {
+    return -1;
   }
+
   // Negative height means invert the image.
   if (height < 0) {
     height = -height;
@@ -970,6 +972,72 @@ void DetilePlane(const uint8_t* src_y,
       src_y = src_y - src_tile_stride + src_stride_y * tile_height;
     }
   }
+  return 0;
+}
+
+// Convert a plane of 16 bit tiles of 16 x H to linear.
+// tile width is 16 and assumed.
+// tile_height is 16 or 32 for MT2T.
+LIBYUV_API
+int DetilePlane_16(const uint16_t* src_y,
+                   int src_stride_y,
+                   uint16_t* dst_y,
+                   int dst_stride_y,
+                   int width,
+                   int height,
+                   int tile_height) {
+  const ptrdiff_t src_tile_stride = 16 * tile_height;
+  int y;
+  void (*DetileRow_16)(const uint16_t* src, ptrdiff_t src_tile_stride,
+                       uint16_t* dst, int width) = DetileRow_16_C;
+  if (!src_y || !dst_y || width <= 0 || height == 0 ||
+      !IS_POWEROFTWO(tile_height)) {
+    return -1;
+  }
+
+  // Negative height means invert the image.
+  if (height < 0) {
+    height = -height;
+    dst_y = dst_y + (height - 1) * dst_stride_y;
+    dst_stride_y = -dst_stride_y;
+  }
+
+#if defined(HAS_DETILEROW_16_SSE2)
+  if (TestCpuFlag(kCpuHasSSE2)) {
+    DetileRow_16 = DetileRow_16_Any_SSE2;
+    if (IS_ALIGNED(width, 16)) {
+      DetileRow_16 = DetileRow_16_SSE2;
+    }
+  }
+#endif
+#if defined(HAS_DETILEROW_16_AVX)
+  if (TestCpuFlag(kCpuHasAVX)) {
+    DetileRow_16 = DetileRow_16_Any_AVX;
+    if (IS_ALIGNED(width, 16)) {
+      DetileRow_16 = DetileRow_16_AVX;
+    }
+  }
+#endif
+#if defined(HAS_DETILEROW_16_NEON)
+  if (TestCpuFlag(kCpuHasNEON)) {
+    DetileRow_16 = DetileRow_16_Any_NEON;
+    if (IS_ALIGNED(width, 16)) {
+      DetileRow_16 = DetileRow_16_NEON;
+    }
+  }
+#endif
+
+  // Detile plane
+  for (y = 0; y < height; ++y) {
+    DetileRow_16(src_y, src_tile_stride, dst_y, width);
+    dst_y += dst_stride_y;
+    src_y += 16;
+    // Advance to next row of tiles.
+    if ((y & (tile_height - 1)) == (tile_height - 1)) {
+      src_y = src_y - src_tile_stride + src_stride_y * tile_height;
+    }
+  }
+  return 0;
 }
 
 LIBYUV_API
@@ -3128,6 +3196,7 @@ int RAWToRGB24(const uint8_t* src_raw,
   return 0;
 }
 
+// TODO(fbarchard): Consider uint8_t value
 LIBYUV_API
 void SetPlane(uint8_t* dst_y,
               int dst_stride_y,
@@ -3188,7 +3257,7 @@ void SetPlane(uint8_t* dst_y,
 
   // Set plane
   for (y = 0; y < height; ++y) {
-    SetRow(dst_y, value, width);
+    SetRow(dst_y, (uint8_t)value, width);
     dst_y += dst_stride_y;
   }
 }

@@ -732,6 +732,92 @@ int MM21ToYUY2(const uint8_t* src_y,
   return 0;
 }
 
+// Convert MT2T into P010. See tinyurl.com/mtk-10bit-video-format for format
+// documentation.
+// TODO(greenjustin): Add an MT2T to I420 conversion.
+LIBYUV_API
+int MT2TToP010(const uint8_t* src_y,
+               int src_stride_y,
+               const uint8_t* src_uv,
+               int src_stride_uv,
+               uint16_t* dst_y,
+               int dst_stride_y,
+               uint16_t* dst_uv,
+               int dst_stride_uv,
+               int width,
+               int height) {
+  if (width <= 0 || !height || !src_uv || !dst_uv) {
+    return -1;
+  }
+
+  {
+    int u_width = (width + 1) / 2;
+    int uv_width = 2 * u_width;
+    int y = 0;
+    int uv_height = uv_height = (height + 1) / 2;
+    const int tile_width = 16;
+    const int y_tile_height = 32;
+    const int uv_tile_height = 16;
+    int padded_width = (width + tile_width - 1) & ~(tile_width - 1);
+    int y_tile_row_size = padded_width * y_tile_height * 10 / 8;
+    int uv_tile_row_size = padded_width * uv_tile_height * 10 / 8;
+    size_t row_buf_size = padded_width * y_tile_height * sizeof(uint16_t);
+    void (*UnpackMT2T)(const uint8_t* src, uint16_t* dst, size_t size) =
+        UnpackMT2T_C;
+    align_buffer_64(row_buf, row_buf_size);
+
+#if defined(HAS_UNPACKMT2T_NEON)
+    if (TestCpuFlag(kCpuHasNEON)) {
+      UnpackMT2T = UnpackMT2T_NEON;
+    }
+#endif
+    // Negative height means invert the image.
+    if (height < 0) {
+      height = -height;
+      uv_height = (height + 1) / 2;
+      if (dst_y) {
+        dst_y = dst_y + (height - 1) * dst_stride_y;
+        dst_stride_y = -dst_stride_y;
+      }
+      dst_uv = dst_uv + (uv_height - 1) * dst_stride_uv;
+      dst_stride_uv = -dst_stride_uv;
+    }
+
+    // Unpack and detile Y in rows of tiles
+    if (src_y && dst_y) {
+      for (y = 0; y < (height & ~(y_tile_height - 1)); y += y_tile_height) {
+        UnpackMT2T(src_y, (uint16_t*)row_buf, y_tile_row_size);
+        DetilePlane_16((uint16_t*)row_buf, padded_width, dst_y, dst_stride_y,
+                       width, y_tile_height, y_tile_height);
+        src_y += src_stride_y * y_tile_height;
+        dst_y += dst_stride_y * y_tile_height;
+      }
+      if (height & (y_tile_height - 1)) {
+        UnpackMT2T(src_y, (uint16_t*)row_buf, y_tile_row_size);
+        DetilePlane_16((uint16_t*)row_buf, padded_width, dst_y, dst_stride_y,
+                       width, height & (y_tile_height - 1), y_tile_height);
+      }
+    }
+
+    // Unpack and detile UV plane
+    for (y = 0; y < (uv_height & ~(uv_tile_height - 1)); y += uv_tile_height) {
+      UnpackMT2T(src_uv, (uint16_t*)row_buf, uv_tile_row_size);
+      DetilePlane_16((uint16_t*)row_buf, padded_width, dst_uv, dst_stride_uv,
+                     uv_width, uv_tile_height, uv_tile_height);
+      src_uv += src_stride_uv * uv_tile_height;
+      dst_uv += dst_stride_uv * uv_tile_height;
+    }
+    if (uv_height & (uv_tile_height - 1)) {
+      UnpackMT2T(src_uv, (uint16_t*)row_buf, uv_tile_row_size);
+      DetilePlane_16((uint16_t*)row_buf, padded_width, dst_uv, dst_stride_uv,
+                     uv_width, uv_height & (uv_tile_height - 1),
+                     uv_tile_height);
+    }
+    free_aligned_buffer_64(row_buf);
+  }
+  return 0;
+}
+
 #ifdef I422TONV21_ROW_VERSION
 // Unittest fails for this version.
 // 422 chroma is 1/2 width, 1x height
@@ -1647,16 +1733,6 @@ int BGRAToI420(const uint8_t* src_bgra,
     src_bgra = src_bgra + (height - 1) * src_stride_bgra;
     src_stride_bgra = -src_stride_bgra;
   }
-#if defined(HAS_BGRATOYROW_SSSE3) && defined(HAS_BGRATOUVROW_SSSE3)
-  if (TestCpuFlag(kCpuHasSSSE3)) {
-    BGRAToUVRow = BGRAToUVRow_Any_SSSE3;
-    BGRAToYRow = BGRAToYRow_Any_SSSE3;
-    if (IS_ALIGNED(width, 16)) {
-      BGRAToUVRow = BGRAToUVRow_SSSE3;
-      BGRAToYRow = BGRAToYRow_SSSE3;
-    }
-  }
-#endif
 #if defined(HAS_BGRATOYROW_NEON)
   if (TestCpuFlag(kCpuHasNEON)) {
     BGRAToYRow = BGRAToYRow_Any_NEON;
@@ -1673,23 +1749,57 @@ int BGRAToI420(const uint8_t* src_bgra,
     }
   }
 #endif
+#if defined(HAS_BGRATOYROW_SSSE3)
+  if (TestCpuFlag(kCpuHasSSSE3)) {
+    BGRAToYRow = BGRAToYRow_Any_SSSE3;
+    if (IS_ALIGNED(width, 16)) {
+      BGRAToYRow = BGRAToYRow_SSSE3;
+    }
+  }
+#endif
+#if defined(HAS_BGRATOUVROW_SSSE3)
+  if (TestCpuFlag(kCpuHasSSSE3)) {
+    BGRAToUVRow = BGRAToUVRow_Any_SSSE3;
+    if (IS_ALIGNED(width, 16)) {
+      BGRAToUVRow = BGRAToUVRow_SSSE3;
+    }
+  }
+#endif
+#if defined(HAS_BGRATOYROW_AVX2)
+  if (TestCpuFlag(kCpuHasAVX2)) {
+    BGRAToYRow = BGRAToYRow_Any_AVX2;
+    if (IS_ALIGNED(width, 32)) {
+      BGRAToYRow = BGRAToYRow_AVX2;
+    }
+  }
+#endif
+#if defined(HAS_BGRATOUVROW_AVX2)
+  if (TestCpuFlag(kCpuHasAVX2)) {
+    BGRAToUVRow = BGRAToUVRow_Any_AVX2;
+    if (IS_ALIGNED(width, 32)) {
+      BGRAToUVRow = BGRAToUVRow_AVX2;
+    }
+  }
+#endif
 #if defined(HAS_BGRATOYROW_MSA) && defined(HAS_BGRATOUVROW_MSA)
   if (TestCpuFlag(kCpuHasMSA)) {
     BGRAToYRow = BGRAToYRow_Any_MSA;
     BGRAToUVRow = BGRAToUVRow_Any_MSA;
     if (IS_ALIGNED(width, 16)) {
       BGRAToYRow = BGRAToYRow_MSA;
+    }
+    if (IS_ALIGNED(width, 32)) {
       BGRAToUVRow = BGRAToUVRow_MSA;
     }
   }
 #endif
-#if defined(HAS_BGRATOYROW_LSX) && defined(HAS_BGRATOUVROW_LSX)
-  if (TestCpuFlag(kCpuHasLSX)) {
-    BGRAToYRow = BGRAToYRow_Any_LSX;
-    BGRAToUVRow = BGRAToUVRow_Any_LSX;
-    if (IS_ALIGNED(width, 16)) {
-      BGRAToYRow = BGRAToYRow_LSX;
-      BGRAToUVRow = BGRAToUVRow_LSX;
+#if defined(HAS_BGRATOYROW_LASX) && defined(HAS_BGRATOUVROW_LASX)
+  if (TestCpuFlag(kCpuHasLASX)) {
+    BGRAToYRow = BGRAToYRow_Any_LASX;
+    BGRAToUVRow = BGRAToUVRow_Any_LASX;
+    if (IS_ALIGNED(width, 32)) {
+      BGRAToYRow = BGRAToYRow_LASX;
+      BGRAToUVRow = BGRAToUVRow_LASX;
     }
   }
 #endif

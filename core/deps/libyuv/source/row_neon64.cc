@@ -650,6 +650,26 @@ void DetileRow_NEON(const uint8_t* src,
   );
 }
 
+// Reads 16 byte Y's of 16 bits from tile and writes out 16 Y's.
+void DetileRow_16_NEON(const uint16_t* src,
+                       ptrdiff_t src_tile_stride,
+                       uint16_t* dst,
+                       int width) {
+  asm volatile(
+      "1:                                        \n"
+      "ld1         {v0.8h,v1.8h}, [%0], %3       \n"  // load 16 pixels
+      "subs        %w2, %w2, #16                 \n"  // 16 processed per loop
+      "prfm        pldl1keep, [%0, 3584]         \n"  // 7 tiles of 512b ahead
+      "st1         {v0.8h,v1.8h}, [%1], #32      \n"  // store 16 pixels
+      "b.gt        1b                            \n"
+      : "+r"(src),                  // %0
+        "+r"(dst),                  // %1
+        "+r"(width)                 // %2
+      : "r"(src_tile_stride * 2)    // %3
+      : "cc", "memory", "v0", "v1"  // Clobber List
+  );
+}
+
 // Read 16 bytes of UV, detile, and write 8 bytes of U and 8 bytes of V.
 void DetileSplitUVRow_NEON(const uint8_t* src_uv,
                            ptrdiff_t src_tile_stride,
@@ -728,6 +748,54 @@ void DetileToYUY2_NEON(const uint8_t* src_y,
   );
 }
 #endif
+
+// Unpack MT2T into tiled P010 64 pixels at a time. See
+// tinyurl.com/mtk-10bit-video-format for format documentation.
+void UnpackMT2T_NEON(const uint8_t* src, uint16_t* dst, size_t size) {
+  const uint8_t* src_lower_bits = src;
+  const uint8_t* src_upper_bits = src + 16;
+  asm volatile(
+      "1:                                        \n"
+      "ld4         {v0.8b, v1.8b, v2.8b, v3.8b}, [%1], #32 \n"
+      "ld1         {v7.8b}, [%0], #8             \n"
+      "shl         v6.8b, v7.8b, #2              \n"
+      "shl         v5.8b, v7.8b, #4              \n"
+      "shl         v4.8b, v7.8b, #6              \n"
+      "zip1        v0.16b, v4.16b, v0.16b        \n"
+      "zip1        v1.16b, v5.16b, v1.16b        \n"
+      "zip1        v2.16b, v6.16b, v2.16b        \n"
+      "zip1        v3.16b, v7.16b, v3.16b        \n"
+      "sri         v0.8h, v0.8h, #10             \n"
+      "sri         v1.8h, v1.8h, #10             \n"
+      "sri         v2.8h, v2.8h, #10             \n"
+      "sri         v3.8h, v3.8h, #10             \n"
+      "st4         {v0.8h, v1.8h, v2.8h, v3.8h}, [%2], #64 \n"
+      "ld4         {v0.8b, v1.8b, v2.8b, v3.8b}, [%1], #32 \n"
+      "ld1         {v7.8b}, [%0], #8             \n"
+      "shl         v6.8b, v7.8b, #2              \n"
+      "shl         v5.8b, v7.8b, #4              \n"
+      "shl         v4.8b, v7.8b, #6              \n"
+      "zip1        v0.16b, v4.16b, v0.16b        \n"
+      "zip1        v1.16b, v5.16b, v1.16b        \n"
+      "zip1        v2.16b, v6.16b, v2.16b        \n"
+      "zip1        v3.16b, v7.16b, v3.16b        \n"
+      "sri         v0.8h, v0.8h, #10             \n"
+      "sri         v1.8h, v1.8h, #10             \n"
+      "sri         v2.8h, v2.8h, #10             \n"
+      "sri         v3.8h, v3.8h, #10             \n"
+      "st4         {v0.8h, v1.8h, v2.8h, v3.8h}, [%2], #64 \n"
+      "mov         %0, %1                        \n"
+      "add         %1, %0, #16                   \n"
+      "subs        %3, %3, #80                   \n"
+      "b.gt        1b                            \n"
+      : "+r"(src_lower_bits),  // %0
+        "+r"(src_upper_bits),  // %1
+        "+r"(dst),             // %2
+        "+r"(size)             // %3
+      :
+      : "cc", "memory", "w0", "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7",
+        "v8", "v9", "v10", "v11", "v12");
+}
 
 #if LIBYUV_USE_ST2
 // Reads 16 U's and V's and writes out 16 pairs of UV.
