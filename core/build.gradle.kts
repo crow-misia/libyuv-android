@@ -28,7 +28,7 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "33.0.0"
+    buildToolsVersion = "33.0.1"
     compileSdk = 33
 
     defaultConfig {
@@ -86,7 +86,7 @@ dependencies {
     androidTestImplementation(AndroidX.test.rules)
     androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
-    androidTestImplementation(libs.truth)
+    androidTestImplementation("com.google.truth:truth:_")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -101,7 +101,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins(libs.javadoc.plugin)
+        plugins("org.jetbrains.dokka:javadoc-plugin:1.7.20")
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
