@@ -2,15 +2,11 @@
 
 package io.github.crow_misia.libyuv
 
-import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.camera.core.ImageProxy
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import kotlin.math.min
 
-sealed interface Plane {
+interface Plane {
     val rowStride: Int
     val buffer: ByteBuffer
 
@@ -59,45 +55,4 @@ sealed interface Plane {
     fun setValue(width: Int, height: Int, value: Int) {
         Yuv.planerSetPlane(srcY = buffer, srcStrideY = rowStride, width = width, height = height, value = value)
     }
-
-    companion object {
-        @RequiresApi(Build.VERSION_CODES.KITKAT)
-        @JvmStatic
-        @JvmName("from")
-        fun Image.Plane.asPlane(): Plane {
-            return PlaneNative(this)
-        }
-
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        @JvmStatic
-        @JvmName("fromProxy")
-        fun ImageProxy.PlaneProxy.asPlane(): Plane {
-            return PlaneProxy(this)
-        }
-    }
 }
-
-@RequiresApi(Build.VERSION_CODES.KITKAT)
-internal class PlaneNative(
-    private val plane: Image.Plane,
-) : Plane {
-    override val buffer: ByteBuffer
-        get() = plane.buffer
-    override val rowStride: Int
-        get() = plane.rowStride
-}
-
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-internal class PlaneProxy(
-    private val proxy: ImageProxy.PlaneProxy,
-) : Plane {
-    override val buffer: ByteBuffer
-        get() = proxy.buffer
-    override val rowStride: Int
-        get() = proxy.rowStride
-}
-
-internal class PlanePrimitive(
-    override val rowStride: Int,
-    override val buffer: ByteBuffer,
-) : Plane
