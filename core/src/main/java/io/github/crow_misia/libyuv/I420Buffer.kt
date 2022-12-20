@@ -1,6 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Color
 import java.nio.ByteBuffer
 import kotlin.math.min
 

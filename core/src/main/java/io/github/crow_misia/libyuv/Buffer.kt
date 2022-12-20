@@ -1,6 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import java.io.ByteArrayOutputStream
 import java.io.Closeable
 import java.io.OutputStream
 import java.nio.ByteBuffer
@@ -50,7 +49,7 @@ interface Buffer : Closeable {
     /**
      * Write image data.
      *
-     * @param buffer destination ByteBuffer
+     * @param dst destination ByteBuffer
      */
     fun write(dst: ByteBuffer)
 }
