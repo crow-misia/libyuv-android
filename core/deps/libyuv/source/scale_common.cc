@@ -1287,7 +1287,7 @@ void ScaleUVRowDown2_C(const uint8_t* src_uv,
   for (x = 0; x < dst_width - 1; x += 2) {
     dst[0] = src[1];
     dst[1] = src[3];
-    src += 2;
+    src += 4;
     dst += 2;
   }
   if (dst_width & 1) {
