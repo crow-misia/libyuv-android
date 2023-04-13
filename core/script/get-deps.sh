@@ -19,5 +19,4 @@ pushd $CURDIR/deps/libyuv
 popd
 pushd $CURDIR/deps/libyuv
   patch -u -p1 < $CURDIR/script/disable_test_and_jpeg.patch
-  patch -u -p1 < $CURDIR/script/fix_bug_scale_down_1_2_uv.patch
 popd

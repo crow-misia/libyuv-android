@@ -15,7 +15,7 @@ object Maven {
     const val artifactId = "libyuv-android"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"
-    const val version = "0.26.0"
+    const val version = "0.27.0"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
@@ -28,7 +28,7 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "33.0.1"
+    buildToolsVersion = "33.0.2"
     compileSdk = 33
 
     defaultConfig {
@@ -62,7 +62,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "25.2.9519653"
 
     sourceSets {
         getByName("androidTest").manifest {
@@ -73,8 +73,8 @@ android {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
         jvmTarget = "1.8"
-        apiVersion = "1.7"
-        languageVersion = "1.7"
+        apiVersion = "1.8"
+        languageVersion = "1.8"
     }
 }
 
@@ -86,7 +86,7 @@ dependencies {
     androidTestImplementation(AndroidX.test.rules)
     androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
-    androidTestImplementation("com.google.truth:truth:_")
+    androidTestImplementation(libs.truth)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -101,7 +101,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins("org.jetbrains.dokka:javadoc-plugin:1.7.20")
+        plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
