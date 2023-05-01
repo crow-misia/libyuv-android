@@ -8,7 +8,7 @@ gradle = { id = "gradle", version = "7.4.2" }
 
 [versions]
 
-kotlin = "1.8.20"
+kotlin = "1.8.21"
 
 dokka = "1.8.10"
 
