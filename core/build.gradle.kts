@@ -1,6 +1,7 @@
-import com.android.build.gradle.*
 import org.jetbrains.dokka.gradle.DokkaTask
-import java.net.URI
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("com.android.library")
@@ -15,7 +16,7 @@ object Maven {
     const val artifactId = "libyuv-android"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"
-    const val version = "0.27.0"
+    const val version = "0.28.0"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
@@ -28,11 +29,10 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "33.0.2"
+    namespace = "io.github.crow_misia.libyuv"
     compileSdk = 33
 
     defaultConfig {
-        namespace = "io.github.crow_misia.libyuv"
         minSdk = 14
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -40,12 +40,6 @@ android {
 
     lint {
         textReport = true
-    }
-
-    libraryVariants.all {
-        generateBuildConfigProvider?.configure {
-            enabled = false
-        }
     }
 
     buildTypes {
@@ -70,11 +64,25 @@ android {
         }
     }
 
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libyuv-android")
-        jvmTarget = "1.8"
-        apiVersion = "1.8"
-        languageVersion = "1.8"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+tasks.withType<KotlinJvmCompile>().all {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+        javaParameters.set(true)
+        jvmTarget.set(JvmTarget.JVM_11)
+        apiVersion.set(KotlinVersion.KOTLIN_1_8)
+        languageVersion.set(KotlinVersion.KOTLIN_1_8)
     }
 }
 
@@ -87,13 +95,6 @@ dependencies {
     androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.ext.truth)
     androidTestImplementation(libs.truth)
-}
-
-val sourcesJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles sources JAR"
-    archiveClassifier.set("sources")
-    from(sourceSets.create("main").allSource)
 }
 
 val customDokkaTask by tasks.creating(DokkaTask::class) {
@@ -131,7 +132,6 @@ afterEvaluate {
                     |    Version: $version
                 """.trimMargin())
 
-                artifact(sourcesJar)
                 artifact(javadocJar)
 
                 pom {
@@ -169,20 +169,19 @@ afterEvaluate {
         }
         repositories {
             maven {
-                val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-                val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
+                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+                val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
                 url = if (Maven.version.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-                val sonatypeUsername: String? by project
-                val sonatypePassword: String? by project
                 credentials {
-                    username = sonatypeUsername.orEmpty()
-                    password = sonatypePassword.orEmpty()
+                    username = project.findProperty("sona.user") as String? ?: providers.environmentVariable("SONA_USER").orNull
+                    password = project.findProperty("sona.password") as String? ?: providers.environmentVariable("SONA_PASSWORD").orNull
                 }
             }
         }
     }
 
     signing {
+        useGpgCmd()
         sign(publishing.publications.getByName("maven"))
     }
 }

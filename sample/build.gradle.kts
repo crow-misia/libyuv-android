@@ -4,13 +4,12 @@ plugins {
 }
 
 android {
-    buildToolsVersion = "33.0.0"
     compileSdk = 33
     defaultConfig {
         namespace = "app"
         applicationId = "com.github.crow_misia.libyuv"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -35,12 +34,17 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
     kotlin {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "1.8"
-            apiVersion = "1.7"
-            languageVersion = "1.7"
+            jvmTarget = "11"
+            apiVersion = "1.8"
+            languageVersion = "1.8"
         }
     }
 }
