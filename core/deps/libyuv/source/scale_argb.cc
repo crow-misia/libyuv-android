@@ -16,6 +16,7 @@
 #include "libyuv/cpu_id.h"
 #include "libyuv/planar_functions.h"  // For CopyARGB
 #include "libyuv/row.h"
+#include "libyuv/scale_argb.h"
 #include "libyuv/scale_row.h"
 
 #ifdef __cplusplus
@@ -127,6 +128,15 @@ static void ScaleARGBDown2(int src_width,
     }
   }
 #endif
+#if defined(HAS_SCALEARGBROWDOWN2_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    ScaleARGBRowDown2 =
+        filtering == kFilterNone
+            ? ScaleARGBRowDown2_RVV
+            : (filtering == kFilterLinear ? ScaleARGBRowDown2Linear_RVV
+                                          : ScaleARGBRowDown2Box_RVV);
+  }
+#endif
 
   if (filtering == kFilterLinear) {
     src_stride = 0;
@@ -182,6 +192,11 @@ static void ScaleARGBDown4Box(int src_width,
     if (IS_ALIGNED(dst_width, 8)) {
       ScaleARGBRowDown2 = ScaleARGBRowDown2Box_NEON;
     }
+  }
+#endif
+#if defined(HAS_SCALEARGBROWDOWN2_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    ScaleARGBRowDown2 = ScaleARGBRowDown2Box_RVV;
   }
 #endif
 
@@ -261,6 +276,12 @@ static void ScaleARGBDownEven(int src_width,
       ScaleARGBRowDownEven =
           filtering ? ScaleARGBRowDownEvenBox_LSX : ScaleARGBRowDownEven_LSX;
     }
+  }
+#endif
+#if defined(HAS_SCALEARGBROWDOWNEVEN_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    ScaleARGBRowDownEven =
+        filtering ? ScaleARGBRowDownEvenBox_RVV : ScaleARGBRowDownEven_RVV;
   }
 #endif
 
@@ -346,6 +367,11 @@ static void ScaleARGBBilinearDown(int src_width,
     if (IS_ALIGNED(clip_src_width, 32)) {
       InterpolateRow = InterpolateRow_LSX;
     }
+  }
+#endif
+#if defined(HAS_INTERPOLATEROW_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    InterpolateRow = InterpolateRow_RVV;
   }
 #endif
 #if defined(HAS_SCALEARGBFILTERCOLS_SSSE3)
@@ -466,6 +492,11 @@ static void ScaleARGBBilinearUp(int src_width,
     if (IS_ALIGNED(dst_width, 8)) {
       InterpolateRow = InterpolateRow_LSX;
     }
+  }
+#endif
+#if defined(HAS_INTERPOLATEROW_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    InterpolateRow = InterpolateRow_RVV;
   }
 #endif
   if (src_width >= 32768) {
@@ -659,12 +690,25 @@ static void ScaleYUVToARGBBilinearUp(int src_width,
     }
   }
 #endif
+#if defined(HAS_I422TOARGBROW_LSX)
+  if (TestCpuFlag(kCpuHasLSX)) {
+    I422ToARGBRow = I422ToARGBRow_Any_LSX;
+    if (IS_ALIGNED(src_width, 16)) {
+      I422ToARGBRow = I422ToARGBRow_LSX;
+    }
+  }
+#endif
 #if defined(HAS_I422TOARGBROW_LASX)
   if (TestCpuFlag(kCpuHasLASX)) {
     I422ToARGBRow = I422ToARGBRow_Any_LASX;
     if (IS_ALIGNED(src_width, 32)) {
       I422ToARGBRow = I422ToARGBRow_LASX;
     }
+  }
+#endif
+#if defined(HAS_I422TOARGBROW_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    I422ToARGBRow = I422ToARGBRow_RVV;
   }
 #endif
 
@@ -709,6 +753,11 @@ static void ScaleYUVToARGBBilinearUp(int src_width,
     if (IS_ALIGNED(dst_width, 8)) {
       InterpolateRow = InterpolateRow_LSX;
     }
+  }
+#endif
+#if defined(HAS_INTERPOLATEROW_RVV)
+  if (TestCpuFlag(kCpuHasRVV)) {
+    InterpolateRow = InterpolateRow_RVV;
   }
 #endif
 

@@ -139,11 +139,11 @@ mips
 
 arm disassembly:
 
-    third_party/android_ndk/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64/bin/aarch64-linux-android-objdump -d ./out/Release/obj/libyuv/row_common.o >row_common.txt
+    llvm-objdump -d ./out/Release/obj/libyuv/row_common.o >row_common.txt
 
-    third_party/android_ndk/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64/bin/aarch64-linux-android-objdump -d ./out/Release/obj/libyuv_neon/row_neon.o >row_neon.txt
+    llvm-objdump -d ./out/Release/obj/libyuv_neon/row_neon.o >row_neon.txt
 
-    third_party/android_ndk/toolchains/aarch64-linux-android-4.9/prebuilt/linux-x86_64/bin/aarch64-linux-android-objdump -d ./out/Release/obj/libyuv_neon/row_neon64.o >row_neon64.txt
+    llvm-objdump -d ./out/Release/obj/libyuv_neon/row_neon64.o >row_neon64.txt
 
     Caveat: Disassembly may require optimize_max be disabled in BUILD.gn
 
@@ -231,7 +231,7 @@ If you don't have prebuilt clang and riscv64 qemu, run the script to download so
 After running script, clang & qemu are built in `build-toolchain-qemu/riscv-clang/` & `build-toolchain-qemu/riscv-qemu/`.
 
 ### Cross-compile for RISC-V target
-    cmake -B out/Release/ -DTEST=ON \
+    cmake -B out/Release/ -DUNIT_TEST=ON \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_TOOLCHAIN_FILE="./riscv_script/riscv-clang.cmake" \
           -DTOOLCHAIN_PATH={TOOLCHAIN_PATH} \
@@ -240,10 +240,6 @@ After running script, clang & qemu are built in `build-toolchain-qemu/riscv-clan
 
 
 ### Run on QEMU
-
-To test RVV on user mode QEMU, we need to hack `source/cpu_id.cc`. By forcing `RiscvCpuCaps` to read from a dummy cpuinfo file instead of the host `/proc/cpuinfo`. Because the program detects CPU Caps from `/proc/cpuinfo` and determines whether to use RVV originally.
-
-    sed -i 's+RiscvCpuCaps("/proc/cpuinfo+RiscvCpuCaps("../../unit_test/testdata/riscv64_rvv.txt+g' source/cpu_id.cc
 
 #### Run libyuv_unittest on QEMU
     cd out/Release/
