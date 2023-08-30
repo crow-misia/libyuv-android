@@ -8,7 +8,7 @@ androidx-databinding = "8.1.1"
 
 [libraries]
 
-org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.9"
+org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.10"
 
 truth = "com.google.truth:truth:1.1.5"
 
