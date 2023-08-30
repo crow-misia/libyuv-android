@@ -96,7 +96,7 @@ class H420Buffer private constructor(
         override fun allocate(width: Int, height: Int): H420Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
-            val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H420Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
@@ -113,7 +113,7 @@ class H420Buffer private constructor(
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H420Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),

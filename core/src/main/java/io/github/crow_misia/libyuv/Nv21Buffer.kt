@@ -159,7 +159,7 @@ class Nv21Buffer private constructor(
         override fun allocate(width: Int, height: Int): Nv21Buffer {
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityVU)
-            val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
+            val (bufferY, bufferVU) = buffer.sliceByLength(capacityY, capacityVU)
             return Nv21Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
@@ -175,7 +175,7 @@ class Nv21Buffer private constructor(
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideVU, capacityVU) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferVU) = buffer.slice(capacityY, capacityVU)
+            val (bufferY, bufferVU) = buffer.sliceByLength(capacityY, capacityVU)
             return Nv21Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),

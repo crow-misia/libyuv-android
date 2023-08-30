@@ -46,7 +46,7 @@ class J422Buffer private constructor(
         override fun allocate(width: Int, height: Int): J422Buffer {
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityU + capacityV)
-            val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return J422Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
@@ -63,7 +63,7 @@ class J422Buffer private constructor(
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferU, bufferV) = buffer.slice(capacityY, capacityU, capacityV)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return J422Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),

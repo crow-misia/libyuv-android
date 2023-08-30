@@ -159,7 +159,7 @@ class Nv12Buffer private constructor(
         override fun allocate(width: Int, height: Int): Nv12Buffer {
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
             val buffer = createByteBuffer(capacityY + capacityUV)
-            val (bufferY, bufferUV) = buffer.slice(capacityY, capacityUV)
+            val (bufferY, bufferUV) = buffer.sliceByLength(capacityY, capacityUV)
             return Nv12Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
@@ -175,7 +175,7 @@ class Nv12Buffer private constructor(
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (strideY, capacityY, strideUV, capacityUV) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferUV) = buffer.slice(capacityY, capacityUV)
+            val (bufferY, bufferUV) = buffer.sliceByLength(capacityY, capacityUV)
             return Nv12Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),

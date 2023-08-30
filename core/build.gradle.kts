@@ -30,7 +30,7 @@ version = Maven.version
 
 android {
     namespace = "io.github.crow_misia.libyuv"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 14
@@ -105,7 +105,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
-    outputDirectory.set(buildDir.resolve("javadoc"))
+    outputDirectory.set(layout.buildDirectory.dir("javadoc"))
 }
 
 val javadocJar by tasks.creating(Jar::class) {

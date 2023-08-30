@@ -30,7 +30,7 @@ internal fun ByteBuffer.sliceRange(offset: Int, length: Int): ByteBuffer {
     }
 }
 
-internal fun ByteBuffer.slice(vararg sliceLengths: Int): Array<ByteBuffer> {
+internal fun ByteBuffer.sliceByLength(vararg sliceLengths: Int): Array<ByteBuffer> {
     execute { _, limit ->
         var offset = 0
         val results = arrayOfNulls<ByteBuffer>(sliceLengths.size)
