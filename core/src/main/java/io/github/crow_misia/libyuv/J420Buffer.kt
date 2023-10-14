@@ -68,8 +68,9 @@ class J420Buffer private constructor(
     companion object Factory : BufferFactory<J420Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)
+            val halfHeight = (height + 1).shr(1)
             val capacity = width * height
-            val halfCapacity = (halfWidth + 1).shr(1) * height
+            val halfCapacity = halfWidth * halfHeight
             return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
         }
 

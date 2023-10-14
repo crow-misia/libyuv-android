@@ -151,8 +151,9 @@ class Nv12Buffer private constructor(
 
     companion object Factory : BufferFactory<Nv12Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+            val halfWidth = (width + 1).shr(1)
             val capacityY = width * height
-            val capacityUV = (width + 1).shr(1) * height
+            val capacityUV = halfWidth * height
             return intArrayOf(width, capacityY, width, capacityUV)
         }
 

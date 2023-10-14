@@ -39,7 +39,7 @@ class H422Buffer private constructor(
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val halfWidth = (width + 1).shr(1)
             val capacity = width * height
-            val halfCapacity = (halfWidth + 1).shr(1) * height
+            val halfCapacity = halfWidth * height
             return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
         }
 
