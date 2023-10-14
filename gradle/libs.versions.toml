@@ -2,13 +2,11 @@
 
 [versions]
 
-dokka = "1.8.20"
+dokka = "1.9.0"
 
-androidx-databinding = "8.1.1"
+androidx-databinding = "8.1.2"
 
 [libraries]
-
-org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.10"
 
 truth = "com.google.truth:truth:1.1.5"
 
