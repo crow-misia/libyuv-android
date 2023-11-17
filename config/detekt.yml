@@ -1,0 +1,22 @@
+build:
+  maxIssues: 0
+
+complexity:
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+
+style:
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  MaxLineLength:
+    active: false
+  WildcardImport:
+    active: false
+  MagicNumber:
+    active: false
+
+naming:
+  PackageNaming:
+    active: false

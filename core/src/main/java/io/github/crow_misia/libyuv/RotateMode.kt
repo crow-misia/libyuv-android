@@ -1,5 +1,3 @@
-@file:JvmMultifileClass
-
 package io.github.crow_misia.libyuv
 
 import kotlin.math.min

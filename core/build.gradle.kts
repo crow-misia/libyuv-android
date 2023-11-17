@@ -5,10 +5,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("com.android.library")
-    kotlin("android")
+    id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.dokka")
     id("signing")
     id("maven-publish")
+    kotlin("android")
 }
 
 object Maven {
@@ -40,6 +41,8 @@ android {
 
     lint {
         textReport = true
+        checkDependencies = true
+        baseline = file("lint-baseline.xml")
     }
 
     buildTypes {
@@ -76,7 +79,7 @@ android {
     }
 }
 
-tasks.withType<KotlinJvmCompile>().all {
+kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
         javaParameters.set(true)
@@ -87,6 +90,7 @@ tasks.withType<KotlinJvmCompile>().all {
 }
 
 dependencies {
+    implementation(Kotlin.stdlib)
     implementation(AndroidX.annotation)
     implementation(AndroidX.camera.core)
 
@@ -183,6 +187,38 @@ afterEvaluate {
     signing {
         useGpgCmd()
         sign(publishing.publications.getByName("maven"))
+    }
+}
+
+detekt {
+    parallel = true
+    buildUponDefaultConfig = true
+    allRules = false
+    autoCorrect = true
+    config.setFrom(files("$rootDir/config/detekt.yml"))
+}
+
+tasks {
+    withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        // Target version of the generated JVM bytecode. It is used for type resolution.
+        jvmTarget = "11"
+
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(true)
+            sarif.required.set(true)
+        }
+    }
+    withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
+        jvmTarget = "11"
+    }
+    withType<Test> {
+        useJUnitPlatform()
+        testLogging {
+            showStandardStreams = true
+            events("passed", "skipped", "failed")
+        }
     }
 }
 
