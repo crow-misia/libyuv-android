@@ -2,9 +2,9 @@
 
 [versions]
 
-dokka = "1.9.0"
+dokka = "1.9.10"
 
-androidx-databinding = "8.1.2"
+androidx-databinding = "8.1.4"
 
 [libraries]
 
