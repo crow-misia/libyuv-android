@@ -1,7 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("com.android.library")
@@ -213,16 +212,6 @@ tasks {
     withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
         jvmTarget = "11"
     }
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            showStandardStreams = true
-            events("passed", "skipped", "failed")
-        }
-    }
-}
-
-tasks {
     withType<Test> {
         useJUnitPlatform()
         testLogging {
