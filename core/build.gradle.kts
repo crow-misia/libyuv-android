@@ -89,9 +89,9 @@ kotlin {
 }
 
 dependencies {
-    implementation(Kotlin.stdlib)
-    implementation(AndroidX.annotation)
-    implementation(AndroidX.camera.core)
+    compileOnly(Kotlin.stdlib)
+    compileOnly(AndroidX.annotation)
+    compileOnly(AndroidX.camera.core)
 
     androidTestImplementation(AndroidX.test.runner)
     androidTestImplementation(AndroidX.test.rules)
