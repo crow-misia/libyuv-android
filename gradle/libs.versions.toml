@@ -4,7 +4,7 @@
 
 dokka = "1.9.10"
 
-androidx-databinding = "8.1.4"
+androidx-databinding = "8.2.0"
 
 [libraries]
 
