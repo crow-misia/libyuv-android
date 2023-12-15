@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -17,6 +20,8 @@ android {
 
     lint {
         textReport = true
+        checkDependencies = true
+        baseline = file("lint-baseline.xml")
     }
 
     buildFeatures {
@@ -38,20 +43,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
 
-    kotlin {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "11"
-            apiVersion = "1.8"
-            languageVersion = "1.8"
-        }
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+        javaParameters.set(true)
+        jvmTarget.set(JvmTarget.JVM_11)
+        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        languageVersion.set(KotlinVersion.KOTLIN_1_9)
     }
 }
 
 dependencies {
     implementation(project(":core"))
 
-    implementation(AndroidX.activity)
-    implementation(AndroidX.appCompat)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.appcompat)
 }
