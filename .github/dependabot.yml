@@ -1,6 +1,20 @@
 version: 2
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    groups:
+      all:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"
+
   - package-ecosystem: "gradle"
     directory: "/"
+    groups:
+      all:
+        patterns:
+          - "*"
     schedule:
       interval: "weekly"
+      day: sunday
