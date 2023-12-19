@@ -16,5 +16,4 @@ updates:
         patterns:
           - "*"
     schedule:
-      interval: "weekly"
-      day: sunday
+      interval: "daily"
