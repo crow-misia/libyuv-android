@@ -1,0 +1,135 @@
+source,target,name,comment
+I444,I420,,
+I444,NV12,,
+I444,NV21,,
+I422,I420,,
+I422,I444,,
+I422,NV21,,
+I420,I420,,
+I400,I420,,Convert I400 (grey) to I420
+I400,NV21,,Convert I400 (grey) to NV21 / NV12
+NV12,I420,,
+NV21,I420,,
+YUY2,I420,,
+UYVY,I420,,
+AYUV,NV12,,
+AYUV,NV21,,
+ARGB,I420,,ARGB little endian (bgra in memory) to I420
+BGRA,I420,,BGRA little endian (argb in memory) to I420
+ABGR,I420,,ABGR little endian (rgba in memory) to I420
+RGBA,I420,,RGBA little endian (abgr in memory) to I420
+RGB24,I420,,RGB little endian (bgr in memory) to I420
+RGB24,J420,,RGB little endian (bgr in memory) to J420
+RAW,I420,,RGB big endian (rgb in memory) to I420
+RAW,J420,,RGB big endian (rgb in memory) to J420
+RGB565,I420,,RGB16 (RGBP fourcc) little endian to I420
+ARGB1555,I420,,RGB15 (RGBO fourcc) little endian to I420
+ARGB4444,I420,,RGB12 (R444 fourcc) little endian to I420
+RGB24,J400,,RGB little endian (bgr in memory) to J400
+RAW,J400,,RGB big endian (rgb in memory) to J400
+ARGB,ARGB,,
+J420,ARGB,,
+J420,ABGR,,
+H420,ARGB,,
+H420,ABGR,,
+U420,ARGB,,
+U420,ABGR,,
+I422,ARGB,,
+J422,ARGB,,
+J422,ABGR,,
+H422,ARGB,,
+H422,ABGR,,
+U422,ARGB,,
+U422,ABGR,,
+I444,ARGB,,
+I444,ABGR,,
+J444,ARGB,,
+J444,ABGR,,
+H444,ARGB,,
+H444,ABGR,,
+U444,ARGB,,
+U444,ABGR,,
+I444,RGB24,,
+I444,RAW,,
+I400,ARGB,,Convert I400 (grey) to ARGB.  Reverse of ARGBToI400
+J400,ARGB,,Convert J400 (jpeg grey) to ARGB
+NV12,ARGB,,
+NV21,ARGB,,
+NV12,ABGR,,
+NV21,ABGR,,
+NV12,RGB24,,
+NV21,RGB24,,
+NV21,YUV24,,
+NV12,RAW,,
+NV21,RAW,,
+YUY2,ARGB,,
+UYVY,ARGB,,
+BGRA,ARGB,,BGRA little endian (argb in memory) to ARGB
+ABGR,ARGB,,ABGR little endian (rgba in memory) to ARGB
+RGBA,ARGB,,RGBA little endian (abgr in memory) to ARGB
+RGB24,ARGB,,RGB little endian (bgr in memory) to ARGB
+RAW,ARGB,,RGB big endian (rgb in memory) to ARGB
+RAW,RGBA,,RGB big endian (rgb in memory) to RGBA
+RGB565,ARGB,,RGB16 (RGBP fourcc) little endian to ARGB
+ARGB1555,ARGB,,RGB15 (RGBO fourcc) little endian to ARGB
+ARGB4444,ARGB,,RGB12 (R444 fourcc) little endian to ARGB
+AR30,ARGB,,
+AR30,ABGR,,
+AR30,AB30,,
+NV12,RGB565,,
+I422,BGRA,,
+I422,ABGR,,
+I422,RGBA,,
+I420,ARGB,,
+I420,BGRA,,
+I420,ABGR,,
+I420,RGBA,,
+I420,RGB24,,
+I420,RAW,,
+H420,RGB24,,
+H420,RAW,,
+J420,RGB24,,
+J420,RAW,,
+I422,RGB24,,
+I422,RAW,,
+I420,RGB565,,
+J420,RGB565,,
+H420,RGB565,,
+I422,RGB565,,
+I420,ARGB1555,,
+I420,ARGB4444,,
+I420,AR30,,
+I420,AB30,,
+H420,AR30,,
+H420,AB30,,
+I420,I422,,
+I420,I444,,
+I400,I400,,"Copy to I400. Source can be I420, I422, I444, I400, NV12 or NV21"
+I420,NV12,,
+I420,NV21,,
+I420,YUY2,,
+I420,UYVY,,
+ARGB,BGRA,,
+ARGB,ABGR,,
+ARGB,RGBA,,
+ARGB,RGB24,,
+ARGB,RAW,,
+ARGB,RGB565,,
+ARGB,ARGB1555,,
+ARGB,ARGB4444,,
+ARGB,I444,,
+ARGB,I422,,
+ARGB,J420,,Convert ARGB to J420. (JPeg full range I420)
+ARGB,J422,,
+ARGB,J400,,Convert ARGB to J400. (JPeg full range)
+ABGR,J420,,Convert ABGR to J420. (JPeg full range I420)
+ABGR,J422,,
+ABGR,J400,,Convert ABGR to J400. (JPeg full range)
+RGBA,J400,,Convert RGBA to J400. (JPeg full range)
+ARGB,I400,,
+ARGB,NV12,,
+ARGB,NV21,,
+ABGR,NV12,,
+ABGR,NV21,,
+ARGB,YUY2,,
+ARGB,UYVY,,

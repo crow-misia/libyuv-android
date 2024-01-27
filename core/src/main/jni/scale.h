@@ -48,7 +48,8 @@
       const jint mode) { \
     SRC_PLANE(S1); \
     DST_PLANE(D1); \
-    NAME(src_##S1, src_stride_##S1, src_width, src_height, \
+    CALL(NAME, \
+         src_##S1, src_stride_##S1, src_width, src_height, \
          dst_##D1, dst_stride_##D1, dst_width, dst_height, \
          (FilterMode) mode); \
   }

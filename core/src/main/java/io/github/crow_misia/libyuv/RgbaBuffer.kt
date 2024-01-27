@@ -25,7 +25,7 @@ class RgbaBuffer private constructor(
     fun convertTo(dst: J400Buffer) {
         Yuv.convertRGBAToJ400(
             srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride,
-            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }

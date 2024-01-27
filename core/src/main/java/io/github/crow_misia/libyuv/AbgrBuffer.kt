@@ -30,7 +30,7 @@ class AbgrBuffer private constructor(
     fun convertTo(dst: J400Buffer) {
         Yuv.convertABGRToJ400(
             srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -38,9 +38,9 @@ class AbgrBuffer private constructor(
     fun convertTo(dst: J420Buffer) {
         Yuv.convertABGRToJ420(
             srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
-            dstUJ = dst.planeU.buffer, dstStrideUJ = dst.planeU.rowStride,
-            dstVJ = dst.planeV.buffer, dstStrideVJ = dst.planeV.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
@@ -48,9 +48,9 @@ class AbgrBuffer private constructor(
     fun convertTo(dst: J422Buffer) {
         Yuv.convertABGRToJ422(
             srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstYJ = dst.planeY.buffer, dstStrideYJ = dst.planeY.rowStride,
-            dstUJ = dst.planeU.buffer, dstStrideUJ = dst.planeU.rowStride,
-            dstVJ = dst.planeV.buffer, dstStrideVJ = dst.planeV.rowStride,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }

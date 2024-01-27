@@ -2,7 +2,7 @@ package io.github.crow_misia.libyuv
 
 import java.nio.ByteBuffer
 
-internal object Yuv {
+object Yuv {
     init {
         System.loadLibrary("yuv")
     }
@@ -99,7 +99,8 @@ internal object Yuv {
     /** Convert I400 (grey) to NV21 / NV12 */
     external fun convertI400ToNV21(
         srcY: ByteBuffer, srcStrideY: Int,
-        dstY: ByteBuffer, dstStrideY: Int, dstVU: ByteBuffer, dstStrideVU: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstVU: ByteBuffer, dstStrideVU: Int,
         width: Int, height: Int,
     )
 
@@ -269,8 +270,6 @@ internal object Yuv {
         dstY: ByteBuffer, dstStrideY: Int,
         width: Int, height: Int,
     )
-
-    // convert_argb.cpp
 
     /** Copy ARGB to ARGB */
     external fun convertARGBCopy(
@@ -649,21 +648,21 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert AR30 To ARGB */
+    /** Convert AR30 to ARGB */
     external fun convertAR30ToARGB(
         srcAR30: ByteBuffer, srcStrideAR30: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
         width: Int, height: Int,
     )
 
-    /** Convert AR30 To ABGR */
+    /** Convert AR30 to ABGR */
     external fun convertAR30ToABGR(
         srcAR30: ByteBuffer, srcStrideAR30: Int,
         dstABGR: ByteBuffer, dstStrideABGR: Int,
         width: Int, height: Int,
     )
 
-    /** Convert AR30 To AB30 */
+    /** Convert AR30 to AB30 */
     external fun convertAR30ToAB30(
         srcAR30: ByteBuffer, srcStrideAR30: Int,
         dstAB30: ByteBuffer, dstStrideAB30: Int,
@@ -687,7 +686,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert I422 to ARBG */
+    /** Convert I422 to ABGR */
     external fun convertI422ToABGR(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -849,7 +848,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert I420 to RGB1555 */
+    /** Convert I420 to ARGB1555 */
     external fun convertI420ToARGB1555(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -902,8 +901,6 @@ internal object Yuv {
         dstAB30: ByteBuffer, dstStrideAB30: Int,
         width: Int, height: Int,
     )
-
-    // convert_from.cpp
 
     /** Convert I420 to I422 */
     external fun convertI420ToI422(
@@ -972,67 +969,63 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    // convert_from_argb.cpp
-
-    /** Copy ARGB to ARGB. duplicate */
-
-    /** Convert ARGB To BGRA */
+    /** Convert ARGB to BGRA */
     external fun convertARGBToBGRA(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstBGRA: ByteBuffer, dstStrideBGRA: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To ABGR */
+    /** Convert ARGB to ABGR */
     external fun convertARGBToABGR(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstABGR: ByteBuffer, dstStrideABGR: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To RGBA */
+    /** Convert ARGB to RGBA */
     external fun convertARGBToRGBA(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstRGBA: ByteBuffer, dstStrideRGBA: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To RGB24 */
+    /** Convert ARGB to RGB24 */
     external fun convertARGBToRGB24(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstRGB24: ByteBuffer, dstStrideRGB24: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To RAW */
+    /** Convert ARGB to RAW */
     external fun convertARGBToRAW(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstRAW: ByteBuffer, dstStrideRAW: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To RGB565 */
+    /** Convert ARGB to RGB565 */
     external fun convertARGBToRGB565(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstRGB565: ByteBuffer, dstStrideRGB565: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To ARGB1555 */
+    /** Convert ARGB to ARGB1555 */
     external fun convertARGBToARGB1555(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstARGB1555: ByteBuffer, dstStrideARGB1555: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To ARGB4444 */
+    /** Convert ARGB to ARGB4444 */
     external fun convertARGBToARGB4444(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstARGB4444: ByteBuffer, dstStrideARGB4444: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To I444 */
+    /** Convert ARGB to I444 */
     external fun convertARGBToI444(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1041,7 +1034,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To I422 */
+    /** Convert ARGB to I422 */
     external fun convertARGBToI422(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1053,57 +1046,57 @@ internal object Yuv {
     /** Convert ARGB to J420. (JPeg full range I420) */
     external fun convertARGBToJ420(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
-        dstUJ: ByteBuffer, dstStrideUJ: Int,
-        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J422 */
     external fun convertARGBToJ422(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
-        dstUJ: ByteBuffer, dstStrideUJ: Int,
-        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J400. (JPeg full range) */
     external fun convertARGBToJ400(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ABGR to J420. (JPeg full range) */
+    /** Convert ABGR to J420. (JPeg full range I420) */
     external fun convertABGRToJ420(
         srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
-        dstUJ: ByteBuffer, dstStrideUJ: Int,
-        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ABGR to J422. */
+    /** Convert ABGR to J422 */
     external fun convertABGRToJ422(
         srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
-        dstUJ: ByteBuffer, dstStrideUJ: Int,
-        dstVJ: ByteBuffer, dstStrideVJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstU: ByteBuffer, dstStrideU: Int,
+        dstV: ByteBuffer, dstStrideV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to J400. (JPeg full range) */
     external fun convertABGRToJ400(
         srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
         width: Int, height: Int,
     )
 
     /** Convert RGBA to J400. (JPeg full range) */
     external fun convertRGBAToJ400(
         srcRGBA: ByteBuffer, srcStrideRGBA: Int,
-        dstYJ: ByteBuffer, dstStrideYJ: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
         width: Int, height: Int,
     )
 
@@ -1114,7 +1107,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To NV12 */
+    /** Convert ARGB to NV12 */
     external fun convertARGBToNV12(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1122,7 +1115,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To NV21 */
+    /** Convert ARGB to NV21 */
     external fun convertARGBToNV21(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1130,7 +1123,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ABGR To NV12 */
+    /** Convert ABGR to NV12 */
     external fun convertABGRToNV12(
         srcABGR: ByteBuffer, srcStrideABGR: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1138,7 +1131,7 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ABGR To NV21 */
+    /** Convert ABGR to NV21 */
     external fun convertABGRToNV21(
         srcABGR: ByteBuffer, srcStrideABGR: Int,
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1146,14 +1139,14 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To YUY2 */
+    /** Convert ARGB to YUY2 */
     external fun convertARGBToYUY2(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstYUY2: ByteBuffer, dstStrideYUY2: Int,
         width: Int, height: Int,
     )
 
-    /** Convert ARGB To UYVY */
+    /** Convert ARGB to UYVY */
     external fun convertARGBToUYVY(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         dstUYVY: ByteBuffer, dstStrideUYVY: Int,
@@ -1162,7 +1155,7 @@ internal object Yuv {
 
     // rotate.cpp
 
-    /** Rotate I420 frame */
+    /** Rotate I420 Frame */
     external fun rotateI420Rotate(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1174,7 +1167,7 @@ internal object Yuv {
         rotateMode: Int,
     )
 
-    /** Rotate I422 frame */
+    /** Rotate I422 Frame */
     external fun rotateI422Rotate(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1186,7 +1179,7 @@ internal object Yuv {
         rotateMode: Int,
     )
 
-    /** Rotate I444 frame */
+    /** Rotate I444 Frame */
     external fun rotateI444Rotate(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1222,6 +1215,44 @@ internal object Yuv {
         rotateMode: Int,
     )
 
+    /** Rotate ARGB Frame */
+    external fun rotateARGBRotate(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+        rotateMode: Int,
+    )
+
+    /** Rotate NV12 Frame */
+    external fun rotateNV12Rotate(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcUV: ByteBuffer, srcStrideUV: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstUV: ByteBuffer, dstStrideUV: Int,
+        width: Int, height: Int,
+        rotateMode: Int,
+    )
+
+    /** Rotate NV21 Frame */
+    external fun rotateNV21Rotate(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcVU: ByteBuffer, srcStrideVU: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int,
+        rotateMode: Int,
+    )
+
+    /** Rotate NV12 to NV21 */
+    external fun rotateNV12ToNV21Rotate(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcUV: ByteBuffer, srcStrideUV: Int,
+        dstY: ByteBuffer, dstStrideY: Int,
+        dstVU: ByteBuffer, dstStrideVU: Int,
+        width: Int, height: Int,
+        rotateMode: Int,
+    )
+
     /** Rotate a plane by 0, 90, 180, or 270 */
     external fun rotateRotatePlane(
         src: ByteBuffer, srcStride: Int,
@@ -1232,7 +1263,7 @@ internal object Yuv {
 
     /** Rotate UV and split into planar. width and height expected to be half size for NV12 */
     external fun rotateSplitRotateUV(
-        srcUV: ByteBuffer, srcUVStride: Int,
+        srcUV: ByteBuffer, srcStrideUV: Int,
         dstU: ByteBuffer, dstStrideU: Int,
         dstV: ByteBuffer, dstStrideV: Int,
         width: Int, height: Int,
@@ -1253,18 +1284,9 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    // rotate_argb.cpp
-
-    /** Rotate ARGB frame */
-    external fun rotateARGBRotate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
-        rotateMode: Int,
-    )
-
     // scale.cpp
 
+    /** Scale Plane Frame */
     external fun scaleScalePlane(
         src: ByteBuffer, srcStride: Int,
         srcWidth: Int, srcHeight: Int,
@@ -1273,6 +1295,7 @@ internal object Yuv {
         filterMode: Int,
     )
 
+    /** Scale I420 Frame */
     external fun scaleI420Scale(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1285,7 +1308,7 @@ internal object Yuv {
         filterMode: Int,
     )
 
-
+    /** Scale I422 Frame */
     external fun scaleI422Scale(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1298,6 +1321,7 @@ internal object Yuv {
         filterMode: Int,
     )
 
+    /** Scale I444 Frame */
     external fun scaleI444Scale(
         srcY: ByteBuffer, srcStrideY: Int,
         srcU: ByteBuffer, srcStrideU: Int,
@@ -1310,6 +1334,7 @@ internal object Yuv {
         filterMode: Int,
     )
 
+    /** Scale NV12 Frame */
     external fun scaleNV12Scale(
         srcY: ByteBuffer, srcStrideY: Int,
         srcUV: ByteBuffer, srcStrideUV: Int,
@@ -1320,12 +1345,20 @@ internal object Yuv {
         filterMode: Int,
     )
 
-    // scale_argb.cpp
-
+    /** Scale ARGB Frame */
     external fun scaleARGBScale(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
         srcWidth: Int, srcHeight: Int,
         dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstWidth: Int, dstHeight: Int,
+        filterMode: Int,
+    )
+
+    /** Scale UV Frame */
+    external fun scaleUVScale(
+        srcUV: ByteBuffer, srcStrideUV: Int,
+        srcWidth: Int, srcHeight: Int,
+        dstUV: ByteBuffer, dstStrideUV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
@@ -1344,13 +1377,6 @@ internal object Yuv {
     // Scale with YUV conversion to ARGB and clipping
 
     // planar_functions.cpp
-
-    /** Set a plane of data to a 32 bit value. */
-    external fun planerSetPlane(
-        srcY: ByteBuffer, srcStrideY: Int,
-        width: Int, height: Int,
-        value: Int,
-    )
 
     /** Copy I422 to I422 */
     external fun planerI422Copy(
@@ -1377,7 +1403,7 @@ internal object Yuv {
     /** Copy NV12 to NV12 */
     external fun planerNV12Copy(
         srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
+        srcUV: ByteBuffer, srcStrideUV: Int,
         dstY: ByteBuffer, dstStrideY: Int,
         dstUV: ByteBuffer, dstStrideUV: Int,
         width: Int, height: Int,
@@ -1435,7 +1461,6 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-
     /** Mirror I420 */
     external fun planerI420Mirror(
         srcY: ByteBuffer, srcStrideY: Int,
@@ -1484,6 +1509,73 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
+    /** Convert I422 to YUY2 */
+    external fun planerI422ToYUY2(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert I422 to UYVY */
+    external fun planerI422ToUYVY(
+        srcY: ByteBuffer, srcStrideY: Int,
+        srcU: ByteBuffer, srcStrideU: Int,
+        srcV: ByteBuffer, srcStrideV: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert unattentuated ARGB to preattenuated ARGB */
+    external fun planerARGBAttenuate(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert preattentuated ARGB to unattenuated ARGB */
+    external fun planerARGBUnattenuate(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Convert ARGB to gray scale ARGB */
+    external fun planerARGBGrayTo(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Copy Alpha channel of ARGB to alpha of ARGB */
+    external fun planerARGBCopyAlpha(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Extract the alpha channel from ARGB */
+    external fun planerARGBExtractAlpha(
+        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        dstA: ByteBuffer, dstStrideA: Int,
+        width: Int, height: Int,
+    )
+
+    /** Copy Y channel to Alpha of ARGB */
+    external fun planerARGBCopyYToAlpha(
+        srcY: ByteBuffer, srcStrideY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        width: Int, height: Int,
+    )
+
+    /** Set a plane of data to a 32 bit value. */
+    external fun planerSetPlane(
+        srcY: ByteBuffer, srcStrideY: Int,
+        width: Int, height: Int,
+        value: Int,
+    )
+
     /** Draw a rectangle into I420 */
     external fun planerI420Rect(
         dstY: ByteBuffer, dstStrideY: Int,
@@ -1500,13 +1592,6 @@ internal object Yuv {
         x: Int, y: Int,
         width: Int, height: Int,
         value: Long,
-    )
-
-    /** Convert ARGB to gray scale ARGB */
-    external fun planerARGBGrayTo(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
     )
 
     /** Make a rectangle of ARGB gray scale */
@@ -1619,59 +1704,6 @@ internal object Yuv {
         width: Int, height: Int,
     )
 
-    /** Copy Alpha channel of ARGB to alpha of ARGB */
-    external fun planerARGBCopyAlpha(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
-    )
-
-    /** Extract the alpha channel from ARGB */
-    external fun planerARGBExtractAlpha(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstA: ByteBuffer, dstStrideA: Int,
-        width: Int, height: Int,
-    )
-
-    /** Copy Y channel to Alpha of ARGB */
-    external fun planerARGBCopyYToAlpha(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
-    )
-
-    /** Convert I422 to YUY2 */
-    external fun planerI422ToYUY2(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
-        width: Int, height: Int,
-    )
-
-    /** Convert I422 to UYVY */
-    external fun planerI422ToUYVY(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
-        width: Int, height: Int,
-    )
-
-    /** Convert unattentuated ARGB to preattenuated ARGB */
-    external fun planerARGBAttenuate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
-    )
-
-    /** Convert preattentuated ARGB to unattenuated ARGB */
-    external fun planerARGBUnattenuate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
-        width: Int, height: Int,
-    )
-
     /** Blur ARGB image */
     external fun planerARGBBlur(
         srcARGB: ByteBuffer, srcStrideARGB: Int,
@@ -1766,36 +1798,5 @@ internal object Yuv {
     // memcopy.cpp
 
     external fun memcopy(dst: Any, dstOffset: Int, src: Any, srcOffset: Int, length: Int)
-
-    // original
-
-    /** Rotate NV21 frame */
-    external fun rotateNV12Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
-        width: Int, height: Int,
-        rotateMode: Int,
-    )
-
-    /** Rotate NV21 frame */
-    external fun rotateNV21Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
-        width: Int, height: Int,
-        rotateMode: Int,
-    )
-
-    /** Rotate NV12 to NV21 frame */
-    external fun rotateNV12ToNV21Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
-        width: Int, height: Int,
-        rotateMode: Int,
-    )
 }
+

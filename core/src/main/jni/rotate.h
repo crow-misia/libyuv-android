@@ -54,7 +54,8 @@
     SRC_PLANE(S1); \
     DST_PLANE(D1); \
     DST_PLANE(D2); \
-    NAME(src_##S1, src_stride_##S1, \
+    CALL(NAME, \
+         src_##S1, src_stride_##S1, \
          dst_##D1, dst_stride_##D1, \
          dst_##D2, dst_stride_##D2, \
          width, height, (RotationMode) mode); \

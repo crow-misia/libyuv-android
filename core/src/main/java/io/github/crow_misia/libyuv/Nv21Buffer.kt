@@ -37,7 +37,7 @@ class Nv21Buffer private constructor(
     fun convertTo(dst: Nv21Buffer) {
         Yuv.planerNV12Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride,
+            srcUV = planeVU.buffer, srcStrideUV = planeVU.rowStride,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
             dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride,
             width = min(width, dst.width), height = min(height, dst.height),
