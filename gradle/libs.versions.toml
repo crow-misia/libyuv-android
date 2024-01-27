@@ -14,13 +14,13 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-android-gradle-plugin = "8.2.0"
+android-gradle-plugin = "8.2.2"
 
 kotlin = "1.9.22"
 
-androidx-camera = "1.4.0-alpha03"
+androidx-camera = "1.4.0-alpha04"
 
-androidx-activity = "1.9.0-alpha01"
+androidx-activity = "1.9.0-alpha02"
 
 androidx-appcompat = "1.7.0-alpha03"
 
