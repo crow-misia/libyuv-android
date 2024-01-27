@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class Rgb24Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer24<Rgb24Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), Buffer24<Rgb24Buffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertRGB24ToI420(
             srcRGB24 = plane.buffer, srcStrideRGB24 = plane.rowStride,
@@ -69,9 +68,8 @@ class Rgb24Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Rgb24Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -84,9 +82,8 @@ class Rgb24Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Rgb24Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -94,9 +91,8 @@ class Rgb24Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Rgb24Buffer {
             return Rgb24Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

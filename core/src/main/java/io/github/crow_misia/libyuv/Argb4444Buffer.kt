@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class Argb4444Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertARGB4444ToI420(
             srcARGB4444 = plane.buffer, srcStrideARGB4444 = plane.rowStride,
@@ -43,9 +42,8 @@ class Argb4444Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Argb4444Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -58,9 +56,8 @@ class Argb4444Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Argb4444Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -68,9 +65,8 @@ class Argb4444Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Argb4444Buffer {
             return Argb4444Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

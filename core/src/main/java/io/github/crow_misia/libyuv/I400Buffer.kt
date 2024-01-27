@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class I400Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback), BufferX400<I400Buffer, I420Buffer>, BufferY<I400Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY), releaseCallback), BufferX400<I400Buffer, I420Buffer>, BufferY<I400Buffer> {
     fun convertTo(dst: Nv21Buffer) {
         Yuv.convertI400ToNV21(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -53,9 +52,8 @@ class I400Buffer private constructor(
             val bufferY = createByteBuffer(capacity)
             return I400Buffer(
                 buffer = bufferY,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(bufferY)
             }
@@ -68,9 +66,8 @@ class I400Buffer private constructor(
             val bufferY = buffer.sliceRange(0, capacity)
             return I400Buffer(
                 buffer = bufferY,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -78,9 +75,8 @@ class I400Buffer private constructor(
         fun wrap(planeY: Plane, width: Int, height: Int): I400Buffer {
             return I400Buffer(
                 buffer = planeY.buffer,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

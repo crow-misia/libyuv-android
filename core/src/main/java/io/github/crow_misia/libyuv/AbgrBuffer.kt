@@ -9,11 +9,10 @@ import kotlin.math.min
  */
 class AbgrBuffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter, Buffer32<AbgrBuffer>, BufferFirstAlpha {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), BitmapConverter, Buffer32<AbgrBuffer>, BufferFirstAlpha {
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.ARGB_8888)
     }
@@ -110,9 +109,8 @@ class AbgrBuffer private constructor(
             val buffer = createByteBuffer(capacity)
             return AbgrBuffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -125,9 +123,8 @@ class AbgrBuffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return AbgrBuffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -135,9 +132,8 @@ class AbgrBuffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): AbgrBuffer {
             return AbgrBuffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

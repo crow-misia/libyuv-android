@@ -11,14 +11,9 @@ interface Buffer : Closeable {
     val planes: Array<Plane>
 
     /**
-     * Image width.
+     * Image crop rectangle.
      */
-    val width: Int
-
-    /**
-     * Image height.
-     */
-    val height: Int
+    val crop: Rect
 
     /**
      * Get as ByteBuffer.
@@ -53,3 +48,15 @@ interface Buffer : Closeable {
      */
     fun write(dst: ByteBuffer)
 }
+
+inline val Buffer.x: Int
+    get() = crop.x
+
+inline val Buffer.y: Int
+    get() = crop.y
+
+inline val Buffer.width: Int
+    get() = crop.width
+
+inline val Buffer.height: Int
+    get() = crop.height

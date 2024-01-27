@@ -9,11 +9,10 @@ import kotlin.math.min
  */
 class Rgb565Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), BitmapConverter {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), BitmapConverter {
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.RGB_565)
     }
@@ -48,9 +47,8 @@ class Rgb565Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Rgb565Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -63,9 +61,8 @@ class Rgb565Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Rgb565Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -73,9 +70,8 @@ class Rgb565Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Rgb565Buffer {
             return Rgb565Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

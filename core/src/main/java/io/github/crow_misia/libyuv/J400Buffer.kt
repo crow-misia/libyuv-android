@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class J400Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer>, BufferY<J400Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer>, BufferY<J400Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertJ400ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -31,9 +30,8 @@ class J400Buffer private constructor(
             val bufferY = createByteBuffer(capacity)
             return J400Buffer(
                 buffer = bufferY,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(bufferY)
             }
@@ -46,9 +44,8 @@ class J400Buffer private constructor(
             val bufferY = buffer.sliceRange(0, capacity)
             return J400Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -56,9 +53,8 @@ class J400Buffer private constructor(
         fun wrap(planeYJ: Plane, width: Int, height: Int): J400Buffer {
             return J400Buffer(
                 buffer = planeYJ.buffer,
+                crop = Rect(width = width, height = height),
                 planeY = planeYJ,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

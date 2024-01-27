@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 abstract class AbstractBuffer(
     internal var buffer: ByteBuffer?,
+    override val crop: Rect,
     planes: Array<Plane>,
     releaseCallback: Runnable?,
 ) : Buffer {

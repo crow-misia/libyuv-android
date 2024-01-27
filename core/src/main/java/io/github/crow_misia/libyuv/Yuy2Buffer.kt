@@ -10,11 +10,10 @@ import kotlin.math.min
  */
 class Yuy2Buffer private constructor(
     buffer: ByteBuffer,
+    crop: Rect,
     val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertYUY2ToI420(
             srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride,
@@ -64,9 +63,8 @@ class Yuy2Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Yuy2Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -79,9 +77,8 @@ class Yuy2Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Yuy2Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -89,9 +86,8 @@ class Yuy2Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Yuy2Buffer {
             return Yuy2Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

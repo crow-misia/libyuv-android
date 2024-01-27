@@ -8,13 +8,12 @@ import kotlin.math.min
  */
 class I444Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
     override val planeU: Plane,
     override val planeV: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<I444Buffer>, BufferY<I400Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<I444Buffer>, BufferY<I400Buffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertI444ToI420(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -101,11 +100,10 @@ class I444Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return I444Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -118,11 +116,10 @@ class I444Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return I444Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -130,11 +127,10 @@ class I444Buffer private constructor(
         fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): I444Buffer {
             return I444Buffer(
                 buffer = null,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeU = planeU,
                 planeV = planeV,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

@@ -8,13 +8,12 @@ import kotlin.math.min
  */
 class H422Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
     override val planeU: Plane,
     override val planeV: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX422<H422Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX422<H422Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertH422ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -49,11 +48,10 @@ class H422Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H422Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -66,11 +64,10 @@ class H422Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H422Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -78,11 +75,10 @@ class H422Buffer private constructor(
         fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): H422Buffer {
             return H422Buffer(
                 buffer = null,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeU = planeU,
                 planeV = planeV,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

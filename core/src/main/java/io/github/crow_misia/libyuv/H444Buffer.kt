@@ -8,13 +8,12 @@ import kotlin.math.min
  */
 class H444Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
     override val planeU: Plane,
     override val planeV: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<H444Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<H444Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertH444ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -47,11 +46,10 @@ class H444Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H444Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -64,11 +62,10 @@ class H444Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return H444Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -76,11 +73,10 @@ class H444Buffer private constructor(
         fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): H444Buffer {
             return H444Buffer(
                 buffer = null,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeU = planeU,
                 planeV = planeV,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

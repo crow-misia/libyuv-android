@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class Ar30Buffer private constructor(
     buffer: ByteBuffer,
+    crop: Rect,
     val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: Ab30Buffer) {
         Yuv.convertAR30ToAB30(
             srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride,
@@ -49,9 +48,8 @@ class Ar30Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Ar30Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -64,9 +62,8 @@ class Ar30Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Ar30Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -74,9 +71,8 @@ class Ar30Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Ar30Buffer {
             return Ar30Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

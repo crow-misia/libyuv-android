@@ -7,11 +7,10 @@ import java.nio.ByteBuffer
  */
 class Yuv24Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
     companion object Factory : BufferFactory<Yuv24Buffer> {
         private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
             val stride = width * 3
@@ -24,9 +23,8 @@ class Yuv24Buffer private constructor(
             val buffer = createByteBuffer(capacity)
             return Yuv24Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -39,9 +37,8 @@ class Yuv24Buffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return Yuv24Buffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -49,9 +46,8 @@ class Yuv24Buffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): Yuv24Buffer {
             return Yuv24Buffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

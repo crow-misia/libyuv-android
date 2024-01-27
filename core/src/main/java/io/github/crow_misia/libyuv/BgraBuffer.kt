@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class BgraBuffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback), Buffer32<BgraBuffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), Buffer32<BgraBuffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertBGRAToI420(
             srcBGRA = plane.buffer, srcStrideBGRA = plane.rowStride,
@@ -43,9 +42,8 @@ class BgraBuffer private constructor(
             val buffer = createByteBuffer(capacity)
             return BgraBuffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -58,9 +56,8 @@ class BgraBuffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return BgraBuffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -68,9 +65,8 @@ class BgraBuffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): BgraBuffer {
             return BgraBuffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

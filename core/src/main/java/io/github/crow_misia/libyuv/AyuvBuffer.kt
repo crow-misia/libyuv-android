@@ -8,11 +8,10 @@ import kotlin.math.min
  */
 class AyuvBuffer private constructor(
     buffer: ByteBuffer,
+    crop: Rect,
     val plane: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: Nv12Buffer) {
         Yuv.convertAYUVToNV12(
             srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride,
@@ -43,9 +42,8 @@ class AyuvBuffer private constructor(
             val buffer = createByteBuffer(capacity)
             return AyuvBuffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -58,9 +56,8 @@ class AyuvBuffer private constructor(
             val sliceBuffer = buffer.sliceRange(0, capacity)
             return AyuvBuffer(
                 buffer = sliceBuffer,
+                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -68,9 +65,8 @@ class AyuvBuffer private constructor(
         fun wrap(plane: Plane, width: Int, height: Int): AyuvBuffer {
             return AyuvBuffer(
                 buffer = plane.buffer,
+                crop = Rect(width = width, height = height),
                 plane = plane,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

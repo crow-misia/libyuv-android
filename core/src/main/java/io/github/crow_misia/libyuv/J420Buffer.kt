@@ -8,13 +8,12 @@ import kotlin.math.min
  */
 class J420Buffer private constructor(
     buffer: ByteBuffer?,
+    override val crop: Rect,
     override val planeY: Plane,
     override val planeU: Plane,
     override val planeV: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<J420Buffer>, BufferY<J400Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<J420Buffer>, BufferY<J400Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertJ420ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -80,11 +79,10 @@ class J420Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return J420Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -97,11 +95,10 @@ class J420Buffer private constructor(
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
             return J420Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -109,11 +106,10 @@ class J420Buffer private constructor(
         fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): J420Buffer {
             return J420Buffer(
                 buffer = null,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeU = planeU,
                 planeV = planeV,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }

@@ -8,12 +8,11 @@ import kotlin.math.min
  */
 class Nv21Buffer private constructor(
     buffer: ByteBuffer?,
+    crop: Rect,
     override val planeY: Plane,
     val planeVU: Plane,
-    override val width: Int,
-    override val height: Int,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, arrayOf(planeY, planeVU), releaseCallback), BufferY<I400Buffer> {
+) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeVU), releaseCallback), BufferY<I400Buffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertNV21ToI420(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride,
@@ -163,10 +162,9 @@ class Nv21Buffer private constructor(
             val (bufferY, bufferVU) = buffer.sliceByLength(capacityY, capacityVU)
             return Nv21Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeVU = PlanePrimitive(strideVU, bufferVU),
-                width = width,
-                height = height,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
@@ -179,10 +177,9 @@ class Nv21Buffer private constructor(
             val (bufferY, bufferVU) = buffer.sliceByLength(capacityY, capacityVU)
             return Nv21Buffer(
                 buffer = buffer,
+                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeVU = PlanePrimitive(strideVU, bufferVU),
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
@@ -190,10 +187,9 @@ class Nv21Buffer private constructor(
         fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int): Nv21Buffer {
             return Nv21Buffer(
                 buffer = null,
+                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeVU = planeVU,
-                width = width,
-                height = height,
                 releaseCallback = null,
             )
         }
