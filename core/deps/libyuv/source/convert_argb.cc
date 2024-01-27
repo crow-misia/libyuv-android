@@ -4455,14 +4455,15 @@ int NV21ToYUV24(const uint8_t* src_y,
   return 0;
 }
 
-// Convert YUY2 to ARGB.
+// Convert YUY2 to ARGB with matrix.
 LIBYUV_API
-int YUY2ToARGB(const uint8_t* src_yuy2,
-               int src_stride_yuy2,
-               uint8_t* dst_argb,
-               int dst_stride_argb,
-               int width,
-               int height) {
+int YUY2ToARGBMatrix(const uint8_t* src_yuy2,
+                     int src_stride_yuy2,
+                     uint8_t* dst_argb,
+                     int dst_stride_argb,
+                     const struct YuvConstants* yuvconstants,
+                     int width,
+                     int height) {
   int y;
   void (*YUY2ToARGBRow)(const uint8_t* src_yuy2, uint8_t* dst_argb,
                         const struct YuvConstants* yuvconstants, int width) =
@@ -4523,21 +4524,34 @@ int YUY2ToARGB(const uint8_t* src_yuy2,
   }
 #endif
   for (y = 0; y < height; ++y) {
-    YUY2ToARGBRow(src_yuy2, dst_argb, &kYuvI601Constants, width);
+    YUY2ToARGBRow(src_yuy2, dst_argb, yuvconstants, width);
     src_yuy2 += src_stride_yuy2;
     dst_argb += dst_stride_argb;
   }
   return 0;
 }
 
-// Convert UYVY to ARGB.
+// Convert YUY2 to ARGB.
 LIBYUV_API
-int UYVYToARGB(const uint8_t* src_uyvy,
-               int src_stride_uyvy,
+int YUY2ToARGB(const uint8_t* src_yuy2,
+               int src_stride_yuy2,
                uint8_t* dst_argb,
                int dst_stride_argb,
                int width,
                int height) {
+  return YUY2ToARGBMatrix(src_yuy2, src_stride_yuy2, dst_argb, dst_stride_argb,
+                          &kYuvI601Constants, width, height);
+}
+
+// Convert UYVY to ARGB with matrix.
+LIBYUV_API
+int UYVYToARGBMatrix(const uint8_t* src_uyvy,
+                     int src_stride_uyvy,
+                     uint8_t* dst_argb,
+                     int dst_stride_argb,
+                     const struct YuvConstants* yuvconstants,
+                     int width,
+                     int height) {
   int y;
   void (*UYVYToARGBRow)(const uint8_t* src_uyvy, uint8_t* dst_argb,
                         const struct YuvConstants* yuvconstants, int width) =
@@ -4598,12 +4612,25 @@ int UYVYToARGB(const uint8_t* src_uyvy,
   }
 #endif
   for (y = 0; y < height; ++y) {
-    UYVYToARGBRow(src_uyvy, dst_argb, &kYuvI601Constants, width);
+    UYVYToARGBRow(src_uyvy, dst_argb, yuvconstants, width);
     src_uyvy += src_stride_uyvy;
     dst_argb += dst_stride_argb;
   }
   return 0;
 }
+
+// Convert UYVY to ARGB.
+LIBYUV_API
+int UYVYToARGB(const uint8_t* src_uyvy,
+               int src_stride_uyvy,
+               uint8_t* dst_argb,
+               int dst_stride_argb,
+               int width,
+               int height) {
+  return UYVYToARGBMatrix(src_uyvy, src_stride_uyvy, dst_argb, dst_stride_argb,
+                          &kYuvI601Constants, width, height);
+}
+
 static void WeavePixels(const uint8_t* src_u,
                         const uint8_t* src_v,
                         int src_pixel_stride_uv,
@@ -4670,6 +4697,8 @@ int Android420ToARGBMatrix(const uint8_t* src_y,
 
   // General case fallback creates NV12
   align_buffer_64(plane_uv, halfwidth * 2 * halfheight);
+  if (!plane_uv)
+    return 1;
   dst_uv = plane_uv;
   for (y = 0; y < halfheight; ++y) {
     WeavePixels(src_u, src_v, src_pixel_stride_uv, dst_uv, halfwidth);
@@ -5982,6 +6011,8 @@ int I420ToRGB565Dither(const uint8_t* src_y,
   {
     // Allocate a row of argb.
     align_buffer_64(row_argb, width * 4);
+    if (!row_argb)
+      return 1;
     for (y = 0; y < height; ++y) {
       I422ToARGBRow(src_y, src_u, src_v, row_argb, &kYuvI601Constants, width);
       ARGBToRGB565DitherRow(row_argb, dst_rgb565,
@@ -6244,6 +6275,8 @@ static int I420ToARGBMatrixBilinear(const uint8_t* src_y,
   uint8_t* temp_u_2 = row + row_size;
   uint8_t* temp_v_1 = row + row_size * 2;
   uint8_t* temp_v_2 = row + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear(src_u, temp_u_1, width);
   ScaleRowUp2_Linear(src_v, temp_v_1, width);
@@ -6378,6 +6411,8 @@ static int I422ToARGBMatrixLinear(const uint8_t* src_y,
   align_buffer_64(row, row_size * 2);
   uint8_t* temp_u = row;
   uint8_t* temp_v = row + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_u, temp_u, width);
@@ -6511,6 +6546,8 @@ static int I420ToRGB24MatrixBilinear(const uint8_t* src_y,
   uint8_t* temp_u_2 = row + row_size;
   uint8_t* temp_v_1 = row + row_size * 2;
   uint8_t* temp_v_2 = row + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear(src_u, temp_u_1, width);
   ScaleRowUp2_Linear(src_v, temp_v_1, width);
@@ -6617,6 +6654,8 @@ static int I010ToAR30MatrixBilinear(const uint16_t* src_y,
   uint16_t* temp_u_2 = (uint16_t*)(row) + row_size;
   uint16_t* temp_v_1 = (uint16_t*)(row) + row_size * 2;
   uint16_t* temp_v_2 = (uint16_t*)(row) + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear_12(src_u, temp_u_1, width);
   ScaleRowUp2_Linear_12(src_v, temp_v_1, width);
@@ -6714,6 +6753,8 @@ static int I210ToAR30MatrixLinear(const uint16_t* src_y,
   align_buffer_64(row, row_size * 2 * sizeof(uint16_t));
   uint16_t* temp_u = (uint16_t*)(row);
   uint16_t* temp_v = (uint16_t*)(row) + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear_12(src_u, temp_u, width);
@@ -6804,6 +6845,8 @@ static int I010ToARGBMatrixBilinear(const uint16_t* src_y,
   uint16_t* temp_u_2 = (uint16_t*)(row) + row_size;
   uint16_t* temp_v_1 = (uint16_t*)(row) + row_size * 2;
   uint16_t* temp_v_2 = (uint16_t*)(row) + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear_12(src_u, temp_u_1, width);
   ScaleRowUp2_Linear_12(src_v, temp_v_1, width);
@@ -6900,6 +6943,8 @@ static int I210ToARGBMatrixLinear(const uint16_t* src_y,
   align_buffer_64(row, row_size * 2 * sizeof(uint16_t));
   uint16_t* temp_u = (uint16_t*)(row);
   uint16_t* temp_v = (uint16_t*)(row) + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear_12(src_u, temp_u, width);
@@ -7078,6 +7123,8 @@ static int I420AlphaToARGBMatrixBilinear(
   uint8_t* temp_u_2 = row + row_size;
   uint8_t* temp_v_1 = row + row_size * 2;
   uint8_t* temp_v_2 = row + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear(src_u, temp_u_1, width);
   ScaleRowUp2_Linear(src_v, temp_v_1, width);
@@ -7276,6 +7323,8 @@ static int I422AlphaToARGBMatrixLinear(const uint8_t* src_y,
   align_buffer_64(row, row_size * 2);
   uint8_t* temp_u = row;
   uint8_t* temp_v = row + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_u, temp_u, width);
@@ -7417,6 +7466,8 @@ static int I010AlphaToARGBMatrixBilinear(
   uint16_t* temp_u_2 = (uint16_t*)(row) + row_size;
   uint16_t* temp_v_1 = (uint16_t*)(row) + row_size * 2;
   uint16_t* temp_v_2 = (uint16_t*)(row) + row_size * 3;
+  if (!row)
+    return 1;
 
   ScaleRowUp2_Linear_12(src_u, temp_u_1, width);
   ScaleRowUp2_Linear_12(src_v, temp_v_1, width);
@@ -7576,6 +7627,8 @@ static int I210AlphaToARGBMatrixLinear(const uint16_t* src_y,
   align_buffer_64(row, row_size * 2 * sizeof(uint16_t));
   uint16_t* temp_u = (uint16_t*)(row);
   uint16_t* temp_v = (uint16_t*)(row) + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_u, temp_u, width);
@@ -7661,6 +7714,8 @@ static int P010ToARGBMatrixBilinear(const uint16_t* src_y,
   align_buffer_64(row, row_size * 2 * sizeof(uint16_t));
   uint16_t* temp_uv_1 = (uint16_t*)(row);
   uint16_t* temp_uv_2 = (uint16_t*)(row) + row_size;
+  if (!row)
+    return 1;
 
   Scale2RowUp_Bilinear_16(src_uv, 0, temp_uv_1, row_size, width);
   P410ToARGBRow(src_y, temp_uv_1, dst_argb, yuvconstants, width);
@@ -7750,6 +7805,8 @@ static int P210ToARGBMatrixLinear(const uint16_t* src_y,
   const int row_size = (2 * width + 31) & ~31;
   align_buffer_64(row, row_size * sizeof(uint16_t));
   uint16_t* temp_uv = (uint16_t*)(row);
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_uv, temp_uv, width);
@@ -7829,6 +7886,8 @@ static int P010ToAR30MatrixBilinear(const uint16_t* src_y,
   align_buffer_64(row, row_size * 2 * sizeof(uint16_t));
   uint16_t* temp_uv_1 = (uint16_t*)(row);
   uint16_t* temp_uv_2 = (uint16_t*)(row) + row_size;
+  if (!row)
+    return 1;
 
   Scale2RowUp_Bilinear_16(src_uv, 0, temp_uv_1, row_size, width);
   P410ToAR30Row(src_y, temp_uv_1, dst_ar30, yuvconstants, width);
@@ -7918,6 +7977,8 @@ static int P210ToAR30MatrixLinear(const uint16_t* src_y,
   const int row_size = (2 * width + 31) & ~31;
   align_buffer_64(row, row_size * sizeof(uint16_t));
   uint16_t* temp_uv = (uint16_t*)(row);
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_uv, temp_uv, width);
@@ -8019,6 +8080,8 @@ static int I422ToRGB24MatrixLinear(const uint8_t* src_y,
   align_buffer_64(row, row_size * 2);
   uint8_t* temp_u = row;
   uint8_t* temp_v = row + row_size;
+  if (!row)
+    return 1;
 
   for (y = 0; y < height; ++y) {
     ScaleRowUp2_Linear(src_u, temp_u, width);
