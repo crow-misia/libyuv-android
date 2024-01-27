@@ -53,7 +53,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
   int has_avx512vbmi = TestCpuFlag(kCpuHasAVX512VBMI);
   int has_avx512vbmi2 = TestCpuFlag(kCpuHasAVX512VBMI2);
   int has_avx512vbitalg = TestCpuFlag(kCpuHasAVX512VBITALG);
-  int has_avx512vpopcntdq = TestCpuFlag(kCpuHasAVX512VPOPCNTDQ);
+  int has_avx10 = TestCpuFlag(kCpuHasAVX10);
   int has_avxvnni = TestCpuFlag(kCpuHasAVXVNNI);
   int has_avxvnniint8 = TestCpuFlag(kCpuHasAVXVNNIINT8);
   printf("Has X86 0x%x\n", has_x86);
@@ -72,7 +72,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
   printf("Has AVX512VBMI 0x%x\n", has_avx512vbmi);
   printf("Has AVX512VBMI2 0x%x\n", has_avx512vbmi2);
   printf("Has AVX512VBITALG 0x%x\n", has_avx512vbitalg);
-  printf("Has AVX512VPOPCNTDQ 0x%x\n", has_avx512vpopcntdq);
+  printf("Has AVX10 0x%x\n", has_avx10);
   printf("HAS AVXVNNI 0x%x\n", has_avxvnni);
   printf("Has AVXVNNIINT8 0x%x\n", has_avxvnniint8);
 #endif
@@ -185,7 +185,7 @@ TEST_F(LibYUVBaseTest, TestCompilerMacros) {
   printf("__pnacl__ %d\n", __pnacl__);
 #endif
 #ifdef GG_LONGLONG
-  printf("GG_LONGLONG %d\n", GG_LONGLONG);
+  printf("GG_LONGLONG %lld\n", GG_LONGLONG(1));
 #endif
 #ifdef INT_TYPES_DEFINED
   printf("INT_TYPES_DEFINED\n");

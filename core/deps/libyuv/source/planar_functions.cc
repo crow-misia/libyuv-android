@@ -3027,6 +3027,8 @@ int I420Blend(const uint8_t* src_y0,
 
   // Row buffer for intermediate alpha pixels.
   align_buffer_64(halfalpha, halfwidth);
+  if (!halfalpha)
+    return 1;
   for (y = 0; y < height; y += 2) {
     // last row of odd height image use 1 row of alpha instead of 2.
     if (y == (height - 1)) {
@@ -4710,6 +4712,8 @@ int GaussPlane_F32(const float* src,
   {
     // 2 pixels on each side, but aligned out to 16 bytes.
     align_buffer_64(rowbuf, (4 + width + 4) * 4);
+    if (!rowbuf)
+      return 1;
     memset(rowbuf, 0, 16);
     memset(rowbuf + (4 + width) * 4, 0, 16);
     float* row = (float*)(rowbuf + 16);
@@ -4868,6 +4872,8 @@ static int ARGBSobelize(const uint8_t* src_argb,
     uint8_t* row_y0 = row_y + kEdge;
     uint8_t* row_y1 = row_y0 + row_size;
     uint8_t* row_y2 = row_y1 + row_size;
+    if (!rows)
+      return 1;
     ARGBToYJRow(src_argb, row_y0, width);
     row_y0[-1] = row_y0[0];
     memset(row_y0 + width, row_y0[width - 1], 16);  // Extrude 16 for valgrind.
@@ -5654,6 +5660,8 @@ int UYVYToNV12(const uint8_t* src_uyvy,
     int awidth = halfwidth * 2;
     // row of y and 2 rows of uv
     align_buffer_64(rows, awidth * 3);
+    if (!rows)
+      return 1;
 
     for (y = 0; y < height - 1; y += 2) {
       // Split Y from UV.

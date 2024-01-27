@@ -12,10 +12,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __linux__
+#include <ctype.h>
+#include <sys/utsname.h>
+#endif
+
 #include "libyuv/cpu_id.h"
 
 #ifdef __cplusplus
 using namespace libyuv;
+#endif
+
+#ifdef __linux__
+static void KernelVersion(int *version) {
+  struct utsname buffer;
+  int i = 0;
+
+  version[0] = version[1] = 0;
+  if (uname(&buffer) == 0) {
+    char *v = buffer.release;
+    for (i = 0; *v && i < 2; ++v) {
+      if (isdigit(*v)) {
+        version[i++] = (int) strtol(v, &v, 10);
+      }
+    }
+  }
+}
 #endif
 
 int main(int argc, const char* argv[]) {
@@ -28,6 +50,13 @@ int main(int argc, const char* argv[]) {
   (void)argc;
   (void)argv;
 
+#ifdef __linux__
+  {
+    int kernelversion[2];
+    KernelVersion(kernelversion);
+    printf("Kernel Version %d.%d\n", kernelversion[0], kernelversion[1]);
+  }
+#endif
 #if defined(__i386__) || defined(__x86_64__) || \
     defined(_M_IX86) || defined(_M_X64)
   if (has_x86) {
@@ -102,7 +131,7 @@ int main(int argc, const char* argv[]) {
     int has_avx512vbmi = TestCpuFlag(kCpuHasAVX512VBMI);
     int has_avx512vbmi2 = TestCpuFlag(kCpuHasAVX512VBMI2);
     int has_avx512vbitalg = TestCpuFlag(kCpuHasAVX512VBITALG);
-    int has_avx512vpopcntdq = TestCpuFlag(kCpuHasAVX512VPOPCNTDQ);
+    int has_avx10 = TestCpuFlag(kCpuHasAVX10);
     int has_avxvnni = TestCpuFlag(kCpuHasAVXVNNI);
     int has_avxvnniint8 = TestCpuFlag(kCpuHasAVXVNNIINT8);
     printf("Has X86 0x%x\n", has_x86);
@@ -121,7 +150,7 @@ int main(int argc, const char* argv[]) {
     printf("Has AVX512VBMI 0x%x\n", has_avx512vbmi);
     printf("Has AVX512VBMI2 0x%x\n", has_avx512vbmi2);
     printf("Has AVX512VBITALG 0x%x\n", has_avx512vbitalg);
-    printf("Has AVX512VPOPCNTDQ 0x%x\n", has_avx512vpopcntdq);
+    printf("Has AVX10 0x%x\n", has_avx10);
     printf("HAS AVXVNNI 0x%x\n", has_avxvnni);
     printf("Has AVXVNNIINT8 0x%x\n", has_avxvnniint8);
   }
