@@ -65,11 +65,12 @@ def processConvertPart():
         comment = row[3]
 
       convert_code += f"\n    /** {comment} */\n"
+      convert_code += f"    @JvmName(\"{function_name}\")\n"
       convert_code += f"    external fun {function_name}(\n"
       for plane in src_planes:
-        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: Int,\n"
+        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: RowStride, srcOffset{plane}: Int,\n"
       for plane in dst_planes:
-        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: Int,\n"
+        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: RowStride, dstOffset{plane}: Int,\n"
       convert_code += '        width: Int, height: Int,\n'
       convert_code += '    )\n'
   return convert_code
@@ -98,13 +99,14 @@ def processRotatePart():
         comment = row[3]
 
       convert_code += f"\n    /** {comment} */\n"
+      convert_code += f"    @JvmName(\"{function_name}\")\n"
       convert_code += f"    external fun {function_name}(\n"
       for plane in src_planes:
-        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: Int,\n"
+        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: RowStride, srcOffset{plane}: Int,\n"
       if row[0] == 'Android420':
         convert_code += '        srcPixelStrideUV: Int,\n'
       for plane in dst_planes:
-        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: Int,\n"
+        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: RowStride, dstOffset{plane}: Int,\n"
       convert_code += '        width: Int, height: Int,\n'
       convert_code += '        rotateMode: Int,\n'
       convert_code += '    )\n'
@@ -127,12 +129,13 @@ def processScalePart():
         comment = f"Scale {format} Frame"
 
       convert_code += f"\n    /** {comment} */\n"
+      convert_code += f"    @JvmName(\"{function_name}\")\n"
       convert_code += f"    external fun {function_name}(\n"
       for plane in planes:
-        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: Int,\n"
+        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: RowStride, srcOffset{plane}: Int,\n"
       convert_code += '        srcWidth: Int, srcHeight: Int,\n'
       for plane in planes:
-        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: Int,\n"
+        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: RowStride, dstOffset{plane}: Int,\n"
       convert_code += '        dstWidth: Int, dstHeight: Int,\n'
       convert_code += '        filterMode: Int,\n'
       convert_code += '    )\n'
@@ -168,11 +171,12 @@ def processPlanerPart():
         comment = row[3]
 
       convert_code += f"\n    /** {comment} */\n"
+      convert_code += f"    @JvmName(\"{function_name}\")\n"
       convert_code += f"    external fun {function_name}(\n"
       for plane in src_planes:
-        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: Int,\n"
+        convert_code += f"        src{plane}: ByteBuffer, srcStride{plane}: RowStride, srcOffset{plane}: Int,\n"
       for plane in dst_planes:
-        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: Int,\n"
+        convert_code += f"        dst{plane}: ByteBuffer, dstStride{plane}: RowStride, dstOffset{plane}: Int,\n"
       convert_code += '        width: Int, height: Int,\n'
       convert_code += '    )\n'
   return convert_code

@@ -14,66 +14,68 @@ class RawBuffer private constructor(
 ) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), Buffer24<RawBuffer> {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertRAWToI420(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: J400Buffer) {
         Yuv.convertRAWToJ400(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: J420Buffer) {
         Yuv.convertRAWToJ420(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertRAWToARGB(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: RgbaBuffer) {
         Yuv.convertRAWToRGBA(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstRGBA = dst.plane.buffer, dstStrideRGBA = dst.plane.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstRGBA = dst.plane.buffer, dstStrideRGBA = dst.plane.rowStride, dstOffsetRGBA = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: Rgb24Buffer) {
         Yuv.planerRAWToRGB24(
-            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = plane.offset,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
-    companion object Factory : BufferFactory<RawBuffer> {
-        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<RawBuffer>, CapacityCalculator<Plane1Capacities> {
+        override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3
-            val capacity = stride * height
-            return intArrayOf(stride, capacity)
+            return Plane1Capacities(
+                planeStride = RowStride(stride),
+                planeCapacity = Capacity(stride * height)
+            )
         }
 
         override fun allocate(width: Int, height: Int): RawBuffer {
-            val (stride, capacity) = getStrideWithCapacity(width, height)
-            val buffer = createByteBuffer(capacity)
+            val (capacity, stride) = calculate(width, height)
+            val (buffer) = createByteBuffer(listOf(capacity))
             return RawBuffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),
@@ -86,11 +88,12 @@ class RawBuffer private constructor(
         override fun wrap(buffer: ByteBuffer, width: Int, height: Int): RawBuffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
-            val (stride, capacity) = getStrideWithCapacity(width, height)
+            val (capacity, stride) = calculate(width, height)
+            val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return RawBuffer(
-                buffer = buffer,
+                buffer = sliceBuffer,
                 crop = Rect(width = width, height = height),
-                plane = PlanePrimitive(stride, buffer.sliceRange(0, capacity)),
+                plane = PlanePrimitive(stride, sliceBuffer),
                 releaseCallback = null,
             )
         }

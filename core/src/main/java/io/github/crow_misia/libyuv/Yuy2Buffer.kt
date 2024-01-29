@@ -16,51 +16,54 @@ class Yuy2Buffer private constructor(
 ) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: I420Buffer) {
         Yuv.convertYUY2ToI420(
-            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride, srcOffsetYUY2 = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: I422Buffer) {
         Yuv.planerYUY2ToI422(
-            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride, srcOffsetYUY2 = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertYUY2ToARGB(
-            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride, srcOffsetYUY2 = plane.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: Nv12Buffer) {
         Yuv.planerYUY2ToNV12(
-            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
+            srcYUY2 = plane.buffer, srcStrideYUY2 = plane.rowStride, srcOffsetYUY2 = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
-    companion object Factory : BufferFactory<Yuy2Buffer> {
-        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<Yuy2Buffer>, CapacityCalculator<Plane1Capacities> {
+        override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(1)
             val capacity = stride * height
-            return intArrayOf(stride, capacity)
+            return Plane1Capacities(
+                planeStride = RowStride(stride),
+                planeCapacity = Capacity(capacity),
+            )
         }
 
         override fun allocate(width: Int, height: Int): Yuy2Buffer {
-            val (stride, capacity) = getStrideWithCapacity(width, height)
-            val buffer = createByteBuffer(capacity)
+            val (capacity, stride) = calculate(width, height)
+            val (buffer) = createByteBuffer(listOf(capacity))
             return Yuy2Buffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),
@@ -73,8 +76,8 @@ class Yuy2Buffer private constructor(
         override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Yuy2Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
-            val (stride, capacity) = getStrideWithCapacity(width, height)
-            val sliceBuffer = buffer.sliceRange(0, capacity)
+            val (capacity, stride) = calculate(width, height)
+            val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return Yuy2Buffer(
                 buffer = sliceBuffer,
                 crop = Rect(width = width, height = height),

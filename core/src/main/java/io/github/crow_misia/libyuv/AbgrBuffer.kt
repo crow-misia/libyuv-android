@@ -19,94 +19,96 @@ class AbgrBuffer private constructor(
 
     fun convertTo(dst: I420Buffer) {
         Yuv.convertABGRToI420(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: J400Buffer) {
         Yuv.convertABGRToJ400(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: J420Buffer) {
         Yuv.convertABGRToJ420(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: J422Buffer) {
         Yuv.convertABGRToJ422(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: Nv12Buffer) {
         Yuv.convertABGRToNV12(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: Nv21Buffer) {
         Yuv.convertABGRToNV21(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride,
-            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertABGRToARGB(
-            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcABGR = plane.buffer, srcStrideABGR = plane.rowStride, srcOffsetABGR = plane.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: Rgb24Buffer) {
         Yuv.convertARGBToRAW(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: RawBuffer) {
         Yuv.convertARGBToRGB24(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
-    companion object Factory : BufferFactory<AbgrBuffer> {
-        internal fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<AbgrBuffer>, CapacityCalculator<Plane1Capacities> {
+        override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(2)
-            val capacity = stride * height
-            return intArrayOf(stride, capacity)
+            return Plane1Capacities(
+                planeStride = RowStride(stride),
+                planeCapacity = Capacity(stride * height),
+            )
         }
 
         override fun allocate(width: Int, height: Int): AbgrBuffer {
-            val (stride, capacity) = getStrideWithCapacity(width, height)
-            val buffer = createByteBuffer(capacity)
+            val (capacity, stride) = calculate(width, height)
+            val (buffer) = createByteBuffer(listOf(capacity))
             return AbgrBuffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),
@@ -119,8 +121,8 @@ class AbgrBuffer private constructor(
         override fun wrap(buffer: ByteBuffer, width: Int, height: Int): AbgrBuffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
-            val (stride, capacity) = getStrideWithCapacity(width, height)
-            val sliceBuffer = buffer.sliceRange(0, capacity)
+            val (capacity, stride) = calculate(width, height)
+            val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return AbgrBuffer(
                 buffer = sliceBuffer,
                 crop = Rect(width = width, height = height),

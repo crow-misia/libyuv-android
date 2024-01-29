@@ -17,8 +17,11 @@ internal fun ByteBuffer.copy(dst: ByteArray, dstOffset: Int = 0, srcOffset: Int 
     Yuv.memcopy(dst, dstOffset, srcObj, srcOffset, length)
 }
 
-internal fun createByteBuffer(capacity: Int): ByteBuffer {
-    return Yuv.allocNativeBuffer(capacity)
+internal fun createByteBuffer(capacities: List<Capacity>): Array<ByteBuffer> {
+    check(capacities.isNotEmpty())
+
+    val whole = Yuv.allocNativeBuffer(capacities.sumOf { it.value })
+    return whole.sliceByLength(capacities)
 }
 
 internal fun ByteBuffer.sliceRange(offset: Int, length: Int): ByteBuffer {
@@ -30,18 +33,23 @@ internal fun ByteBuffer.sliceRange(offset: Int, length: Int): ByteBuffer {
     }
 }
 
-internal fun ByteBuffer.sliceByLength(vararg sliceLengths: Int): Array<ByteBuffer> {
+internal fun ByteBuffer.sliceByLength(capacities: List<Capacity>): Array<ByteBuffer> {
+    check(capacities.isNotEmpty())
+
     execute { _, limit ->
         var offset = 0
-        val results = arrayOfNulls<ByteBuffer>(sliceLengths.size)
-        sliceLengths.forEachIndexed { i, sliceLength ->
+        var index = 0
+        val num = capacities.size
+        val results = arrayOfNulls<ByteBuffer>(num + 1)
+        capacities.forEach { sliceLength ->
             position(offset)
-            offset += sliceLength
+            offset += sliceLength.value
             limit(offset)
-            results[i] = slice()
+            results[index++] = slice()
         }
         check(offset <= limit) { "buffer limit is bigger than expected" }
 
+        results[index] = this
         return results.requireNoNulls()
     }
 }
@@ -59,6 +67,3 @@ internal inline fun <T> ByteBuffer.execute(func: (position: Int, limit: Int) -> 
         limit(previousLimit)
     }
 }
-
-@Suppress("NOTHING_TO_INLINE")
-internal inline operator fun IntArray.component6() = this[5]

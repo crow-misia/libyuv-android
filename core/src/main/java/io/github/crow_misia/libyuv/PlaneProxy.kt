@@ -6,16 +6,15 @@ import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class PlaneProxy(
+data class PlaneProxy(
     private val proxy: ImageProxy.PlaneProxy,
+    override val offset: Int,
 ) : Plane {
-    override val buffer: ByteBuffer
-        get() = proxy.buffer
-    override val rowStride: Int
-        get() = proxy.rowStride
+    override val buffer: ByteBuffer = proxy.buffer
+    override val rowStride: RowStride = RowStride(proxy.rowStride)
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-fun ImageProxy.PlaneProxy.asPlane(): Plane {
-    return PlaneProxy(this)
+fun ImageProxy.PlaneProxy.asPlane(offset: Int = 0): Plane {
+    return PlaneProxy(proxy = this, offset = offset)
 }

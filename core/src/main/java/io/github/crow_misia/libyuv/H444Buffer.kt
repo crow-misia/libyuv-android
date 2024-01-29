@@ -16,34 +16,40 @@ class H444Buffer private constructor(
 ) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<H444Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertH444ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: AbgrBuffer) {
         Yuv.convertH444ToABGR(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
-    companion object Factory : BufferFactory<H444Buffer> {
-        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<H444Buffer>, CapacityCalculator<Plane3Capacities> {
+        override fun calculate(width: Int, height: Int): Plane3Capacities {
             val capacity = width * height
-            return intArrayOf(width, capacity, width, capacity, width, capacity)
+            return Plane3Capacities(
+                plane1Stride = RowStride(width),
+                plane2Stride = RowStride(width),
+                plane3Stride = RowStride(width),
+                plane1Capacity = Capacity(capacity),
+                plane2Capacity = Capacity(capacity),
+                plane3Capacity = Capacity(capacity),
+            )
         }
 
         override fun allocate(width: Int, height: Int): H444Buffer {
-            val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val buffer = createByteBuffer(capacityY + capacityU + capacityV)
-            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
+            val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
+            val (bufferY, bufferU, bufferV, buffer) = createByteBuffer(listOf(capacityY, capacityU, capacityV))
             return H444Buffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),
@@ -58,8 +64,8 @@ class H444Buffer private constructor(
         override fun wrap(buffer: ByteBuffer, width: Int, height: Int): H444Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
-            val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
+            val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(listOf(capacityY, capacityU, capacityV))
             return H444Buffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),

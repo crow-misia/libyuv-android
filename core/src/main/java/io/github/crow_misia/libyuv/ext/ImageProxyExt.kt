@@ -30,6 +30,7 @@ import io.github.crow_misia.libyuv.U420Buffer
 import io.github.crow_misia.libyuv.U422Buffer
 import io.github.crow_misia.libyuv.U444Buffer
 import io.github.crow_misia.libyuv.Yuv24Buffer
+import io.github.crow_misia.libyuv.asPlane
 
 @Suppress("unused")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -43,7 +44,7 @@ object ImageProxyExt {
     fun ImageProxy.toAbgrBuffer(): AbgrBuffer {
         val plane = planes[0]
         return AbgrBuffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -58,7 +59,7 @@ object ImageProxyExt {
     fun ImageProxy.toArgb1555Buffer(): Argb1555Buffer {
         val plane = planes[0]
         return Argb1555Buffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -73,7 +74,7 @@ object ImageProxyExt {
     fun ImageProxy.toArgb4444Buffer(): Argb4444Buffer {
         val plane = planes[0]
         return Argb4444Buffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -88,7 +89,7 @@ object ImageProxyExt {
     fun ImageProxy.toArgbBuffer(): ArgbBuffer {
         val plane = planes[0]
         return ArgbBuffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -103,7 +104,7 @@ object ImageProxyExt {
     fun ImageProxy.toBgraBuffer(): BgraBuffer {
         val plane = planes[0]
         return BgraBuffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -117,9 +118,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toH420Buffer(): H420Buffer {
         return H420Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -133,9 +134,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toH422Buffer(): H422Buffer {
         return H422Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -149,9 +150,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toH444Buffer(): H444Buffer {
         return H444Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -166,7 +167,7 @@ object ImageProxyExt {
     fun ImageProxy.toI400Buffer(): I400Buffer {
         val plane = planes[0]
         return I400Buffer.wrap(
-            planeY = PlaneProxy(plane),
+            planeY = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -180,9 +181,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toI420Buffer(): I420Buffer {
         return I420Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -196,9 +197,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toI422Buffer(): I422Buffer {
         return I422Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -212,9 +213,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toI444Buffer(): I444Buffer {
         return I444Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -229,7 +230,7 @@ object ImageProxyExt {
     fun ImageProxy.toJ400Buffer(): J400Buffer {
         val plane = planes[0]
         return J400Buffer.wrap(
-            planeYJ = PlaneProxy(plane),
+            planeYJ = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -243,9 +244,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toJ420Buffer(): J420Buffer {
         return J420Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -259,9 +260,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toJ422Buffer(): J422Buffer {
         return J422Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -275,9 +276,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toJ444Buffer(): J444Buffer {
         return J444Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -291,8 +292,8 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toNv12Buffer(): Nv12Buffer {
         return Nv12Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeUV = PlaneProxy(planes[1]),
+            planeY = planes[0].asPlane(),
+            planeUV = planes[1].asPlane(),
             width = width,
             height = height,
         )
@@ -306,8 +307,8 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toNv21Buffer(): Nv21Buffer {
         return Nv21Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeVU = PlaneProxy(planes[1]),
+            planeY = planes[0].asPlane(),
+            planeVU = planes[1].asPlane(),
             width = width,
             height = height,
         )
@@ -322,7 +323,7 @@ object ImageProxyExt {
     fun ImageProxy.toRawBuffer(): RawBuffer {
         val plane = planes[0]
         return RawBuffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -337,7 +338,7 @@ object ImageProxyExt {
     fun ImageProxy.toRgb24Buffer(): Rgb24Buffer {
         val plane = planes[0]
         return Rgb24Buffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -352,7 +353,7 @@ object ImageProxyExt {
     fun ImageProxy.toRgb565Buffer(): Rgb565Buffer {
         val plane = planes[0]
         return Rgb565Buffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -367,7 +368,7 @@ object ImageProxyExt {
     fun ImageProxy.toRgbaBuffer(): RgbaBuffer {
         val plane = planes[0]
         return RgbaBuffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )
@@ -381,9 +382,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toU420Buffer(): U420Buffer {
         return U420Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -397,9 +398,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toU422Buffer(): U422Buffer {
         return U422Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -413,9 +414,9 @@ object ImageProxyExt {
     @JvmStatic
     fun ImageProxy.toU444Buffer(): U444Buffer {
         return U444Buffer.wrap(
-            planeY = PlaneProxy(planes[0]),
-            planeU = PlaneProxy(planes[1]),
-            planeV = PlaneProxy(planes[2]),
+            planeY = planes[0].asPlane(),
+            planeU = planes[1].asPlane(),
+            planeV = planes[2].asPlane(),
             width = width,
             height = height,
         )
@@ -430,7 +431,7 @@ object ImageProxyExt {
     fun ImageProxy.toYuv24Buffer(): Yuv24Buffer {
         val plane = planes[0]
         return Yuv24Buffer.wrap(
-            plane = PlaneProxy(plane),
+            plane = plane.asPlane(),
             width = width,
             height = height,
         )

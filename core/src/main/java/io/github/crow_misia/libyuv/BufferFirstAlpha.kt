@@ -10,16 +10,16 @@ interface BufferFirstAlpha : Buffer {
 
     fun copyAlphaTo(dst: AbgrBuffer) {
         Yuv.planerARGBCopyAlpha(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun copyAlphaTo(dst: ArgbBuffer) {
         Yuv.planerARGBCopyAlpha(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }

@@ -16,37 +16,43 @@ class U420Buffer private constructor(
 ) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<U420Buffer> {
     fun convertTo(dst: ArgbBuffer) {
         Yuv.convertU420ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
     fun convertTo(dst: AbgrBuffer) {
         Yuv.convertU420ToABGR(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
             width = min(width, dst.width), height = min(height, dst.height),
         )
     }
 
-    companion object Factory : BufferFactory<U420Buffer> {
-        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
+    companion object Factory : BufferFactory<U420Buffer>, CapacityCalculator<Plane3Capacities> {
+        override fun calculate(width: Int, height: Int): Plane3Capacities {
             val halfWidth = (width + 1).shr(1)
             val halfHeight = (height + 1).shr(1)
             val capacity = width * height
             val halfCapacity = halfWidth * halfHeight
-            return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
+            return Plane3Capacities(
+                plane1Stride = RowStride(width),
+                plane2Stride = RowStride(halfWidth),
+                plane3Stride = RowStride(halfWidth),
+                plane1Capacity = Capacity(capacity),
+                plane2Capacity = Capacity(halfCapacity),
+                plane3Capacity = Capacity(halfCapacity),
+            )
         }
 
         override fun allocate(width: Int, height: Int): U420Buffer {
-            val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val buffer = createByteBuffer(capacityY + capacityU + capacityV)
-            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
+            val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
+            val (bufferY, bufferU, bufferV, buffer) = createByteBuffer(listOf(capacityY, capacityU, capacityV))
             return U420Buffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),
@@ -61,8 +67,8 @@ class U420Buffer private constructor(
         override fun wrap(buffer: ByteBuffer, width: Int, height: Int): U420Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
-            val (strideY, capacityY, strideU, capacityU, strideV, capacityV) = getStrideWithCapacity(width, height)
-            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(capacityY, capacityU, capacityV)
+            val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
+            val (bufferY, bufferU, bufferV) = buffer.sliceByLength(listOf(capacityY, capacityU, capacityV))
             return U420Buffer(
                 buffer = buffer,
                 crop = Rect(width = width, height = height),

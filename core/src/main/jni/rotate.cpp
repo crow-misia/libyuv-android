@@ -66,15 +66,15 @@ static int rotateNV12RotateInternal(
 }
 
 JNI_DEFINE_METHOD(void, rotateNV12Rotate,
-      const jobject j_src_y, const jint j_src_stride_y,
-            jobject j_src_uv, const jint j_src_stride_uv,
-            jobject j_dst_y, const jint j_dst_stride_y,
-            jobject j_dst_uv, const jint j_dst_stride_uv,
+      const jobject j_src_y, const jint j_src_stride_y, const jint j_src_offset_y,
+            jobject j_src_uv, const jint j_src_stride_uv, const jint j_src_offset_uv,
+            jobject j_dst_y, const jint j_dst_stride_y, const jint j_dst_offset_y,
+            jobject j_dst_uv, const jint j_dst_stride_uv, const jint j_dst_offset_uv,
       const jint width, jint height, const jint mode) {
-    SRC_PLANE(y);
-    SRC_PLANE(uv);
-    DST_PLANE(y);
-    DST_PLANE(uv);
+    SRC_PLANE_OFFSET(y);
+    SRC_PLANE_OFFSET(uv);
+    DST_PLANE_OFFSET(y);
+    DST_PLANE_OFFSET(uv);
 
     if (width <= 0 || height == 0) {
         return;
@@ -112,15 +112,15 @@ JNI_DEFINE_METHOD(void, rotateNV12Rotate,
 }
 
 JNI_DEFINE_METHOD(void, rotateNV21Rotate,
-                  const jobject j_src_y, const jint j_src_stride_y,
-                  const jobject j_src_vu, const jint j_src_stride_vu,
-                  jobject j_dst_y, const jint j_dst_stride_y,
-                  jobject j_dst_vu, const jint j_dst_stride_vu,
+                  const jobject j_src_y, const jint j_src_stride_y, const jint j_src_offset_y,
+                  const jobject j_src_vu, const jint j_src_stride_vu, const jint j_src_offset_vu,
+                  jobject j_dst_y, const jint j_dst_stride_y, const jint j_dst_offset_y,
+                  jobject j_dst_vu, const jint j_dst_stride_vu, const jint j_dst_offset_vu,
                   const jint width, jint height, const jint mode) {
-    SRC_PLANE(y);
-    SRC_PLANE(vu);
-    DST_PLANE(y);
-    DST_PLANE(vu);
+    SRC_PLANE_OFFSET(y);
+    SRC_PLANE_OFFSET(vu);
+    DST_PLANE_OFFSET(y);
+    DST_PLANE_OFFSET(vu);
 
     if (width <= 0 || height == 0) {
         return;
@@ -158,15 +158,15 @@ JNI_DEFINE_METHOD(void, rotateNV21Rotate,
 }
 
 JNI_DEFINE_METHOD(void, rotateNV12ToNV21Rotate,
-                  const jobject j_src_y, const jint j_src_stride_y,
-                  const jobject j_src_uv, const jint j_src_stride_uv,
-                  jobject j_dst_y, const jint j_dst_stride_y,
-                  jobject j_dst_vu, const jint j_dst_stride_vu,
+                  const jobject j_src_y, const jint j_src_stride_y, const jint j_src_offset_y,
+                  const jobject j_src_uv, const jint j_src_stride_uv, const jint j_src_offset_uv,
+                  jobject j_dst_y, const jint j_dst_stride_y, const jint j_dst_offset_y,
+                  jobject j_dst_vu, const jint j_dst_stride_vu, const jint j_dst_offset_vu,
                   const jint width, jint height, const jint mode) {
-    SRC_PLANE(y);
-    SRC_PLANE(uv);
-    DST_PLANE(y);
-    DST_PLANE(vu);
+    SRC_PLANE_OFFSET(y);
+    SRC_PLANE_OFFSET(uv);
+    DST_PLANE_OFFSET(y);
+    DST_PLANE_OFFSET(vu);
 
     if (width <= 0 || height == 0) {
         return;

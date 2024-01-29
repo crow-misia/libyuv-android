@@ -7,8 +7,9 @@ import java.nio.ByteBuffer
 import kotlin.math.min
 
 interface Plane {
-    val rowStride: Int
+    val rowStride: RowStride
     val buffer: ByteBuffer
+    val offset: Int
 
     fun hashDjb2(): Long = hashDjb2(5381)
 
@@ -53,6 +54,18 @@ interface Plane {
     }
 
     fun setValue(width: Int, height: Int, value: Int) {
-        Yuv.planerSetPlane(srcY = buffer, srcStrideY = rowStride, width = width, height = height, value = value)
+        Yuv.planerSetPlane(
+            dstY = buffer, dstStrideY = rowStride, dstOffsetY = 0,
+            width = width, height = height,
+            value = value,
+        )
+    }
+
+    fun setValue(top: Int, left: Int, width: Int, height: Int, value: Int) {
+        Yuv.planerSetPlane(
+            dstY = buffer, dstStrideY = rowStride, dstOffsetY = top * width + left,
+            width = width, height = height,
+            value = value,
+        )
     }
 }

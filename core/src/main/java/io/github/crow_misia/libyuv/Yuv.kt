@@ -14,1360 +14,1515 @@ object Yuv {
     // convert.cpp
 
     /** Convert I444 to I420 */
+    @JvmName("convertI444ToI420")
     external fun convertI444ToI420(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to NV12 */
+    @JvmName("convertI444ToNV12")
     external fun convertI444ToNV12(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to NV21 */
+    @JvmName("convertI444ToNV21")
     external fun convertI444ToNV21(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to I420 */
+    @JvmName("convertI422ToI420")
     external fun convertI422ToI420(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to I444 */
+    @JvmName("convertI422ToI444")
     external fun convertI422ToI444(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to NV21 */
+    @JvmName("convertI422ToNV21")
     external fun convertI422ToNV21(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Copy I420 to I420 */
+    @JvmName("convertI420Copy")
     external fun convertI420Copy(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I400 (grey) to I420 */
+    @JvmName("convertI400ToI420")
     external fun convertI400ToI420(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I400 (grey) to NV21 / NV12 */
+    @JvmName("convertI400ToNV21")
     external fun convertI400ToNV21(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to I420 */
+    @JvmName("convertNV12ToI420")
     external fun convertNV12ToI420(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to I420 */
+    @JvmName("convertNV21ToI420")
     external fun convertNV21ToI420(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert YUY2 to I420 */
+    @JvmName("convertYUY2ToI420")
     external fun convertYUY2ToI420(
-        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert UYVY to I420 */
+    @JvmName("convertUYVYToI420")
     external fun convertUYVYToI420(
-        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert AYUV to NV12 */
+    @JvmName("convertAYUVToNV12")
     external fun convertAYUVToNV12(
-        srcAYUV: ByteBuffer, srcStrideAYUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcAYUV: ByteBuffer, srcStrideAYUV: RowStride, srcOffsetAYUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert AYUV to NV21 */
+    @JvmName("convertAYUVToNV21")
     external fun convertAYUVToNV21(
-        srcAYUV: ByteBuffer, srcStrideAYUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcAYUV: ByteBuffer, srcStrideAYUV: RowStride, srcOffsetAYUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** ARGB little endian (bgra in memory) to I420 */
+    @JvmName("convertARGBToI420")
     external fun convertARGBToI420(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** BGRA little endian (argb in memory) to I420 */
+    @JvmName("convertBGRAToI420")
     external fun convertBGRAToI420(
-        srcBGRA: ByteBuffer, srcStrideBGRA: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcBGRA: ByteBuffer, srcStrideBGRA: RowStride, srcOffsetBGRA: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** ABGR little endian (rgba in memory) to I420 */
+    @JvmName("convertABGRToI420")
     external fun convertABGRToI420(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGBA little endian (abgr in memory) to I420 */
+    @JvmName("convertRGBAToI420")
     external fun convertRGBAToI420(
-        srcRGBA: ByteBuffer, srcStrideRGBA: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRGBA: ByteBuffer, srcStrideRGBA: RowStride, srcOffsetRGBA: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB little endian (bgr in memory) to I420 */
+    @JvmName("convertRGB24ToI420")
     external fun convertRGB24ToI420(
-        srcRGB24: ByteBuffer, srcStrideRGB24: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB little endian (bgr in memory) to J420 */
+    @JvmName("convertRGB24ToJ420")
     external fun convertRGB24ToJ420(
-        srcRGB24: ByteBuffer, srcStrideRGB24: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB big endian (rgb in memory) to I420 */
+    @JvmName("convertRAWToI420")
     external fun convertRAWToI420(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB big endian (rgb in memory) to J420 */
+    @JvmName("convertRAWToJ420")
     external fun convertRAWToJ420(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB16 (RGBP fourcc) little endian to I420 */
+    @JvmName("convertRGB565ToI420")
     external fun convertRGB565ToI420(
-        srcRGB565: ByteBuffer, srcStrideRGB565: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcRGB565: ByteBuffer, srcStrideRGB565: RowStride, srcOffsetRGB565: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB15 (RGBO fourcc) little endian to I420 */
+    @JvmName("convertARGB1555ToI420")
     external fun convertARGB1555ToI420(
-        srcARGB1555: ByteBuffer, srcStrideARGB1555: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB1555: ByteBuffer, srcStrideARGB1555: RowStride, srcOffsetARGB1555: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB12 (R444 fourcc) little endian to I420 */
+    @JvmName("convertARGB4444ToI420")
     external fun convertARGB4444ToI420(
-        srcARGB4444: ByteBuffer, srcStrideARGB4444: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB4444: ByteBuffer, srcStrideARGB4444: RowStride, srcOffsetARGB4444: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** RGB little endian (bgr in memory) to J400 */
+    @JvmName("convertRGB24ToJ400")
     external fun convertRGB24ToJ400(
-        srcRGB24: ByteBuffer, srcStrideRGB24: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** RGB big endian (rgb in memory) to J400 */
+    @JvmName("convertRAWToJ400")
     external fun convertRAWToJ400(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Copy ARGB to ARGB */
+    @JvmName("convertARGBCopy")
     external fun convertARGBCopy(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J420 to ARGB */
+    @JvmName("convertJ420ToARGB")
     external fun convertJ420ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J420 to ABGR */
+    @JvmName("convertJ420ToABGR")
     external fun convertJ420ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to ARGB */
+    @JvmName("convertH420ToARGB")
     external fun convertH420ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to ABGR */
+    @JvmName("convertH420ToABGR")
     external fun convertH420ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert U420 to ARGB */
+    @JvmName("convertU420ToARGB")
     external fun convertU420ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert U420 to ABGR */
+    @JvmName("convertU420ToABGR")
     external fun convertU420ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to ARGB */
+    @JvmName("convertI422ToARGB")
     external fun convertI422ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J422 to ARGB */
+    @JvmName("convertJ422ToARGB")
     external fun convertJ422ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J422 to ABGR */
+    @JvmName("convertJ422ToABGR")
     external fun convertJ422ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert H422 to ARGB */
+    @JvmName("convertH422ToARGB")
     external fun convertH422ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert H422 to ABGR */
+    @JvmName("convertH422ToABGR")
     external fun convertH422ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert U422 to ARGB */
+    @JvmName("convertU422ToARGB")
     external fun convertU422ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert U422 to ABGR */
+    @JvmName("convertU422ToABGR")
     external fun convertU422ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to ARGB */
+    @JvmName("convertI444ToARGB")
     external fun convertI444ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to ABGR */
+    @JvmName("convertI444ToABGR")
     external fun convertI444ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert J444 to ARGB */
+    @JvmName("convertJ444ToARGB")
     external fun convertJ444ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J444 to ABGR */
+    @JvmName("convertJ444ToABGR")
     external fun convertJ444ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert H444 to ARGB */
+    @JvmName("convertH444ToARGB")
     external fun convertH444ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert H444 to ABGR */
+    @JvmName("convertH444ToABGR")
     external fun convertH444ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert U444 to ARGB */
+    @JvmName("convertU444ToARGB")
     external fun convertU444ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert U444 to ABGR */
+    @JvmName("convertU444ToABGR")
     external fun convertU444ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to RGB24 */
+    @JvmName("convertI444ToRGB24")
     external fun convertI444ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert I444 to RAW */
+    @JvmName("convertI444ToRAW")
     external fun convertI444ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert I400 (grey) to ARGB.  Reverse of ARGBToI400 */
+    @JvmName("convertI400ToARGB")
     external fun convertI400ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert J400 (jpeg grey) to ARGB */
+    @JvmName("convertJ400ToARGB")
     external fun convertJ400ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to ARGB */
+    @JvmName("convertNV12ToARGB")
     external fun convertNV12ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to ARGB */
+    @JvmName("convertNV21ToARGB")
     external fun convertNV21ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to ABGR */
+    @JvmName("convertNV12ToABGR")
     external fun convertNV12ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to ABGR */
+    @JvmName("convertNV21ToABGR")
     external fun convertNV21ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to RGB24 */
+    @JvmName("convertNV12ToRGB24")
     external fun convertNV12ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to RGB24 */
+    @JvmName("convertNV21ToRGB24")
     external fun convertNV21ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to YUV24 */
+    @JvmName("convertNV21ToYUV24")
     external fun convertNV21ToYUV24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstYUV24: ByteBuffer, dstStrideYUV24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstYUV24: ByteBuffer, dstStrideYUV24: RowStride, dstOffsetYUV24: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to RAW */
+    @JvmName("convertNV12ToRAW")
     external fun convertNV12ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to RAW */
+    @JvmName("convertNV21ToRAW")
     external fun convertNV21ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert YUY2 to ARGB */
+    @JvmName("convertYUY2ToARGB")
     external fun convertYUY2ToARGB(
-        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert UYVY to ARGB */
+    @JvmName("convertUYVYToARGB")
     external fun convertUYVYToARGB(
-        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** BGRA little endian (argb in memory) to ARGB */
+    @JvmName("convertBGRAToARGB")
     external fun convertBGRAToARGB(
-        srcBGRA: ByteBuffer, srcStrideBGRA: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcBGRA: ByteBuffer, srcStrideBGRA: RowStride, srcOffsetBGRA: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** ABGR little endian (rgba in memory) to ARGB */
+    @JvmName("convertABGRToARGB")
     external fun convertABGRToARGB(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGBA little endian (abgr in memory) to ARGB */
+    @JvmName("convertRGBAToARGB")
     external fun convertRGBAToARGB(
-        srcRGBA: ByteBuffer, srcStrideRGBA: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcRGBA: ByteBuffer, srcStrideRGBA: RowStride, srcOffsetRGBA: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGB little endian (bgr in memory) to ARGB */
+    @JvmName("convertRGB24ToARGB")
     external fun convertRGB24ToARGB(
-        srcRGB24: ByteBuffer, srcStrideRGB24: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGB big endian (rgb in memory) to ARGB */
+    @JvmName("convertRAWToARGB")
     external fun convertRAWToARGB(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGB big endian (rgb in memory) to RGBA */
+    @JvmName("convertRAWToRGBA")
     external fun convertRAWToRGBA(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstRGBA: ByteBuffer, dstStrideRGBA: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstRGBA: ByteBuffer, dstStrideRGBA: RowStride, dstOffsetRGBA: Int,
         width: Int, height: Int,
     )
 
     /** RGB16 (RGBP fourcc) little endian to ARGB */
+    @JvmName("convertRGB565ToARGB")
     external fun convertRGB565ToARGB(
-        srcRGB565: ByteBuffer, srcStrideRGB565: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcRGB565: ByteBuffer, srcStrideRGB565: RowStride, srcOffsetRGB565: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGB15 (RGBO fourcc) little endian to ARGB */
+    @JvmName("convertARGB1555ToARGB")
     external fun convertARGB1555ToARGB(
-        srcARGB1555: ByteBuffer, srcStrideARGB1555: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB1555: ByteBuffer, srcStrideARGB1555: RowStride, srcOffsetARGB1555: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** RGB12 (R444 fourcc) little endian to ARGB */
+    @JvmName("convertARGB4444ToARGB")
     external fun convertARGB4444ToARGB(
-        srcARGB4444: ByteBuffer, srcStrideARGB4444: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB4444: ByteBuffer, srcStrideARGB4444: RowStride, srcOffsetARGB4444: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert AR30 to ARGB */
+    @JvmName("convertAR30ToARGB")
     external fun convertAR30ToARGB(
-        srcAR30: ByteBuffer, srcStrideAR30: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcAR30: ByteBuffer, srcStrideAR30: RowStride, srcOffsetAR30: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert AR30 to ABGR */
+    @JvmName("convertAR30ToABGR")
     external fun convertAR30ToABGR(
-        srcAR30: ByteBuffer, srcStrideAR30: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcAR30: ByteBuffer, srcStrideAR30: RowStride, srcOffsetAR30: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert AR30 to AB30 */
+    @JvmName("convertAR30ToAB30")
     external fun convertAR30ToAB30(
-        srcAR30: ByteBuffer, srcStrideAR30: Int,
-        dstAB30: ByteBuffer, dstStrideAB30: Int,
+        srcAR30: ByteBuffer, srcStrideAR30: RowStride, srcOffsetAR30: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: RowStride, dstOffsetAB30: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV12 to RGB565 */
+    @JvmName("convertNV12ToRGB565")
     external fun convertNV12ToRGB565(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to BGRA */
+    @JvmName("convertI422ToBGRA")
     external fun convertI422ToBGRA(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstBGRA: ByteBuffer, dstStrideBGRA: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstBGRA: ByteBuffer, dstStrideBGRA: RowStride, dstOffsetBGRA: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to ABGR */
+    @JvmName("convertI422ToABGR")
     external fun convertI422ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to RGBA */
+    @JvmName("convertI422ToRGBA")
     external fun convertI422ToRGBA(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGBA: ByteBuffer, dstStrideRGBA: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGBA: ByteBuffer, dstStrideRGBA: RowStride, dstOffsetRGBA: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to ARGB */
+    @JvmName("convertI420ToARGB")
     external fun convertI420ToARGB(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to BGRA */
+    @JvmName("convertI420ToBGRA")
     external fun convertI420ToBGRA(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstBGRA: ByteBuffer, dstStrideBGRA: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstBGRA: ByteBuffer, dstStrideBGRA: RowStride, dstOffsetBGRA: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to ABGR */
+    @JvmName("convertI420ToABGR")
     external fun convertI420ToABGR(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to RGBA */
+    @JvmName("convertI420ToRGBA")
     external fun convertI420ToRGBA(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGBA: ByteBuffer, dstStrideRGBA: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGBA: ByteBuffer, dstStrideRGBA: RowStride, dstOffsetRGBA: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to RGB24 */
+    @JvmName("convertI420ToRGB24")
     external fun convertI420ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to RAW */
+    @JvmName("convertI420ToRAW")
     external fun convertI420ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to RGB24 */
+    @JvmName("convertH420ToRGB24")
     external fun convertH420ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to RAW */
+    @JvmName("convertH420ToRAW")
     external fun convertH420ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert J420 to RGB24 */
+    @JvmName("convertJ420ToRGB24")
     external fun convertJ420ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert J420 to RAW */
+    @JvmName("convertJ420ToRAW")
     external fun convertJ420ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to RGB24 */
+    @JvmName("convertI422ToRGB24")
     external fun convertI422ToRGB24(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to RAW */
+    @JvmName("convertI422ToRAW")
     external fun convertI422ToRAW(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to RGB565 */
+    @JvmName("convertI420ToRGB565")
     external fun convertI420ToRGB565(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert J420 to RGB565 */
+    @JvmName("convertJ420ToRGB565")
     external fun convertJ420ToRGB565(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to RGB565 */
+    @JvmName("convertH420ToRGB565")
     external fun convertH420ToRGB565(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to RGB565 */
+    @JvmName("convertI422ToRGB565")
     external fun convertI422ToRGB565(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to ARGB1555 */
+    @JvmName("convertI420ToARGB1555")
     external fun convertI420ToARGB1555(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB1555: ByteBuffer, dstStrideARGB1555: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB1555: ByteBuffer, dstStrideARGB1555: RowStride, dstOffsetARGB1555: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to ARGB4444 */
+    @JvmName("convertI420ToARGB4444")
     external fun convertI420ToARGB4444(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstARGB4444: ByteBuffer, dstStrideARGB4444: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstARGB4444: ByteBuffer, dstStrideARGB4444: RowStride, dstOffsetARGB4444: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to AR30 */
+    @JvmName("convertI420ToAR30")
     external fun convertI420ToAR30(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstAR30: ByteBuffer, dstStrideAR30: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstAR30: ByteBuffer, dstStrideAR30: RowStride, dstOffsetAR30: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to AB30 */
+    @JvmName("convertI420ToAB30")
     external fun convertI420ToAB30(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstAB30: ByteBuffer, dstStrideAB30: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: RowStride, dstOffsetAB30: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to AR30 */
+    @JvmName("convertH420ToAR30")
     external fun convertH420ToAR30(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstAR30: ByteBuffer, dstStrideAR30: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstAR30: ByteBuffer, dstStrideAR30: RowStride, dstOffsetAR30: Int,
         width: Int, height: Int,
     )
 
     /** Convert H420 to AB30 */
+    @JvmName("convertH420ToAB30")
     external fun convertH420ToAB30(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstAB30: ByteBuffer, dstStrideAB30: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstAB30: ByteBuffer, dstStrideAB30: RowStride, dstOffsetAB30: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to I422 */
+    @JvmName("convertI420ToI422")
     external fun convertI420ToI422(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to I444 */
+    @JvmName("convertI420ToI444")
     external fun convertI420ToI444(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Copy to I400. Source can be I420, I422, I444, I400, NV12 or NV21 */
+    @JvmName("convertI400Copy")
     external fun convertI400Copy(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to NV12 */
+    @JvmName("convertI420ToNV12")
     external fun convertI420ToNV12(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to NV21 */
+    @JvmName("convertI420ToNV21")
     external fun convertI420ToNV21(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to YUY2 */
+    @JvmName("convertI420ToYUY2")
     external fun convertI420ToYUY2(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: RowStride, dstOffsetYUY2: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to UYVY */
+    @JvmName("convertI420ToUYVY")
     external fun convertI420ToUYVY(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: RowStride, dstOffsetUYVY: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to BGRA */
+    @JvmName("convertARGBToBGRA")
     external fun convertARGBToBGRA(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstBGRA: ByteBuffer, dstStrideBGRA: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstBGRA: ByteBuffer, dstStrideBGRA: RowStride, dstOffsetBGRA: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to ABGR */
+    @JvmName("convertARGBToABGR")
     external fun convertARGBToABGR(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstABGR: ByteBuffer, dstStrideABGR: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstABGR: ByteBuffer, dstStrideABGR: RowStride, dstOffsetABGR: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to RGBA */
+    @JvmName("convertARGBToRGBA")
     external fun convertARGBToRGBA(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstRGBA: ByteBuffer, dstStrideRGBA: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstRGBA: ByteBuffer, dstStrideRGBA: RowStride, dstOffsetRGBA: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to RGB24 */
+    @JvmName("convertARGBToRGB24")
     external fun convertARGBToRGB24(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to RAW */
+    @JvmName("convertARGBToRAW")
     external fun convertARGBToRAW(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstRAW: ByteBuffer, dstStrideRAW: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstRAW: ByteBuffer, dstStrideRAW: RowStride, dstOffsetRAW: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to RGB565 */
+    @JvmName("convertARGBToRGB565")
     external fun convertARGBToRGB565(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstRGB565: ByteBuffer, dstStrideRGB565: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstRGB565: ByteBuffer, dstStrideRGB565: RowStride, dstOffsetRGB565: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to ARGB1555 */
+    @JvmName("convertARGBToARGB1555")
     external fun convertARGBToARGB1555(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB1555: ByteBuffer, dstStrideARGB1555: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB1555: ByteBuffer, dstStrideARGB1555: RowStride, dstOffsetARGB1555: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to ARGB4444 */
+    @JvmName("convertARGBToARGB4444")
     external fun convertARGBToARGB4444(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB4444: ByteBuffer, dstStrideARGB4444: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB4444: ByteBuffer, dstStrideARGB4444: RowStride, dstOffsetARGB4444: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to I444 */
+    @JvmName("convertARGBToI444")
     external fun convertARGBToI444(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to I422 */
+    @JvmName("convertARGBToI422")
     external fun convertARGBToI422(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J420. (JPeg full range I420) */
+    @JvmName("convertARGBToJ420")
     external fun convertARGBToJ420(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J422 */
+    @JvmName("convertARGBToJ422")
     external fun convertARGBToJ422(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to J400. (JPeg full range) */
+    @JvmName("convertARGBToJ400")
     external fun convertARGBToJ400(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to J420. (JPeg full range I420) */
+    @JvmName("convertABGRToJ420")
     external fun convertABGRToJ420(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to J422 */
+    @JvmName("convertABGRToJ422")
     external fun convertABGRToJ422(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to J400. (JPeg full range) */
+    @JvmName("convertABGRToJ400")
     external fun convertABGRToJ400(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Convert RGBA to J400. (JPeg full range) */
+    @JvmName("convertRGBAToJ400")
     external fun convertRGBAToJ400(
-        srcRGBA: ByteBuffer, srcStrideRGBA: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcRGBA: ByteBuffer, srcStrideRGBA: RowStride, srcOffsetRGBA: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to I400 */
+    @JvmName("convertARGBToI400")
     external fun convertARGBToI400(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to NV12 */
+    @JvmName("convertARGBToNV12")
     external fun convertARGBToNV12(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to NV21 */
+    @JvmName("convertARGBToNV21")
     external fun convertARGBToNV21(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to NV12 */
+    @JvmName("convertABGRToNV12")
     external fun convertABGRToNV12(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert ABGR to NV21 */
+    @JvmName("convertABGRToNV21")
     external fun convertABGRToNV21(
-        srcABGR: ByteBuffer, srcStrideABGR: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcABGR: ByteBuffer, srcStrideABGR: RowStride, srcOffsetABGR: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to YUY2 */
+    @JvmName("convertARGBToYUY2")
     external fun convertARGBToYUY2(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: RowStride, dstOffsetYUY2: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to UYVY */
+    @JvmName("convertARGBToUYVY")
     external fun convertARGBToUYVY(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: RowStride, dstOffsetUYVY: Int,
         width: Int, height: Int,
     )
 
     // rotate.cpp
 
     /** Rotate I420 Frame */
+    @JvmName("rotateI420Rotate")
     external fun rotateI420Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate I422 Frame */
+    @JvmName("rotateI422Rotate")
     external fun rotateI422Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate I444 Frame */
+    @JvmName("rotateI444Rotate")
     external fun rotateI444Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate NV12 input and store in I420 */
+    @JvmName("rotateNV12ToI420Rotate")
     external fun rotateNV12ToI420Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Convert Android420 to I420 with rotation. "rotation" can be 0, 90, 180 or 270 */
+    @JvmName("rotateAndroid420ToI420Rotate")
     external fun rotateAndroid420ToI420Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
         srcPixelStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate ARGB Frame */
+    @JvmName("rotateARGBRotate")
     external fun rotateARGBRotate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate NV12 Frame */
+    @JvmName("rotateNV12Rotate")
     external fun rotateNV12Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate NV21 Frame */
+    @JvmName("rotateNV21Rotate")
     external fun rotateNV21Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate NV12 to NV21 */
+    @JvmName("rotateNV12ToNV21Rotate")
     external fun rotateNV12ToNV21Rotate(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstVU: ByteBuffer, dstStrideVU: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstVU: ByteBuffer, dstStrideVU: RowStride, dstOffsetVU: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate a plane by 0, 90, 180, or 270 */
+    @JvmName("rotateRotatePlane")
     external fun rotateRotatePlane(
-        src: ByteBuffer, srcStride: Int,
-        dst: ByteBuffer, dstStride: Int,
+        src: ByteBuffer, srcStride: RowStride, srcOffset: Int,
+        dst: ByteBuffer, dstStride: RowStride, dstOffset: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** Rotate UV and split into planar. width and height expected to be half size for NV12 */
+    @JvmName("rotateSplitRotateUV")
     external fun rotateSplitRotateUV(
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         rotateMode: Int,
     )
 
     /** The 90 and 270 functions are based on transposes. Deprecated */
+    @JvmName("rotateTransposePlane")
     external fun rotateTransposePlane(
-        src: ByteBuffer, srcStride: Int,
-        dst: ByteBuffer, dstStride: Int,
+        src: ByteBuffer, srcStride: RowStride, srcOffset: Int,
+        dst: ByteBuffer, dstStride: RowStride, dstOffset: Int,
         width: Int, height: Int,
     )
 
+    @JvmName("rotateSplitTransposeUV")
     external fun rotateSplitTransposeUV(
-        src: ByteBuffer, srcStride: Int,
-        dstA: ByteBuffer, dstStrideA: Int,
-        dstB: ByteBuffer, dstStrideB: Int,
+        src: ByteBuffer, srcStride: RowStride, srcOffset: Int,
+        dstA: ByteBuffer, dstStrideA: RowStride, dstOffsetA: Int,
+        dstB: ByteBuffer, dstStrideB: RowStride, dstOffsetB: Int,
         width: Int, height: Int,
     )
 
     // scale.cpp
 
     /** Scale Plane Frame */
+    @JvmName("scaleScalePlane")
     external fun scaleScalePlane(
-        src: ByteBuffer, srcStride: Int,
+        src: ByteBuffer, srcStride: RowStride, srcOffset: Int,
         srcWidth: Int, srcHeight: Int,
-        dst: ByteBuffer, dstStride: Int,
+        dst: ByteBuffer, dstStride: RowStride, dstOffset: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale I420 Frame */
+    @JvmName("scaleI420Scale")
     external fun scaleI420Scale(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
         srcWidth: Int, srcHeight: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale I422 Frame */
+    @JvmName("scaleI422Scale")
     external fun scaleI422Scale(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
         srcWidth: Int, srcHeight: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale I444 Frame */
+    @JvmName("scaleI444Scale")
     external fun scaleI444Scale(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
         srcWidth: Int, srcHeight: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale NV12 Frame */
+    @JvmName("scaleNV12Scale")
     external fun scaleNV12Scale(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
         srcWidth: Int, srcHeight: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale ARGB Frame */
+    @JvmName("scaleARGBScale")
     external fun scaleARGBScale(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         srcWidth: Int, srcHeight: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Scale UV Frame */
+    @JvmName("scaleUVScale")
     external fun scaleUVScale(
-        srcUV: ByteBuffer, srcStrideUV: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
         srcWidth: Int, srcHeight: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         dstWidth: Int, dstHeight: Int,
         filterMode: Int,
     )
 
     /** Clipped scale takes destination rectangle coordinates for clip values */
+    @JvmName("scaleARGBScaleClip")
     external fun scaleARGBScaleClip(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         srcWidth: Int, srcHeight: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         dstWidth: Int, dstHeight: Int,
         clipX: Int, clipY: Int,
         clipWidth: Int, clipHeight: Int,
@@ -1379,278 +1534,312 @@ object Yuv {
     // planar_functions.cpp
 
     /** Copy I422 to I422 */
+    @JvmName("planerI422Copy")
     external fun planerI422Copy(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Copy I444 to I444 */
+    @JvmName("planerI444Copy")
     external fun planerI444Copy(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Copy NV12 to NV12 */
+    @JvmName("planerNV12Copy")
     external fun planerNV12Copy(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert YUY2 to I422 */
+    @JvmName("planerYUY2ToI422")
     external fun planerYUY2ToI422(
-        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert UYVY to I422 */
+    @JvmName("planerUYVYToI422")
     external fun planerUYVYToI422(
-        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Convert YUY2 to NV12 */
+    @JvmName("planerYUY2ToNV12")
     external fun planerYUY2ToNV12(
-        srcYUY2: ByteBuffer, srcStrideYUY2: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert UYVY to NV12 */
+    @JvmName("planerUYVYToNV12")
     external fun planerUYVYToNV12(
-        srcUYVY: ByteBuffer, srcStrideUYVY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert NV21 to NV12 */
+    @JvmName("planerNV21ToNV12")
     external fun planerNV21ToNV12(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcVU: ByteBuffer, srcStrideVU: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Convert I420 to I400 */
+    @JvmName("planerI420ToI400")
     external fun planerI420ToI400(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Mirror I420 */
+    @JvmName("planerI420Mirror")
     external fun planerI420Mirror(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Mirror I400 */
+    @JvmName("planerI400Mirror")
     external fun planerI400Mirror(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Mirror NV12 */
+    @JvmName("planerNV12Mirror")
     external fun planerNV12Mirror(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcUV: ByteBuffer, srcStrideUV: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstUV: ByteBuffer, dstStrideUV: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
         width: Int, height: Int,
     )
 
     /** Mirror ARGB */
+    @JvmName("planerARGBMirror")
     external fun planerARGBMirror(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Mirror RGB24 */
+    @JvmName("planerRGB24Mirror")
     external fun planerRGB24Mirror(
-        srcRGB24: ByteBuffer, srcStrideRGB24: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert RAW to RGB24 */
+    @JvmName("planerRAWToRGB24")
     external fun planerRAWToRGB24(
-        srcRAW: ByteBuffer, srcStrideRAW: Int,
-        dstRGB24: ByteBuffer, dstStrideRGB24: Int,
+        srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
+        dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to YUY2 */
+    @JvmName("planerI422ToYUY2")
     external fun planerI422ToYUY2(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstYUY2: ByteBuffer, dstStrideYUY2: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstYUY2: ByteBuffer, dstStrideYUY2: RowStride, dstOffsetYUY2: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to UYVY */
+    @JvmName("planerI422ToUYVY")
     external fun planerI422ToUYVY(
-        srcY: ByteBuffer, srcStrideY: Int,
-        srcU: ByteBuffer, srcStrideU: Int,
-        srcV: ByteBuffer, srcStrideV: Int,
-        dstUYVY: ByteBuffer, dstStrideUYVY: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
+        srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
+        dstUYVY: ByteBuffer, dstStrideUYVY: RowStride, dstOffsetUYVY: Int,
         width: Int, height: Int,
     )
 
     /** Convert unattentuated ARGB to preattenuated ARGB */
+    @JvmName("planerARGBAttenuate")
     external fun planerARGBAttenuate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert preattentuated ARGB to unattenuated ARGB */
+    @JvmName("planerARGBUnattenuate")
     external fun planerARGBUnattenuate(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to gray scale ARGB */
+    @JvmName("planerARGBGrayTo")
     external fun planerARGBGrayTo(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Copy Alpha channel of ARGB to alpha of ARGB */
+    @JvmName("planerARGBCopyAlpha")
     external fun planerARGBCopyAlpha(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Extract the alpha channel from ARGB */
+    @JvmName("planerARGBExtractAlpha")
     external fun planerARGBExtractAlpha(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstA: ByteBuffer, dstStrideA: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstA: ByteBuffer, dstStrideA: RowStride, dstOffsetA: Int,
         width: Int, height: Int,
     )
 
     /** Copy Y channel to Alpha of ARGB */
+    @JvmName("planerARGBCopyYToAlpha")
     external fun planerARGBCopyYToAlpha(
-        srcY: ByteBuffer, srcStrideY: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Set a plane of data to a 32 bit value. */
+    @JvmName("planerSetPlane")
     external fun planerSetPlane(
-        srcY: ByteBuffer, srcStrideY: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
         value: Int,
     )
 
     /** Draw a rectangle into I420 */
+    @JvmName("planerI420Rect")
     external fun planerI420Rect(
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         x: Int, y: Int,
         width: Int, height: Int,
         valueY: Int, valueU: Int, valueV: Int,
     )
 
     /** Draw a rectangle into ARGB */
+    @JvmName("planerARGBRect")
     external fun planerARGBRect(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
         value: Long,
     )
 
     /** Make a rectangle of ARGB gray scale */
+    @JvmName("planerARGBGray")
     external fun planerARGBGray(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Make a rectangle of ARGB Sepia tone */
+    @JvmName("planerARGBSepia")
     external fun planerARGBSepia(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Apply a matrix rotation to each ARGB pixel */
+    @JvmName("planerARGBColorMatrix")
     external fun planerARGBColorMatrix(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         matrixARGB: ByteArray,
         width: Int, height: Int,
     )
 
     /** Apply a color table each ARGB pixel */
+    @JvmName("planerARGBColorTable")
     external fun planerARGBColorTable(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Apply a color table each ARGB pixel but preserve destination alpha */
+    @JvmName("planerRGBColorTable")
     external fun planerRGBColorTable(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Apply a luma/color table each ARGB pixel but preserve destination alpha */
+    @JvmName("planerARGBLumaColorTable")
     external fun planerARGBLumaColorTable(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         luma: ByteArray,
         width: Int, height: Int,
     )
 
     /** Apply a 3 term polynomial to ARGB values */
+    @JvmName("planerARGBPolynomial")
     external fun planerARGBPolynomial(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         poly: FloatArray,
         width: Int, height: Int,
     )
 
     /** Quantize a rectangle of ARGB. Alpha unaffected */
+    @JvmName("planerARGBQuantize")
     external fun planerARGBQuantize(
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         scale: Int,
         intervalSize: Int, intervalOffset: Int,
         x: Int, y: Int,
@@ -1658,88 +1847,97 @@ object Yuv {
     )
 
     /** Alpha Blend ARGB images and store to destination */
+    @JvmName("planerARGBBlend")
     external fun planerARGBBlend(
-        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
-        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Alpha Blend YUV images and store to destination */
+    @JvmName("planerI420Blend")
     external fun planerI420Blend(
-        srcY0: ByteBuffer, srcStrideY0: Int,
-        srcU0: ByteBuffer, srcStrideU0: Int,
-        srcV0: ByteBuffer, srcStrideV0: Int,
-        srcY1: ByteBuffer, srcStrideY1: Int,
-        srcU1: ByteBuffer, srcStrideU1: Int,
-        srcV1: ByteBuffer, srcStrideV1: Int,
-        srcA: ByteBuffer, srcStrideA: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
+        srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
+        srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,
+        srcY1: ByteBuffer, srcStrideY1: RowStride, srcOffsetY1: Int,
+        srcU1: ByteBuffer, srcStrideU1: RowStride, srcOffsetU1: Int,
+        srcV1: ByteBuffer, srcStrideV1: RowStride, srcOffsetV1: Int,
+        srcA: ByteBuffer, srcStrideA: RowStride, dstOffsetA: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
     )
 
     /** Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255 */
+    @JvmName("planerARGBMultiply")
     external fun planerARGBMultiply(
-        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
-        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Add ARGB image with ARGB image. Saturates to 255 */
+    @JvmName("planerARGBAdd")
     external fun planerARGBAdd(
-        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
-        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Subtract ARGB image with ARGB image. Saturates to 0 */
+    @JvmName("planerARGBSubtract")
     external fun planerARGBSubtract(
-        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
-        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Blur ARGB image */
+    @JvmName("planerARGBBlur")
     external fun planerARGBBlur(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
         radius: Int,
     )
 
     /** Multiply ARGB image by ARGB value */
+    @JvmName("planerARGBShade")
     external fun planerARGBShade(
-        srcARGB: ByteBuffer, srcStrideARGB: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
         value: Long,
     )
 
     /** Interpolate between two ARGB images using specified amount of interpolation Internally calls InterpolatePlane with width * 4 (bpp). */
+    @JvmName("planerARGBInterpolate")
     external fun planerARGBInterpolate(
-        srcARGB0: ByteBuffer, srcStrideARGB0: Int,
-        srcARGB1: ByteBuffer, srcStrideARGB1: Int,
-        dstARGB: ByteBuffer, dstStrideARGB: Int,
+        srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
+        srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
+        dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
         interpolation: Int,
     )
 
     /** Interpolate between two YUV images using specified amount of interpolation Internally calls InterpolatePlane on each plane where the U and V planes are half width and half height */
+    @JvmName("planerI420Interpolate")
     external fun planerI420Interpolate(
-        srcY0: ByteBuffer, srcStrideY0: Int,
-        srcU0: ByteBuffer, srcStrideU0: Int,
-        srcV0: ByteBuffer, srcStrideV0: Int,
-        srcY1: ByteBuffer, srcStrideY1: Int,
-        srcU1: ByteBuffer, srcStrideU1: Int,
-        srcV1: ByteBuffer, srcStrideV1: Int,
-        dstY: ByteBuffer, dstStrideY: Int,
-        dstU: ByteBuffer, dstStrideU: Int,
-        dstV: ByteBuffer, dstStrideV: Int,
+        srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
+        srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
+        srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,
+        srcY1: ByteBuffer, srcStrideY1: RowStride, srcOffsetY1: Int,
+        srcU1: ByteBuffer, srcStrideU1: RowStride, srcOffsetU1: Int,
+        srcV1: ByteBuffer, srcStrideV1: RowStride, srcOffsetV1: Int,
+        dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
+        dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
+        dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
         width: Int, height: Int,
         interpolation: Int,
     )
@@ -1747,56 +1945,64 @@ object Yuv {
     // compare.cpp
 
     /** Compute a hash for specified memory. Seed of 5381 recommended. */
+    @JvmName("hashDjb2")
     external fun hashDjb2(src: ByteBuffer, count: Long, seed: Long): Long
 
     /** Compute Hamming Distance */
+    @JvmName("computeHammingDistance")
     external fun computeHammingDistance(srcA: ByteBuffer, srcB: ByteBuffer, count: Int): ByteArray
 
     /** Compute Sum Square Error Plane */
+    @JvmName("computeSumSquareErrorPlane")
     external fun computeSumSquareErrorPlane(
-        srcA: ByteBuffer, srcStrideA: Int,
-        srcB: ByteBuffer, srcStrideB: Int,
+        srcA: ByteBuffer, srcStrideA: RowStride,
+        srcB: ByteBuffer, srcStrideB: RowStride,
         width: Int, height: Int,
     ): ByteArray
 
     /** Calculate Frame PSNR. */
+    @JvmName("calcFramePsnr")
     external fun calcFramePsnr(
-        srcA: ByteBuffer, srcStrideA: Int,
-        srcB: ByteBuffer, srcStrideB: Int,
+        srcA: ByteBuffer, srcStrideA: RowStride,
+        srcB: ByteBuffer, srcStrideB: RowStride,
         width: Int, height: Int,
     ): Double
 
     /** Calculate Frame PSNR. */
+    @JvmName("calcI420Psnr")
     external fun calcI420Psnr(
-        srcYA: ByteBuffer, srcStrideYA: Int,
-        srcUA: ByteBuffer, srcStrideUA: Int,
-        srcVA: ByteBuffer, srcStrideVA: Int,
-        srcYB: ByteBuffer, srcStrideYB: Int,
-        srcUB: ByteBuffer, srcStrideUB: Int,
-        srcVB: ByteBuffer, srcStrideVB: Int,
+        srcYA: ByteBuffer, srcStrideYA: RowStride,
+        srcUA: ByteBuffer, srcStrideUA: RowStride,
+        srcVA: ByteBuffer, srcStrideVA: RowStride,
+        srcYB: ByteBuffer, srcStrideYB: RowStride,
+        srcUB: ByteBuffer, srcStrideUB: RowStride,
+        srcVB: ByteBuffer, srcStrideVB: RowStride,
         width: Int, height: Int,
     ): Double
 
     /** Calculate Frame SSIM. */
+    @JvmName("calcFrameSsim")
     external fun calcFrameSsim(
-        srcA: ByteBuffer, srcStrideA: Int,
-        srcB: ByteBuffer, srcStrideB: Int,
+        srcA: ByteBuffer, srcStrideA: RowStride,
+        srcB: ByteBuffer, srcStrideB: RowStride,
         width: Int, height: Int,
     ): Double
 
     /** Calculate Frame SSIM. */
+    @JvmName("calcI420Ssim")
     external fun calcI420Ssim(
-        srcYA: ByteBuffer, srcStrideYA: Int,
-        srcUA: ByteBuffer, srcStrideUA: Int,
-        srcVA: ByteBuffer, srcStrideVA: Int,
-        srcYB: ByteBuffer, srcStrideYB: Int,
-        srcUB: ByteBuffer, srcStrideUB: Int,
-        srcVB: ByteBuffer, srcStrideVB: Int,
+        srcYA: ByteBuffer, srcStrideYA: RowStride,
+        srcUA: ByteBuffer, srcStrideUA: RowStride,
+        srcVA: ByteBuffer, srcStrideVA: RowStride,
+        srcYB: ByteBuffer, srcStrideYB: RowStride,
+        srcUB: ByteBuffer, srcStrideUB: RowStride,
+        srcVB: ByteBuffer, srcStrideVB: RowStride,
         width: Int, height: Int,
     ): Double
 
     // memcopy.cpp
 
+    @JvmName("memcopy")
     external fun memcopy(dst: Any, dstOffset: Int, src: Any, srcOffset: Int, length: Int)
 }
 
