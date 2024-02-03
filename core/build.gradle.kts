@@ -84,6 +84,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes.add("/META-INF/LICENSE*")
+        }
+    }
+
     publishing {
         singleVariant("release") {
             withSourcesJar()
@@ -102,16 +109,18 @@ kotlin {
 }
 
 dependencies {
+    compileOnly(platform(libs.kotlin.bom))
     compileOnly(libs.kotlin.stdlib)
     compileOnly(libs.androidx.annotation)
     compileOnly(libs.androidx.camera.core)
 
-    androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.ext.junit.ktx)
     androidTestImplementation(libs.androidx.test.ext.truth)
+    androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.truth)
+
 }
 
 val customDokkaTask by tasks.creating(DokkaTask::class) {
