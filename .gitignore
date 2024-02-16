@@ -46,6 +46,9 @@ google-services.json
 # macOS
 .DS_Store
 
+# Node.js
+node_modules/
+
 # not ignore
 !.idea/codeStyleSettings.xml
 !.idea/findbugs-idea.xml

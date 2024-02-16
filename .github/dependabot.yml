@@ -17,3 +17,12 @@ updates:
           - "*"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    groups:
+      all:
+        patterns:
+          - "*"
+    schedule:
+      interval: "daily"

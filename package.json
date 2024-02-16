@@ -1,0 +1,12 @@
+{
+	"scripts": {
+		"prepare": "husky",
+		"ncu": "npm-check-updates -u"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^18.6.1",
+		"@commitlint/config-conventional": "^18.6.2",
+		"husky": "^9.0.11",
+		"npm-check-updates": "^16.14.15"
+	}
+}
