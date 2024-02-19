@@ -34,7 +34,7 @@ androidx-test-runner = "1.6.0-alpha06"
 
 androidx-test-rules = "1.6.0-alpha03"
 
-truth = "1.4.0"
+truth = "1.4.1"
 
 dokka = "1.9.10"
 
