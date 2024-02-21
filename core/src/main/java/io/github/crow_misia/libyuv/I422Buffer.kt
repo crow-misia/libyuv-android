@@ -178,13 +178,6 @@ class I422Buffer private constructor(
             )
         }
 
-        private fun getStrideWithCapacity(width: Int, height: Int): IntArray {
-            val halfWidth = (width + 1).shr(1)
-            val capacity = width * height
-            val halfCapacity = halfWidth * height
-            return intArrayOf(width, capacity, halfWidth, halfCapacity, halfWidth, halfCapacity)
-        }
-
         override fun allocate(width: Int, height: Int, cropRect: Rect): I422Buffer {
             val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
             val (bufferY, bufferU, bufferV, buffer) = createByteBuffer(listOf(capacityY, capacityU, capacityV))

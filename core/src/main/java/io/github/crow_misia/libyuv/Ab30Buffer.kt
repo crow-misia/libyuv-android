@@ -46,10 +46,6 @@ class Ab30Buffer private constructor(
     }
 
     companion object Factory : BufferFactory<Ab30Buffer>, CapacityCalculator<Plane1Capacities> {
-        private val offsetCalculator = OffsetCalculator { left, top, rowStride ->
-            top * rowStride.value + left.shl(2)
-        }
-
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(2)
             return Plane1Capacities(
