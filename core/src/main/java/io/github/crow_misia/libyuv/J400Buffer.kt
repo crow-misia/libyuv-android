@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * J400 (jpeg grey) YUV Format. 4:0:0 8bpp
@@ -15,11 +14,15 @@ class J400Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer>, BufferY<J400Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left
+    }
+
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertJ400ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

@@ -3,7 +3,6 @@ package io.github.crow_misia.libyuv
 import android.graphics.Bitmap
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * RGB16 (RGBP fourcc) little endian
@@ -16,6 +15,10 @@ class Rgb565Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), BitmapConverter {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left.shl(1)
+    }
+
     override fun asBitmap(): Bitmap {
         return asBuffer().toBitmap(width, height, Bitmap.Config.RGB_565)
     }
@@ -23,10 +26,10 @@ class Rgb565Buffer private constructor(
     fun convertTo(dst: I420Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertRGB565ToI420(
-            srcRGB565 = plane.buffer, srcStrideRGB565 = plane.rowStride, srcOffsetRGB565 = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcRGB565 = plane.buffer, srcStrideRGB565 = plane.rowStride, srcOffsetRGB565 = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -34,8 +37,8 @@ class Rgb565Buffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertRGB565ToARGB(
-            srcRGB565 = plane.buffer, srcStrideRGB565 = plane.rowStride, srcOffsetRGB565 = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcRGB565 = plane.buffer, srcStrideRGB565 = plane.rowStride, srcOffsetRGB565 = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * RGBA little endian (abgr in memory)
@@ -15,13 +14,17 @@ class RgbaBuffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), Buffer32<RgbaBuffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left.shl(2)
+    }
+
     fun convertTo(dst: I420Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertRGBAToI420(
-            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -29,8 +32,8 @@ class RgbaBuffer private constructor(
     fun convertTo(dst: J400Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertRGBAToJ400(
-            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -38,8 +41,8 @@ class RgbaBuffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertRGBAToARGB(
-            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcRGBA = plane.buffer, srcStrideRGBA = plane.rowStride, srcOffsetRGBA = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

@@ -1,7 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import android.graphics.Rect
-
 interface CapacityCalculator<CAPACITIES : PlaneCapacities> {
     fun calculate(width: Int, height: Int): CAPACITIES
 }
@@ -14,6 +12,10 @@ value class Capacity(val value: Int) {
 @JvmInline
 value class RowStride(val value: Int) {
     override fun toString(): String = value.toString()
+
+    operator fun times(other: Int): Int {
+        return value * other
+    }
 }
 
 interface PlaneCapacities

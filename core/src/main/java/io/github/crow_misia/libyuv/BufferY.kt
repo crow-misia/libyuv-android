@@ -1,7 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import kotlin.math.min
-
 /**
  * Y Buffer.
  */
@@ -11,8 +9,8 @@ interface BufferY<BUFFER : BufferY<BUFFER>> : Buffer {
     fun convertTo(dst: BUFFER) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI400Copy(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -20,8 +18,8 @@ interface BufferY<BUFFER : BufferY<BUFFER>> : Buffer {
     fun copyAlpha(dst: BufferFirstAlpha) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerARGBCopyYToAlpha(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

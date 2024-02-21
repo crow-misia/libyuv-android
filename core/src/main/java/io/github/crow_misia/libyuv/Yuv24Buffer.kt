@@ -14,6 +14,10 @@ class Yuv24Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left * 3
+    }
+
     companion object Factory : BufferFactory<Yuv24Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3

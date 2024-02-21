@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * NV12 YUV Format. 4:2:0 12bpp
@@ -16,14 +15,24 @@ class Nv12Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(planeY, planeUV), releaseCallback), BufferY<I400Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return when (planeIndex) {
+            0 -> rowStride * top + left
+            else -> {
+                val halfLeft = (left + 1).shr(1)
+                rowStride * top + halfLeft
+            }
+        }
+    }
+
     fun convertTo(dst: I420Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToI420(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -31,10 +40,10 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV12Copy(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -42,10 +51,10 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: Nv21Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV21ToNV12(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcVU = planeUV.buffer, srcStrideVU = planeUV.rowStride, srcOffsetVU = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride, dstOffsetUV = dst.planeVU.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcVU = planeUV.buffer, srcStrideVU = planeUV.rowStride, srcOffsetVU = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -53,9 +62,9 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -63,9 +72,9 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToABGR(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -73,9 +82,9 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: Rgb24Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToRGB24(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -83,9 +92,9 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: RawBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToRAW(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -93,9 +102,9 @@ class Nv12Buffer private constructor(
     fun convertTo(dst: Rgb565Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV12ToRGB565(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstRGB565 = dst.plane.buffer, dstStrideRGB565 = dst.plane.rowStride, dstOffsetRGB565 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstRGB565 = dst.plane.buffer, dstStrideRGB565 = dst.plane.rowStride, dstOffsetRGB565 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -103,21 +112,21 @@ class Nv12Buffer private constructor(
     fun mirrorTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV12Mirror(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun rotate(dst: I420Buffer, rotateMode: RotateMode) {
         Yuv.rotateNV12ToI420Rotate(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(1),
             width = rotateMode.calculateWidth(this, dst),
             height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
@@ -126,10 +135,10 @@ class Nv12Buffer private constructor(
 
     fun rotate(dst: Nv12Buffer, rotateMode: RotateMode) {
         Yuv.rotateNV12Rotate(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = rotateMode.calculateWidth(this, dst),
             height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
@@ -138,10 +147,10 @@ class Nv12Buffer private constructor(
 
     fun rotate(dst: Nv21Buffer, rotateMode: RotateMode) {
         Yuv.rotateNV12ToNV21Rotate(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.offset(1),
             width = rotateMode.calculateWidth(this, dst),
             height = rotateMode.calculateHeight(this, dst),
             rotateMode = rotateMode.degrees,
@@ -150,11 +159,11 @@ class Nv12Buffer private constructor(
 
     fun scale(dst: Nv12Buffer, filterMode: FilterMode) {
         Yuv.scaleNV12Scale(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = planeUV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
             srcWidth = cropRect.width(), srcHeight = cropRect.height(),
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             dstWidth = dst.cropRect.width(), dstHeight = dst.cropRect.height(),
             filterMode = filterMode.mode,
         )

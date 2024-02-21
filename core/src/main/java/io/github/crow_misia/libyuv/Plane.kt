@@ -7,10 +7,9 @@ import java.math.BigInteger
 import java.nio.ByteBuffer
 import kotlin.math.min
 
-interface Plane {
-    val rowStride: RowStride
-    val buffer: ByteBuffer
-    val offset: Int
+abstract class Plane {
+    abstract val rowStride: RowStride
+    abstract val buffer: ByteBuffer
 
     fun hashDjb2(): Long = hashDjb2(5381)
 
@@ -64,5 +63,10 @@ interface Plane {
             width = rect.width(), height = rect.height(),
             value = value,
         )
+    }
+
+    internal fun offset(buffer: Buffer, planeIndex: Int): Int {
+        val cropRect = buffer.cropRect
+        return buffer.getPlaneOffset(planeIndex, rowStride, cropRect.left, cropRect.top)
     }
 }

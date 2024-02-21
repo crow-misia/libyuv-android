@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * UYVY is a packed YUV format with half width, full height.
@@ -17,13 +16,17 @@ class UyvyBuffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback) {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left.shl(1)
+    }
+
     fun convertTo(dst: I420Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertUYVYToI420(
-            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -31,10 +34,10 @@ class UyvyBuffer private constructor(
     fun convertTo(dst: I422Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerUYVYToI422(
-            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -42,8 +45,8 @@ class UyvyBuffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertUYVYToARGB(
-            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -51,9 +54,9 @@ class UyvyBuffer private constructor(
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerUYVYToNV12(
-            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }

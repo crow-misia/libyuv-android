@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * AR30 is 2 10 10 10 ARGB stored in little endian order.
@@ -15,11 +14,15 @@ class Ar30Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), Buffer32<Ar30Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left.shl(2)
+    }
+
     fun convertTo(dst: Ab30Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToAB30(
-            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
-            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride, dstOffsetAB30 = dst.plane.offset,
+            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = offset(0),
+            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride, dstOffsetAB30 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -27,8 +30,8 @@ class Ar30Buffer private constructor(
     fun convertTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToABGR(
-            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
+            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = offset(0),
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -36,8 +39,8 @@ class Ar30Buffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToARGB(
-            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

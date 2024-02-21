@@ -1,7 +1,5 @@
 package io.github.crow_misia.libyuv
 
-import kotlin.math.min
-
 /**
  * Has first Alpha channel.
  */
@@ -11,8 +9,8 @@ interface BufferFirstAlpha : Buffer {
     fun copyAlphaTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerARGBCopyAlpha(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -20,8 +18,8 @@ interface BufferFirstAlpha : Buffer {
     fun copyAlphaTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerARGBCopyAlpha(
-            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

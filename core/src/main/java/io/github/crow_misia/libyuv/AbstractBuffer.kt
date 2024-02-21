@@ -11,6 +11,9 @@ abstract class AbstractBuffer(
     planes: Array<Plane>,
     releaseCallback: Runnable?,
 ) : Buffer {
+    override var planes: Array<Plane> = planes
+        internal set
+
     override var cropRect: Rect = cropRect
         set(value) {
             val tmp = Rect(value)
@@ -19,9 +22,6 @@ abstract class AbstractBuffer(
             }
             field = tmp
         }
-
-    override var planes: Array<Plane> = planes
-        internal set
 
     private val releaseCallback = AtomicReference(releaseCallback)
 

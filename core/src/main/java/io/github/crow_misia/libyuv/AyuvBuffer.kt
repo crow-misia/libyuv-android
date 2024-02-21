@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * AYUV YUV Format. 4:4:4 32bpp
@@ -15,12 +14,16 @@ class AyuvBuffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback) {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left.shl(2)
+    }
+
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAYUVToNV12(
-            srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -28,9 +31,9 @@ class AyuvBuffer private constructor(
     fun convertTo(dst: Nv21Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAYUVToNV21(
-            srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = plane.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
+            srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = offset(0),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }

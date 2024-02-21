@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * I444 (BT.601) YUV Format. 4:4:4 24bpp
@@ -17,15 +16,19 @@ class I444Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX444<I444Buffer>, BufferY<I400Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return rowStride * top + left
+    }
+
     fun convertTo(dst: I420Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToI420(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
-            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
+            dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.offset(2),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -33,11 +36,11 @@ class I444Buffer private constructor(
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToNV12(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -45,11 +48,11 @@ class I444Buffer private constructor(
     fun convertTo(dst: Nv21Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToNV21(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
-            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
+            dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.offset(1),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -57,10 +60,10 @@ class I444Buffer private constructor(
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -68,10 +71,10 @@ class I444Buffer private constructor(
     fun convertTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToABGR(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -79,10 +82,10 @@ class I444Buffer private constructor(
     fun convertTo(dst: Rgb24Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToRGB24(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -90,10 +93,10 @@ class I444Buffer private constructor(
     fun convertTo(dst: RawBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI444ToRAW(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

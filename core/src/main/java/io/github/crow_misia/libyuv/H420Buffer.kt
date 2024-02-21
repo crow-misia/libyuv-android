@@ -2,7 +2,6 @@ package io.github.crow_misia.libyuv
 
 import android.graphics.Rect
 import java.nio.ByteBuffer
-import kotlin.math.min
 
 /**
  * H420 (BT.709) YUV Format. 4:2:0 12bpp
@@ -17,13 +16,24 @@ class H420Buffer private constructor(
     cropRect: Rect,
     releaseCallback: Runnable?,
 ) : AbstractBuffer(buffer, cropRect, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<H420Buffer> {
+    override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
+        return when (planeIndex) {
+            0 -> rowStride * top + left
+            else -> {
+                val halfLeft = (left + 1).shr(1)
+                val halfTop = (top + 1).shr(1)
+                rowStride * halfTop + halfLeft
+            }
+        }
+    }
+
     fun convertTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToARGB(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -31,10 +41,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToABGR(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -42,10 +52,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: Rgb24Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToRGB24(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -53,10 +63,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: RawBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToRAW(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -64,10 +74,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: Rgb565Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToRGB565(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstRGB565 = dst.plane.buffer, dstStrideRGB565 = dst.plane.rowStride, dstOffsetRGB565 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstRGB565 = dst.plane.buffer, dstStrideRGB565 = dst.plane.rowStride, dstOffsetRGB565 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -75,10 +85,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: Ar30Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToAR30(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstAR30 = dst.plane.buffer, dstStrideAR30 = dst.plane.rowStride, dstOffsetAR30 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstAR30 = dst.plane.buffer, dstStrideAR30 = dst.plane.rowStride, dstOffsetAR30 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }
@@ -86,10 +96,10 @@ class H420Buffer private constructor(
     fun convertTo(dst: Ab30Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertH420ToAB30(
-            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
-            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
-            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
-            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride, dstOffsetAB30 = dst.plane.offset,
+            srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
+            srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
+            srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
+            dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride, dstOffsetAB30 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
         )
     }

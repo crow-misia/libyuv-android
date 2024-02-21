@@ -61,36 +61,38 @@ interface Buffer : Closeable {
     fun write(dst: ByteBuffer)
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun calculateSize(dst: Buffer): Pair<Int, Int> {
-        return Pair(
-            minWidth(cropRect, dst.cropRect),
-            minHeight(cropRect, dst.cropRect),
-        )
-    }
+    fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int
+}
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun minWidth(width: Int, vararg other: Rect): Int {
-        var min = width
-        for (e in other) {
-            min = minOf(min, e.width())
-        }
-        return min
+internal fun minWidth(width: Int, vararg other: Rect): Int {
+    var min = width
+    for (e in other) {
+        min = minOf(min, e.width())
     }
+    return min
+}
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun minWidth(vararg other: Rect): Int {
-        return minWidth(cropRect.width(), *other)
-    }
+internal fun minHeight(height: Int, vararg other: Rect): Int {
+    var min = height
+    for (e in other) min = minOf(min, e.height())
+    return min
+}
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun minHeight(height: Int, vararg other: Rect): Int {
-        var min = height
-        for (e in other) min = minOf(min, e.height())
-        return min
-    }
+internal fun Buffer.calculateSize(dst: Buffer): Pair<Int, Int> {
+    return Pair(
+        minWidth(cropRect, dst.cropRect),
+        minHeight(cropRect, dst.cropRect),
+    )
+}
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun minHeight(vararg other: Rect): Int {
-        return minHeight(cropRect.height(), *other)
-    }
+internal fun Buffer.minWidth(vararg other: Rect): Int {
+    return minWidth(cropRect.width(), *other)
+}
+
+internal fun Buffer.minHeight(vararg other: Rect): Int {
+    return minHeight(cropRect.height(), *other)
+}
+
+internal fun Buffer.offset(planeIndex: Int): Int {
+    return planes[planeIndex].offset(this, planeIndex)
 }

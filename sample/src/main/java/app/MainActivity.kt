@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         val dummy2ARGBBuffer = ArgbBuffer.allocate(width, height).also {
             it.drawRect(0, 0, 1920, 1080, 0xff0000ff)
         }
+        val cropBuffer = AbgrBuffer.allocate(500, 500)
 
         originalBuffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
@@ -176,6 +177,12 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "Sum Square Error NV12:I422 Y Buffer %d".format(nv12Buffer.planeY.computeSumSquareError(i422Buffer.planeY, 1920, 1080)))
         Log.i(TAG, "Frame PSNR NV12:I422 Y Buffer %f".format(nv12Buffer.planeY.calculateFramePsnr(i422Buffer.planeY, 1920, 1080)))
         Log.i(TAG, "Frame SSIM NV12:I422 Y Buffer %f".format(nv12Buffer.planeY.calculateFrameSsim(i422Buffer.planeY, 1920, 1080)))
+
+        argb2Buffer.also {
+            it.cropRect.set(50, 50, 550, 550)
+            it.convertTo(cropBuffer)
+        }
+        binding.crop.setImageBitmap(cropBuffer.asBitmap())
 
         originalBuffer.close()
         original2Buffer.close()
