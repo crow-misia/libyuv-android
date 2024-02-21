@@ -16,7 +16,7 @@ object Maven {
     const val artifactId = "libyuv-android"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"
-    const val version = "0.31.0"
+    const val version = "0.31.1"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
