@@ -1,15 +1,25 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicReference
 
 abstract class AbstractBuffer(
     internal var buffer: ByteBuffer?,
-    override val crop: Rect,
+    cropRect: Rect,
     planes: Array<Plane>,
     releaseCallback: Runnable?,
 ) : Buffer {
+    override var cropRect: Rect = cropRect
+        set(value) {
+            val tmp = Rect(value)
+            if (!tmp.intersect(0, 0, width, height)) {
+                tmp.setEmpty()
+            }
+            field = tmp
+        }
+
     override var planes: Array<Plane> = planes
         internal set
 

@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,31 +9,36 @@ import kotlin.math.min
  */
 class Ab30Buffer private constructor(
     buffer: ByteBuffer,
-    crop: Rect,
-    val plane: Plane,
+    override val plane: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), Buffer32<Ab30Buffer> {
     fun convertTo(dst: Ar30Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToAB30(
             srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
             dstAB30 = dst.plane.buffer, dstStrideAB30 = dst.plane.rowStride, dstOffsetAB30 = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: AbgrBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToARGB(
             srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAR30ToABGR(
             srcAR30 = plane.buffer, srcStrideAR30 = plane.rowStride, srcOffsetAR30 = plane.offset,
             dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -45,36 +51,42 @@ class Ab30Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): Ab30Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): Ab30Buffer {
             val (capacity, stride) = calculate(width, height)
             val (buffer) = createByteBuffer(listOf(capacity))
             return Ab30Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Ab30Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): Ab30Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacity, stride) = calculate(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return Ab30Buffer(
                 buffer = sliceBuffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int): Ab30Buffer {
+        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Ab30Buffer {
             return Ab30Buffer(
                 buffer = plane.buffer,
-                crop = Rect(width = width, height = height),
                 plane = plane,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

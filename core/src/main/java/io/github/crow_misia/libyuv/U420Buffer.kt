@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,29 +9,33 @@ import kotlin.math.min
  */
 class U420Buffer private constructor(
     buffer: ByteBuffer?,
-    crop: Rect,
     override val planeY: Plane,
     override val planeU: Plane,
     override val planeV: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<U420Buffer> {
+) : AbstractBuffer(buffer, cropRect, arrayOf(planeY, planeU, planeV), releaseCallback), BufferX420<U420Buffer> {
     fun convertTo(dst: ArgbBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertU420ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: AbgrBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertU420ToABGR(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = planeU.offset,
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = planeV.offset,
             dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -50,42 +55,48 @@ class U420Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): U420Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): U420Buffer {
             val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
             val (bufferY, bufferU, bufferV, buffer) = createByteBuffer(listOf(capacityY, capacityU, capacityV))
             return U420Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): U420Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): U420Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacityY, capacityU, capacityV, strideY, strideU, strideV) = calculate(width, height)
             val (bufferY, bufferU, bufferV) = buffer.sliceByLength(listOf(capacityY, capacityU, capacityV))
             return U420Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeU = PlanePrimitive(strideU, bufferU),
                 planeV = PlanePrimitive(strideV, bufferV),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int): U420Buffer {
+        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): U420Buffer {
             return U420Buffer(
                 buffer = null,
-                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeU = planeU,
                 planeV = planeV,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

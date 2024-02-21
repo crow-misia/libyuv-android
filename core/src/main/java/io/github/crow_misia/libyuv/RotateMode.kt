@@ -13,15 +13,15 @@ enum class RotateMode(val degrees: Int) {
 
     internal fun calculateWidth(src: Buffer, dst: Buffer): Int {
         return when (this) {
-            ROTATE_0, ROTATE_180 -> min(src.width, dst.width)
-            ROTATE_90, ROTATE_270 -> min(src.width, dst.height)
+            ROTATE_0, ROTATE_180 -> min(src.cropRect.width(), dst.cropRect.width())
+            ROTATE_90, ROTATE_270 -> min(src.cropRect.width(), dst.cropRect.height())
         }
     }
 
     internal fun calculateHeight(src: Buffer, dst: Buffer): Int {
         return when (this) {
-            ROTATE_0, ROTATE_180 -> min(src.height, dst.height)
-            ROTATE_90, ROTATE_270 -> min(src.height, dst.width)
+            ROTATE_0, ROTATE_180 -> min(src.cropRect.height(), dst.cropRect.height())
+            ROTATE_90, ROTATE_270 -> min(src.cropRect.height(), dst.cropRect.width())
         }
     }
 }

@@ -2,6 +2,7 @@
 
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import kotlin.math.min
@@ -53,18 +54,14 @@ interface Plane {
         )
     }
 
-    fun setValue(width: Int, height: Int, value: Int) {
-        Yuv.planerSetPlane(
-            dstY = buffer, dstStrideY = rowStride, dstOffsetY = 0,
-            width = width, height = height,
-            value = value,
-        )
+    fun setValue(top: Int = 0, left: Int = 0, width: Int, height: Int, value: Int) {
+        setValue(Rect(top, left, top + width, top + height), value)
     }
 
-    fun setValue(top: Int, left: Int, width: Int, height: Int, value: Int) {
+    fun setValue(rect: Rect, value: Int) {
         Yuv.planerSetPlane(
-            dstY = buffer, dstStrideY = rowStride, dstOffsetY = top * width + left,
-            width = width, height = height,
+            dstY = buffer, dstStrideY = rowStride, dstOffsetY = rect.top * rowStride.value + rect.left,
+            width = rect.width(), height = rect.height(),
             value = value,
         )
     }

@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,15 +9,18 @@ import kotlin.math.min
  */
 class J400Buffer private constructor(
     buffer: ByteBuffer?,
-    crop: Rect,
     override val planeY: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer>, BufferY<J400Buffer> {
+) : AbstractBuffer(buffer, cropRect, arrayOf(planeY), releaseCallback), BufferX400<J400Buffer, J420Buffer>, BufferY<J400Buffer> {
     fun convertTo(dst: ArgbBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertJ400ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -28,36 +32,42 @@ class J400Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): J400Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): J400Buffer {
             val (capacity, stride) = calculate(width, height)
             val (buffer) = createByteBuffer(listOf(capacity))
             return J400Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): J400Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): J400Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacity, stride) = calculate(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return J400Buffer(
                 buffer = sliceBuffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(planeYJ: Plane, width: Int, height: Int): J400Buffer {
+        fun wrap(planeYJ: Plane, width: Int, height: Int, cropRect: Rect): J400Buffer {
             return J400Buffer(
                 buffer = planeYJ.buffer,
-                crop = Rect(width = width, height = height),
                 planeY = planeYJ,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

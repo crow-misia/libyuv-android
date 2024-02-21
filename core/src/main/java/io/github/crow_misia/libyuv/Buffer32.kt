@@ -10,18 +10,20 @@ interface Buffer32<BUFFER : Buffer32<BUFFER>> : Buffer {
     val plane: Plane
 
     fun convertTo(dst: BUFFER) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertARGBCopy(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun mirrorTo(dst: BUFFER) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerARGBMirror(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -38,9 +40,9 @@ interface Buffer32<BUFFER : Buffer32<BUFFER>> : Buffer {
     fun scale(dst: BUFFER, filterMode: FilterMode) {
         Yuv.scaleARGBScale(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
-            srcWidth = width, srcHeight = height,
+            srcWidth = cropRect.width(), srcHeight = cropRect.height(),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            dstWidth = dst.width, dstHeight = dst.height,
+            dstWidth = dst.cropRect.width(), dstHeight = dst.cropRect.height(),
             filterMode = filterMode.mode,
         )
     }
@@ -48,9 +50,9 @@ interface Buffer32<BUFFER : Buffer32<BUFFER>> : Buffer {
     fun scaleClip(dst: BUFFER, rect: Rect, filterMode: FilterMode) {
         Yuv.scaleARGBScaleClip(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = plane.offset,
-            srcWidth = width, srcHeight = height,
+            srcWidth = cropRect.width(), srcHeight = cropRect.height(),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            dstWidth = dst.width, dstHeight = dst.height,
+            dstWidth = dst.cropRect.width(), dstHeight = dst.cropRect.height(),
             clipX = rect.left, clipY = rect.top,
             clipWidth = rect.width(), clipHeight = rect.height(),
             filterMode = filterMode.mode,

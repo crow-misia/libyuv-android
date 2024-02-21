@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         yuy2Buffer.convertTo(argbBuffer)
         argbBuffer.drawGray(400, 400, 200, 200)
         argbBuffer.drawQuantize(256 * 64, 4, 0, 0, 0, 1920, 1080)
-        argbBuffer.drawBlur(argb2Buffer, width, height, 50)
+        argbBuffer.drawBlur(argb2Buffer, width = width, height = height, radius = 50)
         argb2Buffer.convertTo(forBitmapBuffer)
         binding.convert5.setImageBitmap(forBitmapBuffer.asBitmap())
 

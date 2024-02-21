@@ -1,5 +1,7 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
+
 interface CapacityCalculator<CAPACITIES : PlaneCapacities> {
     fun calculate(width: Int, height: Int): CAPACITIES
 }

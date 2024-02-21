@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,38 +9,43 @@ import kotlin.math.min
  */
 class I400Buffer private constructor(
     buffer: ByteBuffer?,
-    crop: Rect,
     override val planeY: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(planeY), releaseCallback), BufferX400<I400Buffer, I420Buffer>, BufferY<I400Buffer> {
+) : AbstractBuffer(buffer, cropRect, arrayOf(planeY), releaseCallback), BufferX400<I400Buffer, I420Buffer>, BufferY<I400Buffer> {
     fun convertTo(dst: Nv21Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI400ToNV21(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Nv12Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI400ToNV21(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstVU = dst.planeUV.buffer, dstStrideVU = dst.planeUV.rowStride, dstOffsetVU = dst.planeUV.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertI400ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun setValue(value: Int) {
-        planeY.setValue(width, height, value)
+        planeY.setValue(cropRect, value)
     }
 
     companion object Factory : BufferFactory<I400Buffer>, CapacityCalculator<Plane1Capacities> {
@@ -50,36 +56,42 @@ class I400Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): I400Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): I400Buffer {
             val (capacity, stride) = calculate(width, height)
             val (buffer) = createByteBuffer(listOf(capacity))
             return I400Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): I400Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): I400Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacity, stride) = calculate(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return I400Buffer(
                 buffer = sliceBuffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(planeY: Plane, width: Int, height: Int): I400Buffer {
+        fun wrap(planeY: Plane, width: Int, height: Int, cropRect: Rect): I400Buffer {
             return I400Buffer(
                 buffer = planeY.buffer,
-                crop = Rect(width = width, height = height),
                 planeY = planeY,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

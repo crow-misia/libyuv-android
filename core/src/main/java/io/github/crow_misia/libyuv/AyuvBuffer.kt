@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,25 +9,29 @@ import kotlin.math.min
  */
 class AyuvBuffer private constructor(
     buffer: ByteBuffer,
-    crop: Rect,
     val plane: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback) {
+) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback) {
     fun convertTo(dst: Nv12Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAYUVToNV12(
             srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = plane.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Nv21Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertAYUVToNV21(
             srcAYUV = plane.buffer, srcStrideAYUV = plane.rowStride, srcOffsetAYUV = plane.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstVU = dst.planeVU.buffer, dstStrideVU = dst.planeVU.rowStride, dstOffsetVU = dst.planeVU.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -40,36 +45,42 @@ class AyuvBuffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): AyuvBuffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): AyuvBuffer {
             val (capacity, stride) = calculate(width, height)
             val (buffer) = createByteBuffer(listOf(capacity))
             return AyuvBuffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): AyuvBuffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): AyuvBuffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacity, stride) = calculate(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return AyuvBuffer(
                 buffer = sliceBuffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int): AyuvBuffer {
+        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): AyuvBuffer {
             return AyuvBuffer(
                 buffer = plane.buffer,
-                crop = Rect(width = width, height = height),
                 plane = plane,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

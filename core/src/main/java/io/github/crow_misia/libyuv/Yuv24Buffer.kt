@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 
 /**
@@ -7,10 +8,12 @@ import java.nio.ByteBuffer
  */
 class Yuv24Buffer private constructor(
     buffer: ByteBuffer?,
-    crop: Rect,
     override val plane: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
+) : AbstractBuffer(buffer, cropRect, arrayOf(plane), releaseCallback), Buffer24<Yuv24Buffer> {
     companion object Factory : BufferFactory<Yuv24Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3
@@ -21,36 +24,42 @@ class Yuv24Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): Yuv24Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): Yuv24Buffer {
             val (capacity, stride) = calculate(width, height)
             val (buffer) = createByteBuffer(listOf(capacity))
             return Yuv24Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, buffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Yuv24Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): Yuv24Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacity, stride) = calculate(width, height)
             val sliceBuffer = buffer.sliceRange(0, capacity.value)
             return Yuv24Buffer(
                 buffer = sliceBuffer,
-                crop = Rect(width = width, height = height),
                 plane = PlanePrimitive(stride, sliceBuffer),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int): Yuv24Buffer {
+        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Yuv24Buffer {
             return Yuv24Buffer(
                 buffer = plane.buffer,
-                crop = Rect(width = width, height = height),
                 plane = plane,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

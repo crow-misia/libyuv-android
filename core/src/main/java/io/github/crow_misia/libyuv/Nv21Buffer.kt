@@ -1,5 +1,6 @@
 package io.github.crow_misia.libyuv
 
+import android.graphics.Rect
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -8,94 +9,105 @@ import kotlin.math.min
  */
 class Nv21Buffer private constructor(
     buffer: ByteBuffer?,
-    crop: Rect,
     override val planeY: Plane,
     val planeVU: Plane,
+    override val width: Int,
+    override val height: Int,
+    cropRect: Rect,
     releaseCallback: Runnable?,
-) : AbstractBuffer(buffer, crop, arrayOf(planeY, planeVU), releaseCallback), BufferY<I400Buffer> {
+) : AbstractBuffer(buffer, cropRect, arrayOf(planeY, planeVU), releaseCallback), BufferY<I400Buffer> {
     fun convertTo(dst: I420Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToI420(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.planeU.offset,
             dstV = dst.planeV.buffer, dstStrideV = dst.planeV.rowStride, dstOffsetV = dst.planeV.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Nv12Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV21ToNV12(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.planeUV.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Nv21Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV12Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcUV = planeVU.buffer, srcStrideUV = planeVU.rowStride, srcOffsetUV = planeVU.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride, dstOffsetUV = dst.planeVU.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: ArgbBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToARGB(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: AbgrBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToABGR(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstABGR = dst.plane.buffer, dstStrideABGR = dst.plane.rowStride, dstOffsetABGR = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Rgb24Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToRGB24(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: Yuv24Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToYUV24(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstYUV24 = dst.plane.buffer, dstStrideYUV24 = dst.plane.rowStride, dstOffsetYUV24 = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun convertTo(dst: RawBuffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.convertNV21ToRAW(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcVU = planeVU.buffer, srcStrideVU = planeVU.rowStride, srcOffsetVU = planeVU.offset,
             dstRAW = dst.plane.buffer, dstStrideRAW = dst.plane.rowStride, dstOffsetRAW = dst.plane.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
     fun mirrorTo(dst: Nv21Buffer) {
+        val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerNV12Mirror(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcUV = planeVU.buffer, srcStrideUV = planeVU.rowStride, srcOffsetUV = planeVU.offset,
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride, dstOffsetUV = dst.planeVU.offset,
-            width = min(width, dst.width), height = min(height, dst.height),
+            width = fixedWidth, height = fixedHeight,
         )
     }
 
@@ -140,10 +152,10 @@ class Nv21Buffer private constructor(
         Yuv.scaleNV12Scale(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = planeY.offset,
             srcUV = planeVU.buffer, srcStrideUV = planeVU.rowStride, srcOffsetUV = planeVU.offset,
-            srcWidth = width, srcHeight = height,
+            srcWidth = cropRect.width(), srcHeight = cropRect.height(),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.planeY.offset,
             dstUV = dst.planeVU.buffer, dstStrideUV = dst.planeVU.rowStride, dstOffsetUV = dst.planeVU.offset,
-            dstWidth = dst.width, dstHeight = dst.height,
+            dstWidth = dst.cropRect.width(), dstHeight = dst.cropRect.height(),
             filterMode = filterMode.mode,
         )
     }
@@ -161,39 +173,45 @@ class Nv21Buffer private constructor(
             )
         }
 
-        override fun allocate(width: Int, height: Int): Nv21Buffer {
+        override fun allocate(width: Int, height: Int, cropRect: Rect): Nv21Buffer {
             val (capacityY, capacityVU, strideY, strideVU) = calculate(width, height)
             val (bufferY, bufferVU, buffer) = createByteBuffer(listOf(capacityY, capacityVU))
             return Nv21Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeVU = PlanePrimitive(strideVU, bufferVU),
+                width = width,
+                height = height,
+                cropRect = cropRect,
             ) {
                 Yuv.freeNativeBuffer(buffer)
             }
         }
 
-        override fun wrap(buffer: ByteBuffer, width: Int, height: Int): Nv21Buffer {
+        override fun wrap(buffer: ByteBuffer, width: Int, height: Int, cropRect: Rect): Nv21Buffer {
             check(buffer.isDirect) { "Unsupported non-direct ByteBuffer." }
 
             val (capacityY, capacityVU, strideY, strideVU) = calculate(width, height)
             val (bufferY, bufferVU) = buffer.sliceByLength(listOf(capacityY, capacityVU))
             return Nv21Buffer(
                 buffer = buffer,
-                crop = Rect(width = width, height = height),
                 planeY = PlanePrimitive(strideY, bufferY),
                 planeVU = PlanePrimitive(strideVU, bufferVU),
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }
 
-        fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int): Nv21Buffer {
+        fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int, cropRect: Rect): Nv21Buffer {
             return Nv21Buffer(
                 buffer = null,
-                crop = Rect(width = width, height = height),
                 planeY = planeY,
                 planeVU = planeVU,
+                width = width,
+                height = height,
+                cropRect = cropRect,
                 releaseCallback = null,
             )
         }

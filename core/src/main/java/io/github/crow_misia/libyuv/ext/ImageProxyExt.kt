@@ -21,7 +21,6 @@ import io.github.crow_misia.libyuv.J422Buffer
 import io.github.crow_misia.libyuv.J444Buffer
 import io.github.crow_misia.libyuv.Nv12Buffer
 import io.github.crow_misia.libyuv.Nv21Buffer
-import io.github.crow_misia.libyuv.PlaneProxy
 import io.github.crow_misia.libyuv.RawBuffer
 import io.github.crow_misia.libyuv.Rgb24Buffer
 import io.github.crow_misia.libyuv.Rgb565Buffer
@@ -29,6 +28,7 @@ import io.github.crow_misia.libyuv.RgbaBuffer
 import io.github.crow_misia.libyuv.U420Buffer
 import io.github.crow_misia.libyuv.U422Buffer
 import io.github.crow_misia.libyuv.U444Buffer
+import io.github.crow_misia.libyuv.UyvyBuffer
 import io.github.crow_misia.libyuv.Yuv24Buffer
 import io.github.crow_misia.libyuv.asPlane
 
@@ -47,6 +47,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -62,6 +63,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -77,6 +79,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -92,6 +95,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -107,6 +111,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -123,6 +128,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -139,6 +145,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -155,6 +162,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -170,6 +178,7 @@ object ImageProxyExt {
             planeY = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -186,6 +195,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -202,6 +212,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -218,6 +229,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -233,6 +245,7 @@ object ImageProxyExt {
             planeYJ = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -249,6 +262,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -265,6 +279,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -281,6 +296,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -296,6 +312,7 @@ object ImageProxyExt {
             planeUV = planes[1].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -311,6 +328,7 @@ object ImageProxyExt {
             planeVU = planes[1].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -326,6 +344,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -341,6 +360,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -356,6 +376,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -371,6 +392,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -387,6 +409,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -403,6 +426,7 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -419,6 +443,22 @@ object ImageProxyExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
+        )
+    }
+
+    /**
+     * Handling ImageProxy as U444 format.
+     *
+     * @return [U444Buffer]
+     */
+    @JvmStatic
+    fun ImageProxy.toUyvyBuffer(): UyvyBuffer {
+        return UyvyBuffer.wrap(
+            plane = planes[0].asPlane(),
+            width = width,
+            height = height,
+            cropRect = cropRect,
         )
     }
 
@@ -434,6 +474,7 @@ object ImageProxyExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
+            cropRect = cropRect,
         )
     }
 }
