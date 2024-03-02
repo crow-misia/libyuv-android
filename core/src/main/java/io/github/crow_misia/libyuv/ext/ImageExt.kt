@@ -1,9 +1,6 @@
 package io.github.crow_misia.libyuv.ext
 
-import android.graphics.Rect
 import android.media.Image
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.github.crow_misia.libyuv.AbgrBuffer
 import io.github.crow_misia.libyuv.Argb1555Buffer
 import io.github.crow_misia.libyuv.Argb4444Buffer
@@ -33,15 +30,7 @@ import io.github.crow_misia.libyuv.Yuv24Buffer
 import io.github.crow_misia.libyuv.asPlane
 
 @Suppress("unused")
-@RequiresApi(Build.VERSION_CODES.KITKAT)
 object ImageExt {
-    private val Image.cropRectCompat: Rect
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cropRect
-        } else {
-            Rect(0, 0, width, height)
-        }
-
     /**
      * Handling Image as ABGR format.
      *
@@ -54,7 +43,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -70,7 +59,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -86,7 +75,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -102,7 +91,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -118,7 +107,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -135,7 +124,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -152,7 +141,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -169,7 +158,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -185,7 +174,7 @@ object ImageExt {
             planeY = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -202,7 +191,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -219,7 +208,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -236,7 +225,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -252,7 +241,7 @@ object ImageExt {
             planeYJ = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -269,7 +258,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -286,7 +275,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -303,7 +292,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -319,7 +308,7 @@ object ImageExt {
             planeUV = planes[1].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -335,7 +324,7 @@ object ImageExt {
             planeVU = planes[1].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -351,7 +340,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -367,7 +356,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -383,7 +372,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -399,7 +388,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -416,7 +405,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -433,7 +422,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -450,7 +439,7 @@ object ImageExt {
             planeV = planes[2].asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 
@@ -466,7 +455,7 @@ object ImageExt {
             plane = plane.asPlane(),
             width = width,
             height = height,
-            cropRect = cropRectCompat,
+            cropRect = cropRect,
         )
     }
 }

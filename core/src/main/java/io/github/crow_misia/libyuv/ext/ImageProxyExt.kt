@@ -1,7 +1,5 @@
 package io.github.crow_misia.libyuv.ext
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import io.github.crow_misia.libyuv.AbgrBuffer
 import io.github.crow_misia.libyuv.Argb1555Buffer
@@ -33,7 +31,6 @@ import io.github.crow_misia.libyuv.Yuv24Buffer
 import io.github.crow_misia.libyuv.asPlane
 
 @Suppress("unused")
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 object ImageProxyExt {
     /**
      * Handling ImageProxy as ABGR format.

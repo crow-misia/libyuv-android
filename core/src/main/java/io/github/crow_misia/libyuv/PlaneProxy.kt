@@ -1,11 +1,8 @@
 package io.github.crow_misia.libyuv
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageProxy
 import java.nio.ByteBuffer
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 data class PlaneProxy(
     private val proxy: ImageProxy.PlaneProxy,
 ) : Plane() {
@@ -13,7 +10,6 @@ data class PlaneProxy(
     override val rowStride: RowStride = RowStride(proxy.rowStride)
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun ImageProxy.PlaneProxy.asPlane(): Plane {
     return PlaneProxy(proxy = this)
 }
