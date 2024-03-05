@@ -36,7 +36,7 @@ androidx-test-rules = "1.6.0-alpha03"
 
 truth = "1.4.2"
 
-dokka = "1.9.10"
+dokka = "1.9.20"
 
 [libraries]
 
