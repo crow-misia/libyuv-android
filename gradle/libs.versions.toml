@@ -14,7 +14,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-android-gradle-plugin = "8.3.0"
+android-gradle-plugin = "8.3.1"
 
 kotlin = "1.9.23"
 
