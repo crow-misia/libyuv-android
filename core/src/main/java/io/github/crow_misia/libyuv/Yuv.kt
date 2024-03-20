@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 
 object Yuv {
     init {
-        System.loadLibrary("yuv")
+        System.loadLibrary("yuv_android")
     }
 
     // helper.cpp
