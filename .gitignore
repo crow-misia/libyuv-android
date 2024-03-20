@@ -52,4 +52,6 @@ node_modules/
 # not ignore
 !.idea/codeStyleSettings.xml
 !.idea/findbugs-idea.xml
+
 core/.cxx/
+Android.mk.orig
