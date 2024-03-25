@@ -8,7 +8,7 @@ android-library = { id = "com.android.library", version.ref = "android-gradle-pl
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.5" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.6" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
