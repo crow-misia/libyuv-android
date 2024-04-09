@@ -47,7 +47,7 @@ class RgbaBuffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<RgbaBuffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory32<RgbaBuffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(2)
             return Plane1Capacities(
@@ -85,7 +85,7 @@ class RgbaBuffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): RgbaBuffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): RgbaBuffer {
             return RgbaBuffer(
                 buffer = plane.buffer,
                 width = width,

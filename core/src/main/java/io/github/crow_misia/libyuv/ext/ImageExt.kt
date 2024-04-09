@@ -238,7 +238,7 @@ object ImageExt {
     fun Image.toJ400Buffer(): J400Buffer {
         val plane = planes[0]
         return J400Buffer.wrap(
-            planeYJ = plane.asPlane(),
+            planeY = plane.asPlane(),
             width = width,
             height = height,
             cropRect = cropRect,

@@ -270,7 +270,7 @@ class I420Buffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<I420Buffer>, CapacityCalculator<Plane3Capacities> {
+    companion object Factory : BufferFactoryYUV<I420Buffer>, CapacityCalculator<Plane3Capacities> {
         override fun calculate(width: Int, height: Int): Plane3Capacities {
             val halfWidth = (width + 1).shr(1)
             val halfHeight = (height + 1).shr(1)
@@ -319,7 +319,7 @@ class I420Buffer private constructor(
             )
         }
 
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I420Buffer {
+        override fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I420Buffer {
             return I420Buffer(
                 buffer = null,
                 planeY = planeY,

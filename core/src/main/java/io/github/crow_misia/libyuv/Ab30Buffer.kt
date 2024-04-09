@@ -45,7 +45,7 @@ class Ab30Buffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<Ab30Buffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory32<Ab30Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(2)
             return Plane1Capacities(
@@ -83,7 +83,7 @@ class Ab30Buffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Ab30Buffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Ab30Buffer {
             return Ab30Buffer(
                 buffer = plane.buffer,
                 plane = plane,

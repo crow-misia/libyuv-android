@@ -163,7 +163,7 @@ class I422Buffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<I422Buffer>, CapacityCalculator<Plane3Capacities> {
+    companion object Factory : BufferFactoryYUV<I422Buffer>, CapacityCalculator<Plane3Capacities> {
         override fun calculate(width: Int, height: Int): Plane3Capacities {
             val halfWidth = (width + 1).shr(1)
             val capacity = width * height
@@ -211,7 +211,7 @@ class I422Buffer private constructor(
             )
         }
 
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I422Buffer {
+        override fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I422Buffer {
             return I422Buffer(
                 buffer = null,
                 planeY = planeY,

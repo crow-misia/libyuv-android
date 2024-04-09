@@ -393,7 +393,7 @@ class ArgbBuffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<ArgbBuffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory32<ArgbBuffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width.shl(2)
             val capacity = stride * height
@@ -432,7 +432,7 @@ class ArgbBuffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): ArgbBuffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): ArgbBuffer {
             return ArgbBuffer(
                 buffer = plane.buffer,
                 plane = plane,

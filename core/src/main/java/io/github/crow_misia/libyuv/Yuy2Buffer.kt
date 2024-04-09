@@ -100,6 +100,10 @@ class Yuy2Buffer private constructor(
             )
         }
 
+        fun wrap(plane: Plane, width: Int, height: Int): Yuy2Buffer {
+            return wrap(plane, width, height, Rect(0, 0, width, height))
+        }
+
         fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Yuy2Buffer {
             return Yuy2Buffer(
                 buffer = plane.buffer,

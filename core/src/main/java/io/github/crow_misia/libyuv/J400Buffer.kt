@@ -27,7 +27,7 @@ class J400Buffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<J400Buffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactoryY<J400Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             return Plane1Capacities(
                 planeStride = RowStride(width),
@@ -64,10 +64,10 @@ class J400Buffer private constructor(
             )
         }
 
-        fun wrap(planeYJ: Plane, width: Int, height: Int, cropRect: Rect): J400Buffer {
+        override fun wrap(planeY: Plane, width: Int, height: Int, cropRect: Rect): J400Buffer {
             return J400Buffer(
-                buffer = planeYJ.buffer,
-                planeY = planeYJ,
+                buffer = planeY.buffer,
+                planeY = planeY,
                 width = width,
                 height = height,
                 cropRect = cropRect,

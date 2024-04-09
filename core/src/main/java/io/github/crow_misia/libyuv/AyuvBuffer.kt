@@ -77,6 +77,10 @@ class AyuvBuffer private constructor(
             )
         }
 
+        fun wrap(plane: Plane, width: Int, height: Int): AyuvBuffer {
+            return wrap(plane, width, height, Rect(0, 0, width, height))
+        }
+
         fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): AyuvBuffer {
             return AyuvBuffer(
                 buffer = plane.buffer,

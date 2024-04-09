@@ -81,6 +81,10 @@ class Rgb565Buffer private constructor(
             )
         }
 
+        fun wrap(plane: Plane, width: Int, height: Int): Rgb565Buffer {
+            return wrap(plane, width, height, Rect(0, 0, width, height))
+        }
+
         fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Rgb565Buffer {
             return Rgb565Buffer(
                 buffer = plane.buffer,

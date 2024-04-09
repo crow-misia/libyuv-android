@@ -18,7 +18,7 @@ class Yuv24Buffer private constructor(
         return rowStride * top + left * 3
     }
 
-    companion object Factory : BufferFactory<Yuv24Buffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory24<Yuv24Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3
             val capacity = stride * height
@@ -57,7 +57,7 @@ class Yuv24Buffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Yuv24Buffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Yuv24Buffer {
             return Yuv24Buffer(
                 buffer = plane.buffer,
                 plane = plane,

@@ -76,7 +76,7 @@ class RawBuffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<RawBuffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory24<RawBuffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3
             return Plane1Capacities(
@@ -114,7 +114,7 @@ class RawBuffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): RawBuffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): RawBuffer {
             return RawBuffer(
                 buffer = plane.buffer,
                 plane = plane,

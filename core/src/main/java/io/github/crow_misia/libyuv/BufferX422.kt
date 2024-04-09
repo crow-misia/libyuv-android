@@ -3,11 +3,7 @@ package io.github.crow_misia.libyuv
 /**
  * YUV(4:2:2 16bpp) Buffer.
  */
-interface BufferX422<BUFFER : BufferX422<BUFFER>> : Buffer {
-    val planeY: Plane
-    val planeU: Plane
-    val planeV: Plane
-
+interface BufferX422<BUFFER : BufferX422<BUFFER>> : BufferYUV {
     fun convertTo(dst: BUFFER) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
         Yuv.planerI422Copy(

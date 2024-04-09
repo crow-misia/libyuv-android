@@ -213,6 +213,10 @@ class Nv21Buffer private constructor(
             )
         }
 
+        fun wrap(planeY: Plane, planeUV: Plane, width: Int, height: Int): Nv21Buffer {
+            return wrap(planeY, planeUV, width, height, Rect(0, 0, width, height))
+        }
+
         fun wrap(planeY: Plane, planeVU: Plane, width: Int, height: Int, cropRect: Rect): Nv21Buffer {
             return Nv21Buffer(
                 buffer = null,

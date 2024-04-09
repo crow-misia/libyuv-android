@@ -101,7 +101,7 @@ class I444Buffer private constructor(
         )
     }
 
-    companion object FactoryFactory : BufferFactory<I444Buffer>, CapacityCalculator<Plane3Capacities> {
+    companion object FactoryFactory : BufferFactoryYUV<I444Buffer>, CapacityCalculator<Plane3Capacities> {
         override fun calculate(width: Int, height: Int): Plane3Capacities {
             val capacity = width * height
             return Plane3Capacities(
@@ -147,7 +147,7 @@ class I444Buffer private constructor(
             )
         }
 
-        fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I444Buffer {
+        override fun wrap(planeY: Plane, planeU: Plane, planeV: Plane, width: Int, height: Int, cropRect: Rect): I444Buffer {
             return I444Buffer(
                 buffer = null,
                 planeY = planeY,

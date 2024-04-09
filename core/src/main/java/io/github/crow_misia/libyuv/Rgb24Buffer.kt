@@ -67,7 +67,7 @@ class Rgb24Buffer private constructor(
         )
     }
 
-    companion object Factory : BufferFactory<Rgb24Buffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactory24<Rgb24Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             val stride = width * 3
             return Plane1Capacities(
@@ -105,7 +105,7 @@ class Rgb24Buffer private constructor(
             )
         }
 
-        fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Rgb24Buffer {
+        override fun wrap(plane: Plane, width: Int, height: Int, cropRect: Rect): Rgb24Buffer {
             return Rgb24Buffer(
                 buffer = plane.buffer,
                 plane = plane,

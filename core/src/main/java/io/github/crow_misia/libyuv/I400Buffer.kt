@@ -51,7 +51,7 @@ class I400Buffer private constructor(
         planeY.setValue(cropRect, value)
     }
 
-    companion object Factory : BufferFactory<I400Buffer>, CapacityCalculator<Plane1Capacities> {
+    companion object Factory : BufferFactoryY<I400Buffer>, CapacityCalculator<Plane1Capacities> {
         override fun calculate(width: Int, height: Int): Plane1Capacities {
             return Plane1Capacities(
                 planeStride = RowStride(width),
@@ -88,7 +88,7 @@ class I400Buffer private constructor(
             )
         }
 
-        fun wrap(planeY: Plane, width: Int, height: Int, cropRect: Rect): I400Buffer {
+        override fun wrap(planeY: Plane, width: Int, height: Int, cropRect: Rect): I400Buffer {
             return I400Buffer(
                 buffer = planeY.buffer,
                 planeY = planeY,

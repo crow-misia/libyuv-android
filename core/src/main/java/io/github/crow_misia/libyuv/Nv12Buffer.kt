@@ -213,6 +213,10 @@ class Nv12Buffer private constructor(
             )
         }
 
+        fun wrap(planeY: Plane, planeUV: Plane, width: Int, height: Int): Nv12Buffer {
+            return wrap(planeY, planeUV, width, height, Rect(0, 0, width, height))
+        }
+
         fun wrap(planeY: Plane, planeUV: Plane, width: Int, height: Int, cropRect: Rect): Nv12Buffer {
             return Nv12Buffer(
                 buffer = null,
@@ -224,6 +228,5 @@ class Nv12Buffer private constructor(
                 releaseCallback = null,
             )
         }
-
     }
 }
