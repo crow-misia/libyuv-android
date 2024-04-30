@@ -24,15 +24,15 @@ androidx-activity = "1.9.0"
 
 androidx-appcompat = "1.7.0-alpha03"
 
-androidx-test-ext-junit = "1.2.0-alpha03"
+androidx-test-ext-junit = "1.2.0-alpha04"
 
-androidx-test-ext-truth = "1.6.0-alpha03"
+androidx-test-ext-truth = "1.6.0-alpha04"
 
-androidx-test-espresso = "3.6.0-alpha03"
+androidx-test-espresso = "3.6.0-alpha04"
 
-androidx-test-runner = "1.6.0-alpha06"
+androidx-test-runner = "1.6.0-alpha07"
 
-androidx-test-rules = "1.6.0-alpha03"
+androidx-test-rules = "1.6.0-alpha04"
 
 truth = "1.4.2"
 
