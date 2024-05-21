@@ -14,9 +14,9 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-android-gradle-plugin = "8.4.0"
+android-gradle-plugin = "8.4.1"
 
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 
 androidx-camera = "1.4.0-beta01"
 
