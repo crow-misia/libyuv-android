@@ -18,6 +18,8 @@ android-gradle-plugin = "8.5.1"
 
 kotlin = "2.0.0"
 
+android-tools-desugar_jdk_libs = "2.0.4"
+
 androidx-camera = "1.4.0-beta02"
 
 androidx-activity = "1.9.0"
@@ -43,6 +45,8 @@ dokka = "1.9.20"
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
+
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar_jdk_libs" }
 
 dokka-javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref = "dokka" }
 
