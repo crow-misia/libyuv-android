@@ -18,7 +18,7 @@ android-gradle-plugin = "8.6.0"
 
 kotlin = "2.0.20"
 
-android-tools-desugar_jdk_libs = "2.1.1"
+android-tools-desugar_jdk_libs = "2.1.2"
 
 androidx-camera = "1.4.0-rc01"
 
