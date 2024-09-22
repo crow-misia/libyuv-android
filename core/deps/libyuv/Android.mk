@@ -50,7 +50,7 @@ LOCAL_SRC_FILES := \
     source/scale_win.cc         \
     source/video_common.cc
 
-common_CFLAGS := -Wall -fexceptions
+common_CFLAGS := -Wall -fexceptions -DLIBYUV_DISABLE_SVE -DLIBYUV_DISABLE_NEON_DOTPROD -DLIBYUV_DISABLE_NEON_I8MM
 
 LOCAL_CFLAGS += $(common_CFLAGS)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include

@@ -86,8 +86,10 @@ extern "C" {
 #if !defined(LIBYUV_DISABLE_NEON) && defined(__aarch64__)
 #define HAS_HASHDJB2_NEON
 
+#if !defined(LIBYUV_DISABLE_NEON_DOTPROD)
 #define HAS_HAMMINGDISTANCE_NEON_DOTPROD
 #define HAS_SUMSQUAREERROR_NEON_DOTPROD
+#endif // !defined(LIBYUV_DISABLE_NEON_DOTPROD)
 #endif
 
 #if !defined(LIBYUV_DISABLE_MSA) && defined(__mips_msa)
