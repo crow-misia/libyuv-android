@@ -16,7 +16,7 @@ object Maven {
     const val artifactId = "libyuv-android"
     const val name = "libyuv-android"
     const val desc = "LibYuv for Android"
-    const val version = "0.34.0"
+    const val version = "0.35.0"
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
@@ -30,7 +30,7 @@ version = Maven.version
 
 android {
     namespace = "io.github.crow_misia.libyuv"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -58,7 +58,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "26.3.11579264"
+    ndkVersion = "27.1.12297006"
 
     sourceSets {
         getByName("androidTest").manifest {
