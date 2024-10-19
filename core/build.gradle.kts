@@ -1,6 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.android.library)
@@ -20,7 +19,7 @@ object Maven {
     const val siteUrl = "https://github.com/crow-misia/libyuv-android"
     const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
     const val licenseName = "The Apache Software License, Version 2.0"
-    const val licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+    const val licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0.txt"
     const val licenseDist = "repo"
     val licenses = arrayOf("Apache-2.0")
 }
