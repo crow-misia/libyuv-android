@@ -31,17 +31,20 @@ abstract class AbstractBuffer(
         planes = emptyArray()
     }
 
-    override fun asBuffer() = buffer?.also { it.position(0) } ?: run {
-        val size = planes.sumOf { it.buffer.limit() }
-        val buffer = ByteBuffer.allocateDirect(size).also {
-            buffer = it
+    override fun asBuffer(): ByteBuffer {
+        val result = buffer ?: run {
+            val size = planes.sumOf { it.bufferSize }
+            val buffer = ByteBuffer.allocateDirect(size).also {
+                buffer = it
+            }
+            return buffer
         }
-        write(buffer)
-        return buffer
+        result.rewind()
+        return result
     }
 
     override fun asByteArray(): ByteArray {
-        val size = planes.sumOf { it.buffer.limit() }
+        val size = planes.sumOf { it.bufferSize }
         val buffer = ByteArray(size)
 
         asByteArray(buffer)
@@ -50,24 +53,23 @@ abstract class AbstractBuffer(
     }
 
     override fun asByteArray(dst: ByteArray): Int {
-        var offset = 0
+        var dstOffset = 0
         planes.forEach { plane ->
-            val buffer = plane.buffer
-            val remain = dst.size - offset
-            val size = minOf(buffer.limit(), remain)
-            buffer.copy(dst, offset, 0, size)
-            offset += size
+            val remain = dst.size - dstOffset
+            val size = minOf(plane.bufferSize, remain)
+            Yuv.memcopy(dst, dstOffset, plane.buffer, 0, size)
+            dstOffset += size
         }
-        return offset
+        return dstOffset
     }
 
     override fun write(dst: OutputStream): Int {
-        val tmpBufferSize = planes.maxOf { it.buffer.limit() }
+        val tmpBufferSize = planes.maxOf { it.bufferSize }
         val tmpBuffer = ByteArray(tmpBufferSize)
         var ret = 0
-        planes.forEach {
-            val size = it.buffer.limit()
-            it.buffer.copy(tmpBuffer, 0, 0, size)
+        planes.forEach { plane ->
+            val size = plane.bufferSize
+            Yuv.memcopy(tmpBuffer, 0, plane.buffer, 0, size)
             dst.write(tmpBuffer, 0, size)
             ret += size
         }
@@ -75,11 +77,12 @@ abstract class AbstractBuffer(
     }
 
     override fun write(dst: ByteBuffer) {
+        var dstOffset = 0
         planes.forEach { plane ->
-            plane.buffer.also {
-                it.position(0)
-                dst.put(it)
-            }
+            val remain = dst.capacity() - dstOffset
+            val size = minOf(plane.bufferSize, remain)
+            Yuv.memcopy(dst, dstOffset, plane.buffer, 0, size)
+            dstOffset += plane.bufferSize
         }
     }
 }
