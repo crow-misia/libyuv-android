@@ -9,7 +9,9 @@ import kotlin.math.min
 
 abstract class Plane {
     abstract val rowStride: RowStride
+    abstract val pixelStride: PixelStride
     abstract val buffer: ByteBuffer
+    abstract val bufferSize: Int
 
     fun hashDjb2(): Long = hashDjb2(5381)
 

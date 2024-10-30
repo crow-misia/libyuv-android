@@ -1,5 +1,7 @@
 package io.github.crow_misia.libyuv.ext
 
+import android.graphics.ImageFormat
+import android.media.Image.Plane
 import androidx.camera.core.ImageProxy
 import io.github.crow_misia.libyuv.AbgrBuffer
 import io.github.crow_misia.libyuv.Argb1555Buffer
@@ -19,6 +21,8 @@ import io.github.crow_misia.libyuv.J422Buffer
 import io.github.crow_misia.libyuv.J444Buffer
 import io.github.crow_misia.libyuv.Nv12Buffer
 import io.github.crow_misia.libyuv.Nv21Buffer
+import io.github.crow_misia.libyuv.PixelStride
+import io.github.crow_misia.libyuv.PlaneProxy
 import io.github.crow_misia.libyuv.RawBuffer
 import io.github.crow_misia.libyuv.Rgb24Buffer
 import io.github.crow_misia.libyuv.Rgb565Buffer
@@ -304,9 +308,16 @@ object ImageProxyExt {
      */
     @JvmStatic
     fun ImageProxy.toNv12Buffer(): Nv12Buffer {
+        val planeU = planes[1]
+        val planeV = planes[2]
+        val planeUV = when (planeU.pixelStride) {
+            1 -> planeU.asPlane(planeU.buffer.capacity() + planeV.buffer.capacity())
+            2 -> planeU.asPlane(planeU.buffer.capacity() + 1)
+            else -> error("Supported pixel strides for U and V planes are 1 and 2")
+        }
         return Nv12Buffer.wrap(
             planeY = planes[0].asPlane(),
-            planeUV = planes[1].asPlane(),
+            planeUV = planeUV,
             width = width,
             height = height,
             cropRect = cropRect,
@@ -320,9 +331,16 @@ object ImageProxyExt {
      */
     @JvmStatic
     fun ImageProxy.toNv21Buffer(): Nv21Buffer {
+        val planeU = planes[1]
+        val planeV = planes[2]
+        val planeVU = when (planeV.pixelStride) {
+            1 -> planeV.asPlane(planeU.buffer.capacity() + planeV.buffer.capacity())
+            2 -> planeV.asPlane(planeV.buffer.capacity() + 1)
+            else -> error("Supported pixel strides for U and V planes are 1 and 2")
+        }
         return Nv21Buffer.wrap(
             planeY = planes[0].asPlane(),
-            planeVU = planes[1].asPlane(),
+            planeVU = planeVU,
             width = width,
             height = height,
             cropRect = cropRect,
