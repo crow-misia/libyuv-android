@@ -18,8 +18,8 @@ importers:
         specifier: ^9.1.6
         version: 9.1.6
       npm-check-updates:
-        specifier: ^17.1.9
-        version: 17.1.9
+        specifier: ^17.1.10
+        version: 17.1.10
 
 packages:
 
@@ -343,8 +343,8 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  npm-check-updates@17.1.9:
-    resolution: {integrity: sha512-Gfv5S8NNJKTilM1gesFNYka6bUaBs5LnVyPjApXPQphHijrlLFDMw1uSmwYMZbvJSkLZSOx03e8CHcG0Td5SMA==}
+  npm-check-updates@17.1.10:
+    resolution: {integrity: sha512-GnN6KbUzC8BpwsRYJntuumgCiagZ0+xxorvUJM9m06d7AlyK9lm3iFsAsnXF3VAZZzpD5QjZvWBwNze61Vywkw==}
     engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
     hasBin: true
 
@@ -779,7 +779,7 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  npm-check-updates@17.1.9: {}
+  npm-check-updates@17.1.10: {}
 
   p-limit@4.0.0:
     dependencies:
