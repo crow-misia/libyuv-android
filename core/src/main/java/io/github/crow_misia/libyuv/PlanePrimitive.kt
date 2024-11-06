@@ -4,28 +4,23 @@ import java.nio.ByteBuffer
 
 data class PlanePrimitive(
     override val rowStride: RowStride,
-    override val pixelStride: PixelStride,
     override val buffer: ByteBuffer,
-    override val bufferSize: Int,
+    override val pixelStride: PixelStride = PixelStride.ONE,
+    override val bufferSize: Int = buffer.capacity(),
 ) : Plane() {
-    constructor(
-        rowStride: RowStride,
-        buffer: ByteBuffer,
-    ) : this(
-        rowStride = rowStride,
-        pixelStride = PixelStride.ONE,
-        buffer = buffer,
-        bufferSize = buffer.limit(),
-    )
-
-    constructor(
-        rowStride: RowStride,
-        pixelStride: PixelStride,
-        buffer: ByteBuffer,
-    ) : this(
-        rowStride = rowStride,
-        pixelStride = pixelStride,
-        buffer = buffer,
-        bufferSize = buffer.limit(),
-    )
+    companion object {
+        @JvmStatic
+        @JvmOverloads
+        fun create(
+            rowStride: Int,
+            buffer: ByteBuffer,
+            pixelStride: Int = PixelStride.ONE.value,
+            bufferSize: Int = buffer.capacity(),
+        ) = PlanePrimitive(
+            rowStride = RowStride(rowStride),
+            pixelStride = PixelStride(pixelStride),
+            buffer = buffer,
+            bufferSize = bufferSize,
+        )
+    }
 }
