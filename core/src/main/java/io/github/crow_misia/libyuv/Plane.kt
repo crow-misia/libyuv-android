@@ -13,6 +13,10 @@ abstract class Plane {
     abstract val buffer: ByteBuffer
     abstract val bufferSize: Int
 
+    fun getRowStride(): Int = rowStride.value
+
+    fun getPixelStride(): Int = pixelStride.value
+
     fun hashDjb2(): Long = hashDjb2(5381)
 
     fun hashDjb2(seed: Long): Long {
