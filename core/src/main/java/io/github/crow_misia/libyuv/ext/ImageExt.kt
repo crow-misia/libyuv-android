@@ -308,11 +308,11 @@ object ImageExt {
     @JvmStatic
     fun Image.toNv12Buffer(): Nv12Buffer {
         val planeU = planes[1]
-        val planeV = planes[2]
-        val planeUV = when (planeU.pixelStride) {
-            1 -> planeU.asPlane(planeU.buffer.capacity() + planeV.buffer.capacity())
-            2 -> planeU.asPlane(planeU.buffer.capacity() + 1)
-            else -> error("Supported pixel strides for U and V planes are 1 and 2")
+        val planeUV = if (planeU.pixelStride == 2) {
+            val capacity = planeU.buffer.capacity()
+            planeU.asPlane(capacity + capacity % 2)
+        } else {
+            error("Supported pixel strides for U planes are 2")
         }
         return Nv12Buffer.wrap(
             planeY = planes[0].asPlane(),
@@ -330,12 +330,12 @@ object ImageExt {
      */
     @JvmStatic
     fun Image.toNv21Buffer(): Nv21Buffer {
-        val planeU = planes[1]
         val planeV = planes[2]
-        val planeVU = when (planeV.pixelStride) {
-            1 -> planeV.asPlane(planeU.buffer.capacity() + planeV.buffer.capacity())
-            2 -> planeV.asPlane(planeV.buffer.capacity() + 1)
-            else -> error("Supported pixel strides for U and V planes are 1 and 2")
+        val planeVU = if (planeV.pixelStride == 2) {
+            val capacity = planeV.buffer.capacity()
+            planeV.asPlane(capacity + capacity % 2)
+        } else {
+            error("Supported pixel strides for V planes are 2")
         }
         return Nv21Buffer.wrap(
             planeY = planes[0].asPlane(),
