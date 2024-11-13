@@ -24,6 +24,7 @@ value class PixelStride(val value: Int) {
 
     companion object {
         val ONE = PixelStride(1)
+        val TWO = PixelStride(2)
     }
 }
 

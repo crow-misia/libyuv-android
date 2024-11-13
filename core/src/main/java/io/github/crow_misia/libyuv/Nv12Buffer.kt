@@ -188,7 +188,7 @@ class Nv12Buffer private constructor(
             return Nv12Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
-                planeUV = PlanePrimitive(strideUV, bufferUV),
+                planeUV = PlanePrimitive(strideUV, bufferUV, PixelStride.TWO),
                 width = width,
                 height = height,
                 cropRect = cropRect,
@@ -205,7 +205,7 @@ class Nv12Buffer private constructor(
             return Nv12Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
-                planeUV = PlanePrimitive(strideUV, bufferUV),
+                planeUV = PlanePrimitive(strideUV, bufferUV, PixelStride.TWO),
                 width = width,
                 height = height,
                 cropRect = cropRect,
