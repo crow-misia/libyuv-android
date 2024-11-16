@@ -18,16 +18,6 @@ value class RowStride(val value: Int) {
     }
 }
 
-@JvmInline
-value class PixelStride(val value: Int) {
-    override fun toString(): String = value.toString()
-
-    companion object {
-        val ONE = PixelStride(1)
-        val TWO = PixelStride(2)
-    }
-}
-
 interface PlaneCapacities
 
 data class Plane1Capacities(
