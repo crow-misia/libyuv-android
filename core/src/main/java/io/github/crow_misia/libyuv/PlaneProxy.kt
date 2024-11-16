@@ -9,7 +9,6 @@ data class PlaneProxy @JvmOverloads constructor(
     override val bufferSize: Int = buffer.capacity(),
 ) : Plane() {
     override val rowStride: RowStride = RowStride(proxy.rowStride)
-    override val pixelStride: PixelStride = PixelStride(proxy.pixelStride)
 }
 
 fun ImageProxy.PlaneProxy.asPlane(bufferSize: Int = buffer.capacity()): Plane {

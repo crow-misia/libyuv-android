@@ -1,7 +1,5 @@
 package io.github.crow_misia.libyuv.ext
 
-import android.graphics.ImageFormat
-import android.media.Image.Plane
 import androidx.camera.core.ImageProxy
 import io.github.crow_misia.libyuv.AbgrBuffer
 import io.github.crow_misia.libyuv.Argb1555Buffer
@@ -21,8 +19,6 @@ import io.github.crow_misia.libyuv.J422Buffer
 import io.github.crow_misia.libyuv.J444Buffer
 import io.github.crow_misia.libyuv.Nv12Buffer
 import io.github.crow_misia.libyuv.Nv21Buffer
-import io.github.crow_misia.libyuv.PixelStride
-import io.github.crow_misia.libyuv.PlaneProxy
 import io.github.crow_misia.libyuv.RawBuffer
 import io.github.crow_misia.libyuv.Rgb24Buffer
 import io.github.crow_misia.libyuv.Rgb565Buffer

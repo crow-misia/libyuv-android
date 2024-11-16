@@ -9,13 +9,10 @@ import kotlin.math.min
 
 abstract class Plane {
     abstract val rowStride: RowStride
-    abstract val pixelStride: PixelStride
     abstract val buffer: ByteBuffer
     abstract val bufferSize: Int
 
     fun getRowStride(): Int = rowStride.value
-
-    fun getPixelStride(): Int = pixelStride.value
 
     fun hashDjb2(): Long = hashDjb2(5381)
 

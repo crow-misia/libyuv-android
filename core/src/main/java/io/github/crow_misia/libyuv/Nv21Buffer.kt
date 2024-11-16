@@ -188,7 +188,7 @@ class Nv21Buffer private constructor(
             return Nv21Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
-                planeVU = PlanePrimitive(strideVU, bufferVU, PixelStride.TWO),
+                planeVU = PlanePrimitive(strideVU, bufferVU),
                 width = width,
                 height = height,
                 cropRect = cropRect,
@@ -205,7 +205,7 @@ class Nv21Buffer private constructor(
             return Nv21Buffer(
                 buffer = buffer,
                 planeY = PlanePrimitive(strideY, bufferY),
-                planeVU = PlanePrimitive(strideVU, bufferVU, PixelStride.TWO),
+                planeVU = PlanePrimitive(strideVU, bufferVU),
                 width = width,
                 height = height,
                 cropRect = cropRect,

@@ -9,7 +9,6 @@ data class PlaneNative @JvmOverloads constructor(
     override val bufferSize: Int = buffer.capacity(),
 ) : Plane() {
     override val rowStride: RowStride = RowStride(plane.rowStride)
-    override val pixelStride: PixelStride = PixelStride(plane.pixelStride)
 }
 
 fun Image.Plane.asPlane(bufferSize: Int = buffer.capacity()): Plane {
