@@ -74,6 +74,13 @@ static void ScalePlaneDown2(int src_width,
     }
   }
 #endif
+#if defined(HAS_SCALEROWDOWN2_SME)
+  if (TestCpuFlag(kCpuHasSME)) {
+    ScaleRowDown2 = filtering == kFilterNone     ? ScaleRowDown2_SME
+                    : filtering == kFilterLinear ? ScaleRowDown2Linear_SME
+                                                 : ScaleRowDown2Box_SME;
+  }
+#endif
 #if defined(HAS_SCALEROWDOWN2_SSSE3)
   if (TestCpuFlag(kCpuHasSSSE3)) {
     ScaleRowDown2 =
@@ -180,9 +187,8 @@ static void ScalePlaneDown2_16(int src_width,
   }
 
 #if defined(HAS_SCALEROWDOWN2_16_NEON)
-  if (TestCpuFlag(kCpuHasNEON) && IS_ALIGNED(dst_width, 16)) {
-    ScaleRowDown2 =
-        filtering ? ScaleRowDown2Box_16_NEON : ScaleRowDown2_16_NEON;
+  if (TestCpuFlag(kCpuHasNEON) && IS_ALIGNED(dst_width, 16) && filtering) {
+    ScaleRowDown2 = ScaleRowDown2Box_16_NEON;
   }
 #endif
 #if defined(HAS_SCALEROWDOWN2_16_SSE2)

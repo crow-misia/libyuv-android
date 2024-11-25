@@ -967,6 +967,9 @@ ANY21PT(MergeUVRow_16_Any_NEON, MergeUVRow_16_NEON, uint16_t, 2, 7)
     memcpy(dst_ptr + n * BPP, vout, r * BPP);                            \
   }
 
+#ifdef HAS_COPYROW_AVX512BW
+ANY11(CopyRow_Any_AVX512BW, CopyRow_AVX512BW, 0, 1, 1, 127)
+#endif
 #ifdef HAS_COPYROW_AVX
 ANY11(CopyRow_Any_AVX, CopyRow_AVX, 0, 1, 1, 63)
 #endif
@@ -1810,14 +1813,7 @@ ANY11P16(HalfFloat1Row_Any_F16C,
          15)
 #endif
 #ifdef HAS_HALFFLOATROW_NEON
-ANY11P16(HalfFloatRow_Any_NEON, HalfFloatRow_NEON, uint16_t, uint16_t, 2, 2, 7)
-ANY11P16(HalfFloat1Row_Any_NEON,
-         HalfFloat1Row_NEON,
-         uint16_t,
-         uint16_t,
-         2,
-         2,
-         7)
+ANY11P16(HalfFloatRow_Any_NEON, HalfFloatRow_NEON, uint16_t, uint16_t, 2, 2, 15)
 #endif
 #ifdef HAS_HALFFLOATROW_MSA
 ANY11P16(HalfFloatRow_Any_MSA, HalfFloatRow_MSA, uint16_t, uint16_t, 2, 2, 31)
@@ -2193,6 +2189,12 @@ ANY12PT(SplitUVRow_16_Any_NEON, SplitUVRow_16_NEON, uint16_t, 2, 7)
 
 #ifdef HAS_SPLITRGBROW_SSSE3
 ANY13(SplitRGBRow_Any_SSSE3, SplitRGBRow_SSSE3, 3, 15)
+#endif
+#ifdef HAS_SPLITRGBROW_SSE41
+ANY13(SplitRGBRow_Any_SSE41, SplitRGBRow_SSE41, 3, 15)
+#endif
+#ifdef HAS_SPLITRGBROW_AVX2
+ANY13(SplitRGBRow_Any_AVX2, SplitRGBRow_AVX2, 3, 31)
 #endif
 #ifdef HAS_SPLITRGBROW_NEON
 ANY13(SplitRGBRow_Any_NEON, SplitRGBRow_NEON, 3, 15)

@@ -62,6 +62,11 @@ void CopyPlane(const uint8_t* src_y,
     CopyRow = IS_ALIGNED(width, 64) ? CopyRow_AVX : CopyRow_Any_AVX;
   }
 #endif
+#if defined(HAS_COPYROW_AVX512BW)
+  if (TestCpuFlag(kCpuHasAVX512BW)) {
+    CopyRow = IS_ALIGNED(width, 128) ? CopyRow_AVX512BW : CopyRow_Any_AVX512BW;
+  }
+#endif
 #if defined(HAS_COPYROW_ERMS)
   if (TestCpuFlag(kCpuHasERMS)) {
     CopyRow = CopyRow_ERMS;
@@ -877,6 +882,11 @@ void ConvertToLSBPlane_16(const uint16_t* src_y,
     }
   }
 #endif
+#if defined(HAS_DIVIDEROW_16_SVE2)
+  if (TestCpuFlag(kCpuHasSVE2)) {
+    DivideRow = DivideRow_16_SVE2;
+  }
+#endif
 
   for (y = 0; y < height; ++y) {
     DivideRow(src_y, dst_y, scale, width);
@@ -1277,6 +1287,22 @@ void SplitRGBPlane(const uint8_t* src_rgb,
     SplitRGBRow = SplitRGBRow_Any_SSSE3;
     if (IS_ALIGNED(width, 16)) {
       SplitRGBRow = SplitRGBRow_SSSE3;
+    }
+  }
+#endif
+#if defined(HAS_SPLITRGBROW_SSE41)
+  if (TestCpuFlag(kCpuHasSSE41)) {
+    SplitRGBRow = SplitRGBRow_Any_SSE41;
+    if (IS_ALIGNED(width, 16)) {
+      SplitRGBRow = SplitRGBRow_SSE41;
+    }
+  }
+#endif
+#if defined(HAS_SPLITRGBROW_AVX2)
+  if (TestCpuFlag(kCpuHasAVX2)) {
+    SplitRGBRow = SplitRGBRow_Any_AVX2;
+    if (IS_ALIGNED(width, 32)) {
+      SplitRGBRow = SplitRGBRow_AVX2;
     }
   }
 #endif
@@ -5182,12 +5208,24 @@ int HalfFloatPlane(const uint16_t* src_y,
   }
 #endif
 #if defined(HAS_HALFFLOATROW_NEON)
-  if (TestCpuFlag(kCpuHasNEON)) {
-    HalfFloatRow =
-        (scale == 1.0f) ? HalfFloat1Row_Any_NEON : HalfFloatRow_Any_NEON;
-    if (IS_ALIGNED(width, 8)) {
-      HalfFloatRow = (scale == 1.0f) ? HalfFloat1Row_NEON : HalfFloatRow_NEON;
+  if (TestCpuFlag(kCpuHasNEON)
+#if defined(__arm__)
+      // When scale is 1/65535 the scale * 2^-112 used to convert is a denormal.
+      // But when Neon vmul is asked to multiply a normal float by that
+      // denormal scale, even though the result would have been normal, it
+      // flushes to zero.  The scalar version of vmul supports denormals.
+      && scale >= 1.0f / 4096.0f
+#endif
+  ) {
+    HalfFloatRow = HalfFloatRow_Any_NEON;
+    if (IS_ALIGNED(width, 16)) {
+      HalfFloatRow = HalfFloatRow_NEON;
     }
+  }
+#endif
+#if defined(HAS_HALFFLOATROW_SVE2)
+  if (TestCpuFlag(kCpuHasSVE2)) {
+    HalfFloatRow = scale == 1.0f ? HalfFloat1Row_SVE2 : HalfFloatRow_SVE2;
   }
 #endif
 #if defined(HAS_HALFFLOATROW_MSA)

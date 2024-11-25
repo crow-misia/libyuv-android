@@ -18,6 +18,6 @@ pushd $CURDIR/deps/libyuv
   tar xf $CURDIR/deps/libyuv.${LIBYUV_VERSION}.tar.gz
 popd
 pushd $CURDIR/deps/libyuv
-  patch -u -p1 < $CURDIR/script/disable_test_and_jpeg.patch
-  patch -u -p1 < $CURDIR/script/disable_dotprod.patch
+  patch -u -p1 --no-backup-if-mismatch < $CURDIR/script/disable_test_and_jpeg.patch
+  patch -u -p1 --no-backup-if-mismatch < $CURDIR/script/disable_dotprod.patch
 popd
