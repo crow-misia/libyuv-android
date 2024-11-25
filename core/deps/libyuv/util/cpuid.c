@@ -171,6 +171,7 @@ int main(int argc, const char* argv[]) {
     int has_avx = TestCpuFlag(kCpuHasAVX);
     int has_avx2 = TestCpuFlag(kCpuHasAVX2);
     int has_erms = TestCpuFlag(kCpuHasERMS);
+    int has_fsmr = TestCpuFlag(kCpuHasFSMR);
     int has_fma3 = TestCpuFlag(kCpuHasFMA3);
     int has_f16c = TestCpuFlag(kCpuHasF16C);
     int has_avx512bw = TestCpuFlag(kCpuHasAVX512BW);
@@ -191,6 +192,7 @@ int main(int argc, const char* argv[]) {
     printf("Has AVX 0x%x\n", has_avx);
     printf("Has AVX2 0x%x\n", has_avx2);
     printf("Has ERMS 0x%x\n", has_erms);
+    printf("Has FSMR 0x%x\n", has_fsmr);
     printf("Has FMA3 0x%x\n", has_fma3);
     printf("Has F16C 0x%x\n", has_f16c);
     printf("Has AVX512BW 0x%x\n", has_avx512bw);
