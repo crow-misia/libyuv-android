@@ -4,7 +4,7 @@
 		"ncu": "npm-check-updates -u"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^19.6.0",
+		"@commitlint/cli": "^19.6.1",
 		"@commitlint/config-conventional": "^19.6.0",
 		"husky": "^9.1.7",
 		"npm-check-updates": "^17.1.11"
