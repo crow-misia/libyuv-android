@@ -1,10 +1,10 @@
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.kotlin.android)
     id("signing")
     id("maven-publish")
@@ -21,7 +21,6 @@ object Maven {
     const val licenseName = "The Apache Software License, Version 2.0"
     const val licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0.txt"
     const val licenseDist = "repo"
-    val licenses = arrayOf("Apache-2.0")
 }
 
 group = Maven.groupId
@@ -117,29 +116,12 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.truth)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.truth)
-
 }
 
-val dokkaJavadoc by tasks.getting(DokkaTask::class) {
-    dokkaSourceSets.named("main") {
-        noAndroidSdkLink = false
-    }
-    dependencies {
-        plugins(libs.dokka.javadoc.plugin)
-    }
-    inputs.dir("src/main/java")
-    outputDirectory = layout.buildDirectory.dir("javadoc").get().asFile
-}
-
-val javadocJar by tasks.registering(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles JavaDoc JAR"
-    archiveClassifier = "javadoc"
-    from(dokkaJavadoc.outputDirectory)
-}
-
-artifacts {
-    archives(javadocJar)
+val dokkaJavadocJar by tasks.registering(Jar::class) {
+    description = "A Javadoc JAR containing Dokka Javadoc"
+    from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
 }
 
 publishing {
@@ -158,6 +140,8 @@ publishing {
                 |    Artifact: $artifactId
                 |    Version: $version
             """.trimMargin())
+
+            artifact(dokkaJavadocJar)
 
             pom {
                 name = Maven.name
@@ -215,5 +199,5 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     autoCorrect = true
-    config.setFrom(rootDir.resolve("config/detekt.yml"))
+    config.from(rootDir.resolve("config/detekt.yml"))
 }

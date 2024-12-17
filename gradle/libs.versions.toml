@@ -6,17 +6,17 @@ android-application = { id = "com.android.application", version.ref = "android-g
 
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.7" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
 [versions]
 
 android-gradle-plugin = "8.7.3"
-
-kotlin = "2.1.0"
 
 android-tools-desugar_jdk_libs = "2.1.3"
 
@@ -36,19 +36,13 @@ androidx-test-runner = "1.6.2"
 
 androidx-test-rules = "1.6.1"
 
-truth = "1.4.4"
-
 dokka = "2.0.0"
 
+kotlin = "2.1.0"
+
+truth = "1.4.4"
+
 [libraries]
-
-kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
-
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
-
-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar_jdk_libs" }
-
-dokka-javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref = "dokka" }
 
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version = "1.9.1" }
 
@@ -67,5 +61,11 @@ androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espres
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
+
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar_jdk_libs" }
+
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
 
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
