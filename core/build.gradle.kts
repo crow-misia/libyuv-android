@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,25 +9,20 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.maven.publish)
     id("signing")
-    id("maven-publish")
 }
 
 object Maven {
-    const val groupId = "io.github.crow-misia.libyuv"
-    const val artifactId = "libyuv-android"
-    const val name = "libyuv-android"
-    const val desc = "LibYuv for Android"
-    const val version = "0.40.0"
-    const val siteUrl = "https://github.com/crow-misia/libyuv-android"
-    const val gitUrl = "https://github.com/crow-misia/libyuv-android.git"
-    const val licenseName = "The Apache Software License, Version 2.0"
-    const val licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-    const val licenseDist = "repo"
+    const val GROUP_ID = "io.github.crow-misia.libyuv"
+    const val ARTIFACT_ID = "libyuv-android"
+    const val DESCRIPTION = "LibYuv for Android"
+    const val VERSION = "0.40.0"
+    const val GITHUB_REPOSITORY = "crow-misia/libyuv-android"
 }
 
-group = Maven.groupId
-version = Maven.version
+group = Maven.GROUP_ID
+version = Maven.VERSION
 
 android {
     namespace = "io.github.crow_misia.libyuv"
@@ -90,12 +88,6 @@ android {
             excludes.add("/META-INF/LICENSE*")
         }
     }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
 kotlin {
@@ -118,80 +110,46 @@ dependencies {
     androidTestImplementation(libs.truth)
 }
 
-val dokkaJavadocJar by tasks.registering(Jar::class) {
-    description = "A Javadoc JAR containing Dokka Javadoc"
-    from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
-
-publishing {
-    publications {
-        register<MavenPublication>("maven") {
-            afterEvaluate {
-                from(components.named("release").get())
-            }
-
-            groupId = Maven.groupId
-            artifactId = Maven.artifactId
-
-            println("""
-                |Creating maven publication
-                |    Group: $groupId
-                |    Artifact: $artifactId
-                |    Version: $version
-            """.trimMargin())
-
-            artifact(dokkaJavadocJar)
-
-            pom {
-                name = Maven.name
-                description = Maven.desc
-                url = Maven.siteUrl
-
-                scm {
-                    val scmUrl = "scm:git:${Maven.gitUrl}"
-                    connection = scmUrl
-                    developerConnection = scmUrl
-                    url = Maven.gitUrl
-                    tag = "HEAD"
-                }
-
-                developers {
-                    developer {
-                        id = "crow-misia"
-                        name = "Zenichi Amano"
-                        email = "crow.misia@gmail.com"
-                        roles = listOf("Project-Administrator", "Developer")
-                        timezone = "+9"
-                    }
-                }
-
-                licenses {
-                    license {
-                        name = Maven.licenseName
-                        url = Maven.licenseUrl
-                        distribution = Maven.licenseDist
-                    }
-                }
-            }
-        }
-    }
-    repositories {
-        maven {
-            val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
-            url = if (Maven.version.endsWith("-SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-            credentials {
-                username = project.findProperty("sona.user") as String? ?: providers.environmentVariable("SONA_USER").orNull
-                password = project.findProperty("sona.password") as String? ?: providers.environmentVariable("SONA_PASSWORD").orNull
-            }
-        }
-    }
-}
-
 signing {
     useGpgCmd()
     sign(publishing.publications)
+}
+
+mavenPublishing {
+    configure(AndroidSingleVariantLibrary(
+        variant = "release",
+        publishJavadocJar = true,
+        sourcesJar = true,
+    ))
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    coordinates(Maven.GROUP_ID, Maven.ARTIFACT_ID, Maven.VERSION)
+
+    pom {
+        name = Maven.ARTIFACT_ID
+        description = Maven.DESCRIPTION
+        url = "https://github.com/${Maven.GITHUB_REPOSITORY}/"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "crow-misia"
+                name = "Zenichi Amano"
+                email = "crow.misia@gmail.com"
+            }
+        }
+        scm {
+            url = "https://github.com/${Maven.GITHUB_REPOSITORY}/"
+            connection = "scm:git:git://github.com/${Maven.GITHUB_REPOSITORY}.git"
+            developerConnection = "scm:git:ssh://git@github.com/${Maven.GITHUB_REPOSITORY}.git"
+        }
+    }
 }
 
 detekt {

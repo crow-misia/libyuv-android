@@ -14,6 +14,8 @@ dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+
 [versions]
 
 android-gradle-plugin = "8.7.3"
@@ -39,6 +41,8 @@ androidx-test-rules = "1.6.1"
 dokka = "2.0.0"
 
 kotlin = "2.1.0"
+
+maven-publish = "0.30.0"
 
 truth = "1.4.4"
 
