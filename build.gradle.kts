@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.dokka.javadoc) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.maven.publish) apply false
 }
