@@ -12,8 +12,5 @@ push = false
 
 [bumpver.file_patterns]
 "core/build.gradle.kts" = [
-    "    const val version = \"{pep440_version}\"",
-]
-"bumpver.toml" = [
-    'current_version = "{version}"',
+    "    const val VERSION = \"{pep440_version}\"",
 ]
