@@ -1,9 +1,9 @@
 libyuv-anrdroid
 =================
 
-[![Android CI](https://github.com/crow-misia/libyuv-android/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/crow-misia/libyuv-android/actions/workflows/android.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.crow-misia.libyuv/libyuv-android.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.crow-misia.libyuv%22%20AND%20a:%22libyuv-android%22)
-[![License](https://img.shields.io/badge/license-Apache%202-green)](LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libyuv-android/android.yml)](https://github.com/crow-misia/libyuv-android/actions/workflows/android.yml)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libyuv/libyuv-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libyuv/libyuv-android)
+[![GitHub License](https://img.shields.io/github/license/crow-misia/libyuv-android)](LICENSE)
 
 ## Get Started
 
@@ -11,7 +11,7 @@ libyuv-anrdroid
 
 Add dependencies (you can also add other modules that you need):
 
-`${latest.version}` is [![Maven Central](https://img.shields.io/maven-central/v/io.github.crow-misia.libyuv/libyuv-android.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.crow-misia.libyuv%22%20AND%20a:%22libyuv-android%22)
+`${latest.version}` is [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libyuv/libyuv-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libyuv/libyuv-android)
 
 ```groovy
 dependencies {
