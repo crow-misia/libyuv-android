@@ -1,8 +1,8 @@
 name: Assign author
 
 on:
-  pull_request:
-    types: [opened]
+  pull_request_target:
+    types: [opened, reopened]
 
 permissions:
   pull-requests: write
@@ -13,4 +13,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign author to PR
-        uses: technote-space/assign-author@v1
+        uses: toshimaru/auto-author-assign@7e15cd70c245ad136377c3fab3479815df10d844 # v2.1.1
