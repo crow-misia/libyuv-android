@@ -17,7 +17,7 @@ interface BufferY<BUFFER : BufferY<BUFFER>> : Buffer {
 
     fun copyAlpha(dst: BufferFirstAlpha) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerARGBCopyYToAlpha(
+        Yuv.planarARGBCopyYToAlpha(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,

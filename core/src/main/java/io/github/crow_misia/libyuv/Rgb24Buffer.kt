@@ -60,7 +60,7 @@ class Rgb24Buffer private constructor(
 
     fun convertTo(dst: RawBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerRAWToRGB24(
+        Yuv.planarRAWToRGB24(
             srcRAW = plane.buffer, srcStrideRAW = plane.rowStride, srcOffsetRAW = offset(0),
             dstRGB24 = dst.plane.buffer, dstStrideRGB24 = dst.plane.rowStride, dstOffsetRGB24 = dst.offset(0),
             width = fixedWidth, height = fixedHeight,

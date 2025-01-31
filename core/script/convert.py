@@ -141,9 +141,9 @@ def processScalePart():
       convert_code += '    )\n'
   return convert_code
 
-def processPlanerPart():
+def processPlanarPart():
   convert_code = 'planar_functions.cpp\n'
-  with open('./planer.csv', 'r', encoding='utf-8') as convert_file:
+  with open('./planar.csv', 'r', encoding='utf-8') as convert_file:
     f = csv.reader(convert_file, escapechar='\\',delimiter=',', doublequote=True, quotechar='"', skipinitialspace=True)
     next(f)
     for row in f:
@@ -155,15 +155,15 @@ def processPlanerPart():
       if isMirror:
         dst_planes = src_planes
         comment = f"Mirror {src_format}"
-        function_name = f"planer{src_format}Mirror"
+        function_name = f"planar{src_format}Mirror"
       elif src_format == dst_format:
         dst_planes = plane_num_mapping[dst_format]
         comment = f"Copy {src_format} to {dst_format}"
-        function_name = f"planer{src_format}Copy"
+        function_name = f"planar{src_format}Copy"
       else:
         dst_planes = plane_num_mapping[dst_format]
         comment = f"Convert {src_format} to {dst_format}"
-        function_name = f"planer{src_format}To{dst_format}"
+        function_name = f"planar{src_format}To{dst_format}"
 
       if row[2] != '':
         function_name = row[2]
@@ -191,6 +191,6 @@ with open('../src/main/java/io/github/crow_misia/libyuv/Yuv.kt', 'w', encoding='
     'convert_code': processConvertPart(),
     'rotate_code': processRotatePart(),
     'scale_code': processScalePart(),
-    'planar_code': processPlanerPart(),
+    'planar_code': processPlanarPart(),
   }
   print(kotlin_template.safe_substitute(dict), file=kotlin_file)

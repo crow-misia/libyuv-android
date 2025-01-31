@@ -46,16 +46,16 @@ object Yuv {
 
     // ${planar_code}
     /** Set a plane of data to a 32 bit value. */
-    @JvmName("planerSetPlane")
-    external fun planerSetPlane(
+    @JvmName("planarSetPlane")
+    external fun planarSetPlane(
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
         value: Int,
     )
 
     /** Draw a rectangle into I420 */
-    @JvmName("planerI420Rect")
-    external fun planerI420Rect(
+    @JvmName("planarI420Rect")
+    external fun planarI420Rect(
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
         dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
@@ -65,8 +65,8 @@ object Yuv {
     )
 
     /** Draw a rectangle into ARGB */
-    @JvmName("planerARGBRect")
-    external fun planerARGBRect(
+    @JvmName("planarARGBRect")
+    external fun planarARGBRect(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
@@ -74,24 +74,24 @@ object Yuv {
     )
 
     /** Make a rectangle of ARGB gray scale */
-    @JvmName("planerARGBGray")
-    external fun planerARGBGray(
+    @JvmName("planarARGBGray")
+    external fun planarARGBGray(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Make a rectangle of ARGB Sepia tone */
-    @JvmName("planerARGBSepia")
-    external fun planerARGBSepia(
+    @JvmName("planarARGBSepia")
+    external fun planarARGBSepia(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Apply a matrix rotation to each ARGB pixel */
-    @JvmName("planerARGBColorMatrix")
-    external fun planerARGBColorMatrix(
+    @JvmName("planarARGBColorMatrix")
+    external fun planarARGBColorMatrix(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         matrixARGB: ByteArray,
@@ -99,8 +99,8 @@ object Yuv {
     )
 
     /** Apply a color table each ARGB pixel */
-    @JvmName("planerARGBColorTable")
-    external fun planerARGBColorTable(
+    @JvmName("planarARGBColorTable")
+    external fun planarARGBColorTable(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
@@ -108,8 +108,8 @@ object Yuv {
     )
 
     /** Apply a color table each ARGB pixel but preserve destination alpha */
-    @JvmName("planerRGBColorTable")
-    external fun planerRGBColorTable(
+    @JvmName("planarRGBColorTable")
+    external fun planarRGBColorTable(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
@@ -117,8 +117,8 @@ object Yuv {
     )
 
     /** Apply a luma/color table each ARGB pixel but preserve destination alpha */
-    @JvmName("planerARGBLumaColorTable")
-    external fun planerARGBLumaColorTable(
+    @JvmName("planarARGBLumaColorTable")
+    external fun planarARGBLumaColorTable(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         luma: ByteArray,
@@ -126,8 +126,8 @@ object Yuv {
     )
 
     /** Apply a 3 term polynomial to ARGB values */
-    @JvmName("planerARGBPolynomial")
-    external fun planerARGBPolynomial(
+    @JvmName("planarARGBPolynomial")
+    external fun planarARGBPolynomial(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         poly: FloatArray,
@@ -135,8 +135,8 @@ object Yuv {
     )
 
     /** Quantize a rectangle of ARGB. Alpha unaffected */
-    @JvmName("planerARGBQuantize")
-    external fun planerARGBQuantize(
+    @JvmName("planarARGBQuantize")
+    external fun planarARGBQuantize(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         scale: Int,
         intervalSize: Int, intervalOffset: Int,
@@ -145,8 +145,8 @@ object Yuv {
     )
 
     /** Alpha Blend ARGB images and store to destination */
-    @JvmName("planerARGBBlend")
-    external fun planerARGBBlend(
+    @JvmName("planarARGBBlend")
+    external fun planarARGBBlend(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -154,8 +154,8 @@ object Yuv {
     )
 
     /** Alpha Blend YUV images and store to destination */
-    @JvmName("planerI420Blend")
-    external fun planerI420Blend(
+    @JvmName("planarI420Blend")
+    external fun planarI420Blend(
         srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
         srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
         srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,
@@ -170,8 +170,8 @@ object Yuv {
     )
 
     /** Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255 */
-    @JvmName("planerARGBMultiply")
-    external fun planerARGBMultiply(
+    @JvmName("planarARGBMultiply")
+    external fun planarARGBMultiply(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -179,8 +179,8 @@ object Yuv {
     )
 
     /** Add ARGB image with ARGB image. Saturates to 255 */
-    @JvmName("planerARGBAdd")
-    external fun planerARGBAdd(
+    @JvmName("planarARGBAdd")
+    external fun planarARGBAdd(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -188,8 +188,8 @@ object Yuv {
     )
 
     /** Subtract ARGB image with ARGB image. Saturates to 0 */
-    @JvmName("planerARGBSubtract")
-    external fun planerARGBSubtract(
+    @JvmName("planarARGBSubtract")
+    external fun planarARGBSubtract(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -197,8 +197,8 @@ object Yuv {
     )
 
     /** Blur ARGB image */
-    @JvmName("planerARGBBlur")
-    external fun planerARGBBlur(
+    @JvmName("planarARGBBlur")
+    external fun planarARGBBlur(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
@@ -206,8 +206,8 @@ object Yuv {
     )
 
     /** Multiply ARGB image by ARGB value */
-    @JvmName("planerARGBShade")
-    external fun planerARGBShade(
+    @JvmName("planarARGBShade")
+    external fun planarARGBShade(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
@@ -215,8 +215,8 @@ object Yuv {
     )
 
     /** Interpolate between two ARGB images using specified amount of interpolation Internally calls InterpolatePlane with width * 4 (bpp). */
-    @JvmName("planerARGBInterpolate")
-    external fun planerARGBInterpolate(
+    @JvmName("planarARGBInterpolate")
+    external fun planarARGBInterpolate(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -225,8 +225,8 @@ object Yuv {
     )
 
     /** Interpolate between two YUV images using specified amount of interpolation Internally calls InterpolatePlane on each plane where the U and V planes are half width and half height */
-    @JvmName("planerI420Interpolate")
-    external fun planerI420Interpolate(
+    @JvmName("planarI420Interpolate")
+    external fun planarI420Interpolate(
         srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
         srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
         srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,

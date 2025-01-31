@@ -19,7 +19,7 @@ interface Buffer32<BUFFER : Buffer32<BUFFER>> : Buffer {
 
     fun mirrorTo(dst: BUFFER) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerARGBMirror(
+        Yuv.planarARGBMirror(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,

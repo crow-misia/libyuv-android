@@ -1,5 +1,5 @@
 #include <libyuv.h>
-#include "planer_functions.h"
+#include "planar_functions.h"
 
 using namespace libyuv;
 using namespace libyuv::jniutil;
@@ -13,7 +13,7 @@ extern "C" {
 // Convert8To16Plane
 
 // Set a plane of data to a 32 bit value.
-JNI_DEFINE_METHOD(void, planerSetPlane,
+JNI_DEFINE_METHOD(void, planarSetPlane,
                   jobject j_dst_y, const jint j_dst_stride_y, const jint j_dst_offset_y,
                   const jint width, const jint height,
                   const jint value) {
@@ -154,7 +154,7 @@ PLANES_1_TO_1(RGB24Mirror, rgb24, rgb24);
 PLANES_1_TO_1(RAWToRGB24, raw, rgb24);
 
 // Draw a rectangle into I420.
-JNI_DEFINE_METHOD(void, planerI420Rect,
+JNI_DEFINE_METHOD(void, planarI420Rect,
                   jobject j_dst_y, const jint j_dst_stride_y, const jint j_dst_offset_y,
                   jobject j_dst_u, const jint j_dst_stride_u, const jint j_dst_offset_u,
                   jobject j_dst_v, const jint j_dst_stride_v, const jint j_dst_offset_v,
@@ -169,7 +169,7 @@ JNI_DEFINE_METHOD(void, planerI420Rect,
 }
 
 // Draw a rectangle into ARGB.
-JNI_DEFINE_METHOD(void, planerARGBRect,
+JNI_DEFINE_METHOD(void, planarARGBRect,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint x, const jint y,
                   const jint width, const jint height,
@@ -183,7 +183,7 @@ JNI_DEFINE_METHOD(void, planerARGBRect,
 PLANES_1_TO_1(ARGBGrayTo, argb, argb);
 
 // Make a rectangle of ARGB gray scale.
-JNI_DEFINE_METHOD(void, planerARGBGray,
+JNI_DEFINE_METHOD(void, planarARGBGray,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint x, const jint y,
                   const jint width, const jint height) {
@@ -193,7 +193,7 @@ JNI_DEFINE_METHOD(void, planerARGBGray,
 }
 
 // Make a rectangle of ARGB Sepia tone.
-JNI_DEFINE_METHOD(void, planerARGBSepia,
+JNI_DEFINE_METHOD(void, planarARGBSepia,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint x, const jint y,
                   const jint width, const jint height) {
@@ -203,7 +203,7 @@ JNI_DEFINE_METHOD(void, planerARGBSepia,
 }
 
 // Apply a matrix rotation to each ARGB pixel.
-JNI_DEFINE_METHOD(void, planerARGBColorMatrix,
+JNI_DEFINE_METHOD(void, planarARGBColorMatrix,
                   const jobject j_src_argb, const jint j_src_stride_argb, const jint j_src_offset_argb,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jbyteArray j_matrix_argb,
@@ -218,7 +218,7 @@ JNI_DEFINE_METHOD(void, planerARGBColorMatrix,
 }
 
 // Apply a color table each ARGB pixel.
-JNI_DEFINE_METHOD(void, planerARGBColorTable,
+JNI_DEFINE_METHOD(void, planarARGBColorTable,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jbyteArray j_table_argb,
                   const jint x, const jint y,
@@ -232,7 +232,7 @@ JNI_DEFINE_METHOD(void, planerARGBColorTable,
 }
 
 // Apply a color table each ARGB pixel but preserve destination alpha.
-JNI_DEFINE_METHOD(void, planerRGBColorTable,
+JNI_DEFINE_METHOD(void, planarRGBColorTable,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jbyteArray j_table_argb,
                   const jint x, const jint y,
@@ -246,7 +246,7 @@ JNI_DEFINE_METHOD(void, planerRGBColorTable,
 }
 
 // Apply a luma/color table each ARGB pixel but preserve destination alpha.
-JNI_DEFINE_METHOD(void, planerARGBLumaColorTable,
+JNI_DEFINE_METHOD(void, planarARGBLumaColorTable,
                   const jobject j_src_argb, const jint j_src_stride_argb, const jint j_src_offset_argb,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jbyteArray j_luma,
@@ -262,7 +262,7 @@ JNI_DEFINE_METHOD(void, planerARGBLumaColorTable,
 }
 
 // Apply a 3 term polynomial to ARGB values.
-JNI_DEFINE_METHOD(void, planerARGBPolynomial,
+JNI_DEFINE_METHOD(void, planarARGBPolynomial,
                   const jobject j_src_argb, const jint j_src_stride_argb, const jint j_src_offset_argb,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jfloatArray j_poly,
@@ -286,7 +286,7 @@ JNI_DEFINE_METHOD(void, planerARGBPolynomial,
 // ByteToFloat
 
 // Quantize a rectangle of ARGB. Alpha unaffected.
-JNI_DEFINE_METHOD(void, planerARGBQuantize,
+JNI_DEFINE_METHOD(void, planarARGBQuantize,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint scale,
                   const jint interval_size, const jint interval_offset,
@@ -317,7 +317,7 @@ PLANES_1_TO_1(ARGBCopyYToAlpha, y, argb);
 // GetARGBBlend
 
 // Alpha Blend ARGB images and store to destination.
-JNI_DEFINE_METHOD(void, planerARGBBlend,
+JNI_DEFINE_METHOD(void, planarARGBBlend,
                   jobject j_src_argb0, const jint j_src_stride_argb0, const jint j_src_offset_argb0,
                   jobject j_src_argb1, const jint j_src_stride_argb1, const jint j_src_offset_argb1,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
@@ -336,7 +336,7 @@ JNI_DEFINE_METHOD(void, planerARGBBlend,
 // BlendPlane
 
 // Alpha Blend YUV images and store to destination.
-JNI_DEFINE_METHOD(void, planerI420Blend,
+JNI_DEFINE_METHOD(void, planarI420Blend,
                   jobject j_src_y0, const jint j_src_stride_y0, const jint j_src_offset_y0,
                   jobject j_src_u0, const jint j_src_stride_u0, const jint j_src_offset_u0,
                   jobject j_src_v0, const jint j_src_stride_v0, const jint j_src_offset_v0,
@@ -373,7 +373,7 @@ JNI_DEFINE_METHOD(void, planerI420Blend,
 }
 
 // Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255.
-JNI_DEFINE_METHOD(void, planerARGBMultiply,
+JNI_DEFINE_METHOD(void, planarARGBMultiply,
                   jobject j_src_argb0, const jint j_src_stride_argb0, const jint j_src_offset_argb0,
                   jobject j_src_argb1, const jint j_src_stride_argb1,  const jint j_src_offset_argb1,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
@@ -389,7 +389,7 @@ JNI_DEFINE_METHOD(void, planerARGBMultiply,
 }
 
 // Add ARGB image with ARGB image. Saturates to 255.
-JNI_DEFINE_METHOD(void, planerARGBAdd,
+JNI_DEFINE_METHOD(void, planarARGBAdd,
                   jobject j_src_argb0, const jint j_src_stride_argb0, const jint j_src_offset_argb0,
                   jobject j_src_argb1, const jint j_src_stride_argb1, const jint j_src_offset_argb1,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
@@ -405,7 +405,7 @@ JNI_DEFINE_METHOD(void, planerARGBAdd,
 }
 
 // Subtract ARGB image (argb1) from ARGB image (argb0). Saturates to 0.
-JNI_DEFINE_METHOD(void, planerARGBSubtract,
+JNI_DEFINE_METHOD(void, planarARGBSubtract,
                   jobject j_src_argb0, const jint j_src_stride_argb0, const jint j_src_offset_argb0,
                   jobject j_src_argb1, const jint j_src_stride_argb1, const jint j_src_offset_argb1,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
@@ -433,7 +433,7 @@ PLANES_1_TO_1(ARGBAttenuate, argb, argb);
 PLANES_1_TO_1(ARGBUnattenuate, argb, argb);
 
 // Blur ARGB image.
-JNI_DEFINE_METHOD(void, planerARGBBlur,
+JNI_DEFINE_METHOD(void, planarARGBBlur,
                   jobject j_src_argb, const jint j_src_stride_argb, const jint j_src_offset_argb,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint width, const jint height,
@@ -456,7 +456,7 @@ JNI_DEFINE_METHOD(void, planerARGBBlur,
 // GaussPlane_F32
 
 // Multiply ARGB image by ARGB value.
-JNI_DEFINE_METHOD(void, planerARGBShade,
+JNI_DEFINE_METHOD(void, planarARGBShade,
                   jobject j_src_argb, const jint j_src_stride_argb, const jint j_src_offset_argb,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
                   const jint width, const jint height,
@@ -476,7 +476,7 @@ JNI_DEFINE_METHOD(void, planerARGBShade,
 
 // Interpolate between two ARGB images using specified amount of interpolation
 // Internally calls InterpolatePlane with width * 4 (bpp).
-JNI_DEFINE_METHOD(void, planerARGBInterpolate,
+JNI_DEFINE_METHOD(void, planarARGBInterpolate,
                   jobject j_src_argb0, const jint j_src_stride_argb0, const jint j_src_offset_argb0,
                   jobject j_src_argb1, const jint j_src_stride_argb1, const jint j_src_offset_argb1,
                   jobject j_dst_argb, const jint j_dst_stride_argb, const jint j_dst_offset_argb,
@@ -496,7 +496,7 @@ JNI_DEFINE_METHOD(void, planerARGBInterpolate,
 // Interpolate between two YUV images using specified amount of interpolation
 // Internally calls InterpolatePlane on each plane where the U and V planes
 // are half width and half height.
-JNI_DEFINE_METHOD(void, planerI420Interpolate,
+JNI_DEFINE_METHOD(void, planarI420Interpolate,
                   jobject j_src_y0, const jint j_src_stride_y0, const jint j_src_offset_y0,
                   jobject j_src_u0, const jint j_src_stride_u0, const jint j_src_offset_u0,
                   jobject j_src_v0, const jint j_src_stride_v0, const jint j_src_offset_v0,

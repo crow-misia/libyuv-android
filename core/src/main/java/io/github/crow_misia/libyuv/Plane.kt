@@ -61,7 +61,7 @@ abstract class Plane {
     }
 
     fun setValue(rect: Rect, value: Int) {
-        Yuv.planerSetPlane(
+        Yuv.planarSetPlane(
             dstY = buffer, dstStrideY = rowStride, dstOffsetY = rect.top * rowStride.value + rect.left,
             width = rect.width(), height = rect.height(),
             value = value,
