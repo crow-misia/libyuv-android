@@ -14,7 +14,7 @@ LOCAL_SRC_FILES := \
     jniload.cpp \
     jniutil.cpp \
     memcopy.cpp \
-    planer_functions.cpp \
+    planar_functions.cpp \
     rotate.cpp \
     rotate_argb.cpp \
     scale.cpp \

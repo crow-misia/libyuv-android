@@ -1534,8 +1534,8 @@ object Yuv {
     // planar_functions.cpp
 
     /** Copy I422 to I422 */
-    @JvmName("planerI422Copy")
-    external fun planerI422Copy(
+    @JvmName("planarI422Copy")
+    external fun planarI422Copy(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1546,8 +1546,8 @@ object Yuv {
     )
 
     /** Copy I444 to I444 */
-    @JvmName("planerI444Copy")
-    external fun planerI444Copy(
+    @JvmName("planarI444Copy")
+    external fun planarI444Copy(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1558,8 +1558,8 @@ object Yuv {
     )
 
     /** Copy NV12 to NV12 */
-    @JvmName("planerNV12Copy")
-    external fun planerNV12Copy(
+    @JvmName("planarNV12Copy")
+    external fun planarNV12Copy(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
@@ -1568,8 +1568,8 @@ object Yuv {
     )
 
     /** Convert YUY2 to I422 */
-    @JvmName("planerYUY2ToI422")
-    external fun planerYUY2ToI422(
+    @JvmName("planarYUY2ToI422")
+    external fun planarYUY2ToI422(
         srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
@@ -1578,8 +1578,8 @@ object Yuv {
     )
 
     /** Convert UYVY to I422 */
-    @JvmName("planerUYVYToI422")
-    external fun planerUYVYToI422(
+    @JvmName("planarUYVYToI422")
+    external fun planarUYVYToI422(
         srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
@@ -1588,8 +1588,8 @@ object Yuv {
     )
 
     /** Convert YUY2 to NV12 */
-    @JvmName("planerYUY2ToNV12")
-    external fun planerYUY2ToNV12(
+    @JvmName("planarYUY2ToNV12")
+    external fun planarYUY2ToNV12(
         srcYUY2: ByteBuffer, srcStrideYUY2: RowStride, srcOffsetYUY2: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
@@ -1597,8 +1597,8 @@ object Yuv {
     )
 
     /** Convert UYVY to NV12 */
-    @JvmName("planerUYVYToNV12")
-    external fun planerUYVYToNV12(
+    @JvmName("planarUYVYToNV12")
+    external fun planarUYVYToNV12(
         srcUYVY: ByteBuffer, srcStrideUYVY: RowStride, srcOffsetUYVY: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstUV: ByteBuffer, dstStrideUV: RowStride, dstOffsetUV: Int,
@@ -1606,8 +1606,8 @@ object Yuv {
     )
 
     /** Convert NV21 to NV12 */
-    @JvmName("planerNV21ToNV12")
-    external fun planerNV21ToNV12(
+    @JvmName("planarNV21ToNV12")
+    external fun planarNV21ToNV12(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcVU: ByteBuffer, srcStrideVU: RowStride, srcOffsetVU: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
@@ -1616,8 +1616,8 @@ object Yuv {
     )
 
     /** Convert I420 to I400 */
-    @JvmName("planerI420ToI400")
-    external fun planerI420ToI400(
+    @JvmName("planarI420ToI400")
+    external fun planarI420ToI400(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1626,8 +1626,8 @@ object Yuv {
     )
 
     /** Mirror I420 */
-    @JvmName("planerI420Mirror")
-    external fun planerI420Mirror(
+    @JvmName("planarI420Mirror")
+    external fun planarI420Mirror(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1638,16 +1638,16 @@ object Yuv {
     )
 
     /** Mirror I400 */
-    @JvmName("planerI400Mirror")
-    external fun planerI400Mirror(
+    @JvmName("planarI400Mirror")
+    external fun planarI400Mirror(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
     )
 
     /** Mirror NV12 */
-    @JvmName("planerNV12Mirror")
-    external fun planerNV12Mirror(
+    @JvmName("planarNV12Mirror")
+    external fun planarNV12Mirror(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcUV: ByteBuffer, srcStrideUV: RowStride, srcOffsetUV: Int,
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
@@ -1656,32 +1656,32 @@ object Yuv {
     )
 
     /** Mirror ARGB */
-    @JvmName("planerARGBMirror")
-    external fun planerARGBMirror(
+    @JvmName("planarARGBMirror")
+    external fun planarARGBMirror(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Mirror RGB24 */
-    @JvmName("planerRGB24Mirror")
-    external fun planerRGB24Mirror(
+    @JvmName("planarRGB24Mirror")
+    external fun planarRGB24Mirror(
         srcRGB24: ByteBuffer, srcStrideRGB24: RowStride, srcOffsetRGB24: Int,
         dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert RAW to RGB24 */
-    @JvmName("planerRAWToRGB24")
-    external fun planerRAWToRGB24(
+    @JvmName("planarRAWToRGB24")
+    external fun planarRAWToRGB24(
         srcRAW: ByteBuffer, srcStrideRAW: RowStride, srcOffsetRAW: Int,
         dstRGB24: ByteBuffer, dstStrideRGB24: RowStride, dstOffsetRGB24: Int,
         width: Int, height: Int,
     )
 
     /** Convert I422 to YUY2 */
-    @JvmName("planerI422ToYUY2")
-    external fun planerI422ToYUY2(
+    @JvmName("planarI422ToYUY2")
+    external fun planarI422ToYUY2(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1690,8 +1690,8 @@ object Yuv {
     )
 
     /** Convert I422 to UYVY */
-    @JvmName("planerI422ToUYVY")
-    external fun planerI422ToUYVY(
+    @JvmName("planarI422ToUYVY")
+    external fun planarI422ToUYVY(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         srcU: ByteBuffer, srcStrideU: RowStride, srcOffsetU: Int,
         srcV: ByteBuffer, srcStrideV: RowStride, srcOffsetV: Int,
@@ -1700,64 +1700,64 @@ object Yuv {
     )
 
     /** Convert unattentuated ARGB to preattenuated ARGB */
-    @JvmName("planerARGBAttenuate")
-    external fun planerARGBAttenuate(
+    @JvmName("planarARGBAttenuate")
+    external fun planarARGBAttenuate(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert preattentuated ARGB to unattenuated ARGB */
-    @JvmName("planerARGBUnattenuate")
-    external fun planerARGBUnattenuate(
+    @JvmName("planarARGBUnattenuate")
+    external fun planarARGBUnattenuate(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Convert ARGB to gray scale ARGB */
-    @JvmName("planerARGBGrayTo")
-    external fun planerARGBGrayTo(
+    @JvmName("planarARGBGrayTo")
+    external fun planarARGBGrayTo(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Copy Alpha channel of ARGB to alpha of ARGB */
-    @JvmName("planerARGBCopyAlpha")
-    external fun planerARGBCopyAlpha(
+    @JvmName("planarARGBCopyAlpha")
+    external fun planarARGBCopyAlpha(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Extract the alpha channel from ARGB */
-    @JvmName("planerARGBExtractAlpha")
-    external fun planerARGBExtractAlpha(
+    @JvmName("planarARGBExtractAlpha")
+    external fun planarARGBExtractAlpha(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstA: ByteBuffer, dstStrideA: RowStride, dstOffsetA: Int,
         width: Int, height: Int,
     )
 
     /** Copy Y channel to Alpha of ARGB */
-    @JvmName("planerARGBCopyYToAlpha")
-    external fun planerARGBCopyYToAlpha(
+    @JvmName("planarARGBCopyYToAlpha")
+    external fun planarARGBCopyYToAlpha(
         srcY: ByteBuffer, srcStrideY: RowStride, srcOffsetY: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
     )
 
     /** Set a plane of data to a 32 bit value. */
-    @JvmName("planerSetPlane")
-    external fun planerSetPlane(
+    @JvmName("planarSetPlane")
+    external fun planarSetPlane(
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         width: Int, height: Int,
         value: Int,
     )
 
     /** Draw a rectangle into I420 */
-    @JvmName("planerI420Rect")
-    external fun planerI420Rect(
+    @JvmName("planarI420Rect")
+    external fun planarI420Rect(
         dstY: ByteBuffer, dstStrideY: RowStride, dstOffsetY: Int,
         dstU: ByteBuffer, dstStrideU: RowStride, dstOffsetU: Int,
         dstV: ByteBuffer, dstStrideV: RowStride, dstOffsetV: Int,
@@ -1767,8 +1767,8 @@ object Yuv {
     )
 
     /** Draw a rectangle into ARGB */
-    @JvmName("planerARGBRect")
-    external fun planerARGBRect(
+    @JvmName("planarARGBRect")
+    external fun planarARGBRect(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
@@ -1776,24 +1776,24 @@ object Yuv {
     )
 
     /** Make a rectangle of ARGB gray scale */
-    @JvmName("planerARGBGray")
-    external fun planerARGBGray(
+    @JvmName("planarARGBGray")
+    external fun planarARGBGray(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Make a rectangle of ARGB Sepia tone */
-    @JvmName("planerARGBSepia")
-    external fun planerARGBSepia(
+    @JvmName("planarARGBSepia")
+    external fun planarARGBSepia(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         x: Int, y: Int,
         width: Int, height: Int,
     )
 
     /** Apply a matrix rotation to each ARGB pixel */
-    @JvmName("planerARGBColorMatrix")
-    external fun planerARGBColorMatrix(
+    @JvmName("planarARGBColorMatrix")
+    external fun planarARGBColorMatrix(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         matrixARGB: ByteArray,
@@ -1801,8 +1801,8 @@ object Yuv {
     )
 
     /** Apply a color table each ARGB pixel */
-    @JvmName("planerARGBColorTable")
-    external fun planerARGBColorTable(
+    @JvmName("planarARGBColorTable")
+    external fun planarARGBColorTable(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
@@ -1810,8 +1810,8 @@ object Yuv {
     )
 
     /** Apply a color table each ARGB pixel but preserve destination alpha */
-    @JvmName("planerRGBColorTable")
-    external fun planerRGBColorTable(
+    @JvmName("planarRGBColorTable")
+    external fun planarRGBColorTable(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         tableARGB: ByteArray,
         x: Int, y: Int,
@@ -1819,8 +1819,8 @@ object Yuv {
     )
 
     /** Apply a luma/color table each ARGB pixel but preserve destination alpha */
-    @JvmName("planerARGBLumaColorTable")
-    external fun planerARGBLumaColorTable(
+    @JvmName("planarARGBLumaColorTable")
+    external fun planarARGBLumaColorTable(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         luma: ByteArray,
@@ -1828,8 +1828,8 @@ object Yuv {
     )
 
     /** Apply a 3 term polynomial to ARGB values */
-    @JvmName("planerARGBPolynomial")
-    external fun planerARGBPolynomial(
+    @JvmName("planarARGBPolynomial")
+    external fun planarARGBPolynomial(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         poly: FloatArray,
@@ -1837,8 +1837,8 @@ object Yuv {
     )
 
     /** Quantize a rectangle of ARGB. Alpha unaffected */
-    @JvmName("planerARGBQuantize")
-    external fun planerARGBQuantize(
+    @JvmName("planarARGBQuantize")
+    external fun planarARGBQuantize(
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         scale: Int,
         intervalSize: Int, intervalOffset: Int,
@@ -1847,8 +1847,8 @@ object Yuv {
     )
 
     /** Alpha Blend ARGB images and store to destination */
-    @JvmName("planerARGBBlend")
-    external fun planerARGBBlend(
+    @JvmName("planarARGBBlend")
+    external fun planarARGBBlend(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -1856,8 +1856,8 @@ object Yuv {
     )
 
     /** Alpha Blend YUV images and store to destination */
-    @JvmName("planerI420Blend")
-    external fun planerI420Blend(
+    @JvmName("planarI420Blend")
+    external fun planarI420Blend(
         srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
         srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
         srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,
@@ -1872,8 +1872,8 @@ object Yuv {
     )
 
     /** Multiply ARGB image by ARGB image. Shifted down by 8. Saturates to 255 */
-    @JvmName("planerARGBMultiply")
-    external fun planerARGBMultiply(
+    @JvmName("planarARGBMultiply")
+    external fun planarARGBMultiply(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -1881,8 +1881,8 @@ object Yuv {
     )
 
     /** Add ARGB image with ARGB image. Saturates to 255 */
-    @JvmName("planerARGBAdd")
-    external fun planerARGBAdd(
+    @JvmName("planarARGBAdd")
+    external fun planarARGBAdd(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -1890,8 +1890,8 @@ object Yuv {
     )
 
     /** Subtract ARGB image with ARGB image. Saturates to 0 */
-    @JvmName("planerARGBSubtract")
-    external fun planerARGBSubtract(
+    @JvmName("planarARGBSubtract")
+    external fun planarARGBSubtract(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -1899,8 +1899,8 @@ object Yuv {
     )
 
     /** Blur ARGB image */
-    @JvmName("planerARGBBlur")
-    external fun planerARGBBlur(
+    @JvmName("planarARGBBlur")
+    external fun planarARGBBlur(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
@@ -1908,8 +1908,8 @@ object Yuv {
     )
 
     /** Multiply ARGB image by ARGB value */
-    @JvmName("planerARGBShade")
-    external fun planerARGBShade(
+    @JvmName("planarARGBShade")
+    external fun planarARGBShade(
         srcARGB: ByteBuffer, srcStrideARGB: RowStride, srcOffsetARGB: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
         width: Int, height: Int,
@@ -1917,8 +1917,8 @@ object Yuv {
     )
 
     /** Interpolate between two ARGB images using specified amount of interpolation Internally calls InterpolatePlane with width * 4 (bpp). */
-    @JvmName("planerARGBInterpolate")
-    external fun planerARGBInterpolate(
+    @JvmName("planarARGBInterpolate")
+    external fun planarARGBInterpolate(
         srcARGB0: ByteBuffer, srcStrideARGB0: RowStride, srcOffsetARGB0: Int,
         srcARGB1: ByteBuffer, srcStrideARGB1: RowStride, srcOffsetARGB1: Int,
         dstARGB: ByteBuffer, dstStrideARGB: RowStride, dstOffsetARGB: Int,
@@ -1927,8 +1927,8 @@ object Yuv {
     )
 
     /** Interpolate between two YUV images using specified amount of interpolation Internally calls InterpolatePlane on each plane where the U and V planes are half width and half height */
-    @JvmName("planerI420Interpolate")
-    external fun planerI420Interpolate(
+    @JvmName("planarI420Interpolate")
+    external fun planarI420Interpolate(
         srcY0: ByteBuffer, srcStrideY0: RowStride, srcOffsetY0: Int,
         srcU0: ByteBuffer, srcStrideU0: RowStride, srcOffsetU0: Int,
         srcV0: ByteBuffer, srcStrideV0: RowStride, srcOffsetV0: Int,

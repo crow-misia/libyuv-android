@@ -206,7 +206,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawRect(rect: Rect, value: Long) {
-        Yuv.planerARGBRect(
+        Yuv.planarARGBRect(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             x = rect.left, y = rect.top,
             width = rect.width(), height = rect.height(),
@@ -216,7 +216,7 @@ class ArgbBuffer private constructor(
 
     fun drawGrayTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerARGBGrayTo(
+        Yuv.planarARGBGrayTo(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
@@ -224,7 +224,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawGray(left: Int, top: Int, width: Int, height: Int) {
-        Yuv.planerARGBGray(
+        Yuv.planarARGBGray(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             x = left, y = top,
             width = width, height = height,
@@ -236,7 +236,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawSepia(left: Int, top: Int, width: Int, height: Int) {
-        Yuv.planerARGBSepia(
+        Yuv.planarARGBSepia(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             x = left, y = top,
             width = width, height = height,
@@ -248,7 +248,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawColorMatrix(dst: ArgbBuffer, matrixARGB: ByteArray, width: Int, height: Int) {
-        Yuv.planerARGBColorMatrix(
+        Yuv.planarARGBColorMatrix(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             matrixARGB = matrixARGB,
@@ -257,7 +257,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawColorTable(tableARGB: ByteArray, left: Int, top: Int, width: Int, height: Int) {
-        Yuv.planerARGBColorTable(
+        Yuv.planarARGBColorTable(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             tableARGB = tableARGB,
             x = left, y = top,
@@ -270,7 +270,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawRGBColorTable(tableARGB: ByteArray, left: Int, top: Int, width: Int, height: Int) {
-        Yuv.planerARGBColorTable(
+        Yuv.planarARGBColorTable(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             tableARGB = tableARGB,
             x = left, y = top,
@@ -283,7 +283,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawLumaColorTable(dst: ArgbBuffer, luma: ByteArray, width: Int, height: Int) {
-        Yuv.planerARGBLumaColorTable(
+        Yuv.planarARGBLumaColorTable(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             luma = luma,
@@ -292,7 +292,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawPolynomial(dst: ArgbBuffer, poly: FloatArray, width: Int, height: Int) {
-        Yuv.planerARGBPolynomial(
+        Yuv.planarARGBPolynomial(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             poly = poly,
@@ -301,7 +301,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawQuantize(scale: Int, intervalSize: Int, intervalOffset: Int, left: Int, top: Int, width: Int, height: Int) {
-        Yuv.planerARGBQuantize(
+        Yuv.planarARGBQuantize(
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
             scale = scale,
             intervalSize = intervalSize, intervalOffset = intervalOffset,
@@ -315,7 +315,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawBlendFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
-        Yuv.planerARGBBlend(
+        Yuv.planarARGBBlend(
             srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride, srcOffsetARGB0 = src1.offset(0),
             srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride, srcOffsetARGB1 = src2.offset(0),
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
@@ -325,7 +325,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawMultiplyFrom(src1: ArgbBuffer, src2: ArgbBuffer, width: Int, height: Int) {
-        Yuv.planerARGBMultiply(
+        Yuv.planarARGBMultiply(
             srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride, srcOffsetARGB0 = src1.offset(0),
             srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride, srcOffsetARGB1 = src2.offset(0),
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
@@ -335,7 +335,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawAddFrom(src1: ArgbBuffer, src2: ArgbBuffer, rect: Rect) {
-        Yuv.planerARGBAdd(
+        Yuv.planarARGBAdd(
             srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride, srcOffsetARGB0 = src1.offset(0),
             srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride, srcOffsetARGB1 = src2.offset(0),
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
@@ -345,7 +345,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawSubtractFrom(src1: ArgbBuffer, src2: ArgbBuffer, rect: Rect) {
-        Yuv.planerARGBSubtract(
+        Yuv.planarARGBSubtract(
             srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride, srcOffsetARGB0 = src1.offset(0),
             srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride, srcOffsetARGB1 = src2.offset(0),
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),
@@ -359,7 +359,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawBlur(dst: ArgbBuffer, rect: Rect = cropRect, radius: Int) {
-        Yuv.planerARGBBlur(
+        Yuv.planarARGBBlur(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = minWidth(rect, dst.cropRect),
@@ -373,7 +373,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawShade(dst: ArgbBuffer, rect: Rect = cropRect, value: Long) {
-        Yuv.planerARGBShade(
+        Yuv.planarARGBShade(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = minWidth(rect, dst.cropRect),
@@ -383,7 +383,7 @@ class ArgbBuffer private constructor(
     }
 
     fun drawInterpolateFrom(src1: ArgbBuffer, src2: ArgbBuffer, rect: Rect, interpolation: Int) {
-        Yuv.planerARGBInterpolate(
+        Yuv.planarARGBInterpolate(
             srcARGB0 = src1.plane.buffer, srcStrideARGB0 = src1.plane.rowStride, srcOffsetARGB0 = src1.offset(0),
             srcARGB1 = src2.plane.buffer, srcStrideARGB1 = src2.plane.rowStride, srcOffsetARGB1 = src2.offset(0),
             dstARGB = plane.buffer, dstStrideARGB = plane.rowStride, dstOffsetARGB = offset(0),

@@ -8,7 +8,7 @@ interface BufferFirstAlpha : Buffer {
 
     fun copyAlphaTo(dst: AbgrBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerARGBCopyAlpha(
+        Yuv.planarARGBCopyAlpha(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,
@@ -17,7 +17,7 @@ interface BufferFirstAlpha : Buffer {
 
     fun copyAlphaTo(dst: ArgbBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerARGBCopyAlpha(
+        Yuv.planarARGBCopyAlpha(
             srcARGB = plane.buffer, srcStrideARGB = plane.rowStride, srcOffsetARGB = offset(0),
             dstARGB = dst.plane.buffer, dstStrideARGB = dst.plane.rowStride, dstOffsetARGB = dst.offset(0),
             width = fixedWidth, height = fixedHeight,

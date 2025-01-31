@@ -19,7 +19,7 @@ interface BufferX420<BUFFER : BufferX420<BUFFER>> : BufferYUV {
 
     fun mirrorTo(dst: BUFFER) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerI420Mirror(
+        Yuv.planarI420Mirror(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),

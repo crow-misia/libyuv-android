@@ -143,7 +143,7 @@ class I422Buffer private constructor(
 
     fun convertTo(dst: Yuy2Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerI422ToYUY2(
+        Yuv.planarI422ToYUY2(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),
@@ -154,7 +154,7 @@ class I422Buffer private constructor(
 
     fun convertTo(dst: UyvyBuffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerI422ToUYVY(
+        Yuv.planarI422ToUYVY(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),

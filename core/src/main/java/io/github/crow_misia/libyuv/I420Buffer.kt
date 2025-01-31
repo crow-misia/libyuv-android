@@ -222,7 +222,7 @@ class I420Buffer private constructor(
 
 
     fun drawRect(left: Int, top: Int, width: Int, height: Int, valueY: Int, valueU: Int, valueV: Int) {
-        Yuv.planerI420Rect(
+        Yuv.planarI420Rect(
             dstY = planeY.buffer, dstStrideY = planeY.rowStride, dstOffsetY = offset(0),
             dstU = planeU.buffer, dstStrideU = planeU.rowStride, dstOffsetU = offset(1),
             dstV = planeV.buffer, dstStrideV = planeV.rowStride, dstOffsetV = offset(2),
@@ -237,7 +237,7 @@ class I420Buffer private constructor(
     }
 
     fun drawBlendFrom(src1: I420Buffer, srcAPlane: Plane, src2: I420Buffer, width: Int, height: Int) {
-        Yuv.planerI420Blend(
+        Yuv.planarI420Blend(
             srcY0 = src1.planeY.buffer, srcStrideY0 = src1.planeY.rowStride, srcOffsetY0 = src1.offset(0),
             srcU0 = src1.planeU.buffer, srcStrideU0 = src1.planeU.rowStride, srcOffsetU0 = src1.offset(1),
             srcV0 = src1.planeV.buffer, srcStrideV0 = src1.planeV.rowStride, srcOffsetV0 = src1.offset(2),
@@ -254,7 +254,7 @@ class I420Buffer private constructor(
     }
 
     fun drawInterpolateFrom(src1: I420Buffer, src2: I420Buffer, width: Int, height: Int, interpolation: Int) {
-        Yuv.planerI420Interpolate(
+        Yuv.planarI420Interpolate(
             srcY0 = src1.planeY.buffer, srcStrideY0 = src1.planeY.rowStride, srcOffsetY0 = src1.offset(0),
             srcU0 = src1.planeU.buffer, srcStrideU0 = src1.planeU.rowStride, srcOffsetU0 = src1.offset(1),
             srcV0 = src1.planeV.buffer, srcStrideV0 = src1.planeV.rowStride, srcOffsetV0 = src1.offset(2),

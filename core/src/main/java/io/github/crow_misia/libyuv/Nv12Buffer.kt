@@ -39,7 +39,7 @@ class Nv12Buffer private constructor(
 
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerNV12Copy(
+        Yuv.planarNV12Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
@@ -50,7 +50,7 @@ class Nv12Buffer private constructor(
 
     fun convertTo(dst: Nv21Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerNV21ToNV12(
+        Yuv.planarNV21ToNV12(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcVU = planeUV.buffer, srcStrideVU = planeUV.rowStride, srcOffsetVU = offset(1),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
@@ -111,7 +111,7 @@ class Nv12Buffer private constructor(
 
     fun mirrorTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerNV12Mirror(
+        Yuv.planarNV12Mirror(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcUV = planeUV.buffer, srcStrideUV = planeUV.rowStride, srcOffsetUV = offset(1),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),

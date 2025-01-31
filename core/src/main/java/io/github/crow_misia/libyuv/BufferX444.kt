@@ -6,7 +6,7 @@ package io.github.crow_misia.libyuv
 interface BufferX444<BUFFER : BufferX444<BUFFER>> : BufferYUV {
     fun convertTo(dst: BUFFER) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerI444Copy(
+        Yuv.planarI444Copy(
             srcY = planeY.buffer, srcStrideY = planeY.rowStride, srcOffsetY = offset(0),
             srcU = planeU.buffer, srcStrideU = planeU.rowStride, srcOffsetU = offset(1),
             srcV = planeV.buffer, srcStrideV = planeV.rowStride, srcOffsetV = offset(2),

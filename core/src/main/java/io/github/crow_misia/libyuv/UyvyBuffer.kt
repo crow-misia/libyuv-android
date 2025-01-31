@@ -33,7 +33,7 @@ class UyvyBuffer private constructor(
 
     fun convertTo(dst: I422Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerUYVYToI422(
+        Yuv.planarUYVYToI422(
             srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
             dstU = dst.planeU.buffer, dstStrideU = dst.planeU.rowStride, dstOffsetU = dst.offset(1),
@@ -53,7 +53,7 @@ class UyvyBuffer private constructor(
 
     fun convertTo(dst: Nv12Buffer) {
         val (fixedWidth, fixedHeight) = calculateSize(dst)
-        Yuv.planerUYVYToNV12(
+        Yuv.planarUYVYToNV12(
             srcUYVY = plane.buffer, srcStrideUYVY = plane.rowStride, srcOffsetUYVY = offset(0),
             dstY = dst.planeY.buffer, dstStrideY = dst.planeY.rowStride, dstOffsetY = dst.offset(0),
             dstUV = dst.planeUV.buffer, dstStrideUV = dst.planeUV.rowStride, dstOffsetUV = dst.offset(1),
