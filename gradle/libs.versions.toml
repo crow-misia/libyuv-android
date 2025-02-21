@@ -6,7 +6,7 @@ android-application = { id = "com.android.application", version.ref = "android-g
 
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.7" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
