@@ -7,6 +7,6 @@
 		"@commitlint/cli": "^19.7.1",
 		"@commitlint/config-conventional": "^19.7.1",
 		"husky": "^9.1.7",
-		"npm-check-updates": "^17.1.14"
+		"npm-check-updates": "^17.1.15"
 	}
 }
