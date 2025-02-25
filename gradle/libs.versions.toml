@@ -20,7 +20,7 @@ maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publ
 
 android-gradle-plugin = "8.8.1"
 
-android-tools-desugar_jdk_libs = "2.1.4"
+android-tools-desugar_jdk_libs = "2.1.5"
 
 androidx-camera = "1.5.0-alpha05"
 
