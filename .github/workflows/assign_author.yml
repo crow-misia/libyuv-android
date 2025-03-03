@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   assignAuthor:
+    timeout-minutes: 30
     name: Assign author to PR
     runs-on: ubuntu-latest
     steps:

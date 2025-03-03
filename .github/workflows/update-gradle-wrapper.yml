@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   update-gradle-wrapper:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
 
     steps:
