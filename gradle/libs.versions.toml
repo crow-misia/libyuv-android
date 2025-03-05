@@ -18,7 +18,7 @@ maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publ
 
 [versions]
 
-android-gradle-plugin = "8.8.2"
+android-gradle-plugin = "8.9.0"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
