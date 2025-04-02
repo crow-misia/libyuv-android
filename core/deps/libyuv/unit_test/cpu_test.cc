@@ -67,16 +67,16 @@ TEST_F(LibYUVBaseTest, TestCpuId) {
 #endif
 
 #ifdef __linux__
-static void KernelVersion(int *version) {
+static void KernelVersion(int* version) {
   struct utsname buffer;
   int i = 0;
 
   version[0] = version[1] = 0;
   if (uname(&buffer) == 0) {
-    char *v = buffer.release;
+    char* v = buffer.release;
     for (i = 0; *v && i < 2; ++v) {
       if (isdigit(*v)) {
-        version[i++] = (int) strtol(v, &v, 10);
+        version[i++] = (int)strtol(v, &v, 10);
       }
     }
   }
@@ -101,6 +101,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
     int has_sve = TestCpuFlag(kCpuHasSVE);
     int has_sve2 = TestCpuFlag(kCpuHasSVE2);
     int has_sme = TestCpuFlag(kCpuHasSME);
+    int has_sme2 = TestCpuFlag(kCpuHasSME2);
     printf("Has Arm 0x%x\n", has_arm);
     printf("Has Neon 0x%x\n", has_neon);
     printf("Has Neon DotProd 0x%x\n", has_neon_dotprod);
@@ -108,6 +109,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
     printf("Has SVE 0x%x\n", has_sve);
     printf("Has SVE2 0x%x\n", has_sve2);
     printf("Has SME 0x%x\n", has_sme);
+    printf("Has SME2 0x%x\n", has_sme2);
 
 #if defined(__aarch64__)
     // Read and print the SVE and SME vector lengths.
@@ -142,8 +144,8 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
 
     // Read and print the RVV vector length.
     if (has_rvv) {
-      register uint32_t vlenb __asm__ ("t0");
-      __asm__(".word 0xC22022F3"  /* CSRR t0, vlenb */ : "=r" (vlenb));
+      register uint32_t vlenb __asm__("t0");
+      __asm__(".word 0xC22022F3" /* CSRR t0, vlenb */ : "=r"(vlenb));
       printf("RVV vector length: %d bytes\n", vlenb);
     }
   }
@@ -161,7 +163,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
 #if defined(__loongarch__)
   int has_loongarch = TestCpuFlag(kCpuHasLOONGARCH);
   if (has_loongarch) {
-    int has_lsx  = TestCpuFlag(kCpuHasLSX);
+    int has_lsx = TestCpuFlag(kCpuHasLSX);
     int has_lasx = TestCpuFlag(kCpuHasLASX);
     printf("Has LOONGARCH 0x%x\n", has_loongarch);
     printf("Has LSX 0x%x\n", has_lsx);
@@ -169,8 +171,8 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
   }
 #endif  // defined(__loongarch__)
 
-#if defined(__i386__) || defined(__x86_64__) || \
-    defined(_M_IX86) || defined(_M_X64)
+#if defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || \
+    defined(_M_X64)
   int has_x86 = TestCpuFlag(kCpuHasX86);
   if (has_x86) {
     int has_sse2 = TestCpuFlag(kCpuHasSSE2);
@@ -190,6 +192,7 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
     int has_avx512vbmi2 = TestCpuFlag(kCpuHasAVX512VBMI2);
     int has_avx512vbitalg = TestCpuFlag(kCpuHasAVX512VBITALG);
     int has_avx10 = TestCpuFlag(kCpuHasAVX10);
+    int has_avx10_2 = TestCpuFlag(kCpuHasAVX10_2);
     int has_avxvnni = TestCpuFlag(kCpuHasAVXVNNI);
     int has_avxvnniint8 = TestCpuFlag(kCpuHasAVXVNNIINT8);
     int has_amxint8 = TestCpuFlag(kCpuHasAMXINT8);
@@ -211,11 +214,13 @@ TEST_F(LibYUVBaseTest, TestCpuHas) {
     printf("Has AVX512VBMI2 0x%x\n", has_avx512vbmi2);
     printf("Has AVX512VBITALG 0x%x\n", has_avx512vbitalg);
     printf("Has AVX10 0x%x\n", has_avx10);
+    printf("Has AVX10_2 0x%x\n", has_avx10_2);
     printf("HAS AVXVNNI 0x%x\n", has_avxvnni);
     printf("Has AVXVNNIINT8 0x%x\n", has_avxvnniint8);
     printf("Has AMXINT8 0x%x\n", has_amxint8);
   }
-#endif  // defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) || defined(_M_X64)
+#endif  // defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) ||
+        // defined(_M_X64)
 }
 
 TEST_F(LibYUVBaseTest, TestCompilerMacros) {
@@ -378,6 +383,8 @@ TEST_F(LibYUVBaseTest, TestLinuxAArch64) {
   // Check for SME feature detection.
   expected |= kCpuHasSME;
   EXPECT_EQ(expected, AArch64CpuCaps(0x3fffffffU, 0x82f3ffU));
+
+  // TODO: Check for SME2 feature detection from Apple M4
 }
 #endif
 

@@ -182,11 +182,12 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
 #ifdef __linux__
 // Define hwcap values ourselves: building with an old auxv header where these
 // hwcap values are not defined should not prevent features from being enabled.
-#define YUV_AARCH64_HWCAP_ASIMDDP (1 << 20)
-#define YUV_AARCH64_HWCAP_SVE (1 << 22)
-#define YUV_AARCH64_HWCAP2_SVE2 (1 << 1)
-#define YUV_AARCH64_HWCAP2_I8MM (1 << 13)
-#define YUV_AARCH64_HWCAP2_SME (1 << 23)
+#define YUV_AARCH64_HWCAP_ASIMDDP (1UL << 20)
+#define YUV_AARCH64_HWCAP_SVE (1UL << 22)
+#define YUV_AARCH64_HWCAP2_SVE2 (1UL << 1)
+#define YUV_AARCH64_HWCAP2_I8MM (1UL << 13)
+#define YUV_AARCH64_HWCAP2_SME (1UL << 23)
+#define YUV_AARCH64_HWCAP2_SME2 (1UL << 37)
 
 // For AArch64, but public to allow testing on any CPU.
 LIBYUV_API SAFEBUFFERS int AArch64CpuCaps(unsigned long hwcap,
@@ -208,9 +209,13 @@ LIBYUV_API SAFEBUFFERS int AArch64CpuCaps(unsigned long hwcap,
         features |= kCpuHasSVE;
         if (hwcap2 & YUV_AARCH64_HWCAP2_SVE2) {
           features |= kCpuHasSVE2;
-          if (hwcap2 & YUV_AARCH64_HWCAP2_SME) {
-            features |= kCpuHasSME;
-          }
+        }
+      }
+      // SME may be present without SVE
+      if (hwcap2 & YUV_AARCH64_HWCAP2_SME) {
+        features |= kCpuHasSME;
+        if (hwcap2 & YUV_AARCH64_HWCAP2_SME2) {
+          features |= kCpuHasSME2;
         }
       }
     }
@@ -256,8 +261,11 @@ LIBYUV_API SAFEBUFFERS int AArch64CpuCaps() {
     features |= kCpuHasNeonDotProd;
     if (have_feature("hw.optional.arm.FEAT_I8MM")) {
       features |= kCpuHasNeonI8MM;
-      if (have_feature("hw.optional.arm.FEAT_SME2")) {
+      if (have_feature("hw.optional.arm.FEAT_SME")) {
         features |= kCpuHasSME;
+        if (have_feature("hw.optional.arm.FEAT_SME2")) {
+          features |= kCpuHasSME2;
+        }
       }
     }
   }
@@ -409,6 +417,7 @@ static SAFEBUFFERS int GetCpuFlags(void) {
   int cpu_info1[4] = {0, 0, 0, 0};
   int cpu_info7[4] = {0, 0, 0, 0};
   int cpu_einfo7[4] = {0, 0, 0, 0};
+  int cpu_info24[4] = {0, 0, 0, 0};
   int cpu_amdinfo21[4] = {0, 0, 0, 0};
   CpuId(0, 0, cpu_info0);
   CpuId(1, 0, cpu_info1);
@@ -416,6 +425,9 @@ static SAFEBUFFERS int GetCpuFlags(void) {
     CpuId(7, 0, cpu_info7);
     CpuId(7, 1, cpu_einfo7);
     CpuId(0x80000021, 0, cpu_amdinfo21);
+  }
+  if (cpu_info0[0] >= 0x24) {
+    CpuId(0x24, 0, cpu_info24);
   }
   cpu_info = kCpuHasX86 | ((cpu_info1[3] & 0x04000000) ? kCpuHasSSE2 : 0) |
              ((cpu_info1[2] & 0x00000200) ? kCpuHasSSSE3 : 0) |
@@ -445,6 +457,9 @@ static SAFEBUFFERS int GetCpuFlags(void) {
                   ((cpu_info7[2] & 0x00001000) ? kCpuHasAVX512VBITALG : 0) |
                   ((cpu_einfo7[3] & 0x00080000) ? kCpuHasAVX10 : 0) |
                   ((cpu_info7[3] & 0x02000000) ? kCpuHasAMXINT8 : 0);
+      if (cpu_info0[0] >= 0x24 && (cpu_einfo7[3] & 0x00080000)) {
+        cpu_info |= ((cpu_info24[1] & 0xFF) >= 2) ? kCpuHasAVX10_2 : 0;
+      }
     }
   }
 #endif

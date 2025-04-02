@@ -1,11 +1,11 @@
 # CMakeLists for libyuv
 # Originally created for "roxlu build system" to compile libyuv on windows
-# Run with -DTEST=ON to build unit tests
+# Run with -DUNIT_TEST=ON to build unit tests
 
 include(CheckCSourceCompiles)
 
 project ( YUV C CXX )	# "C" is required even for C++ projects
-cmake_minimum_required( VERSION 2.8.12 )
+cmake_minimum_required( VERSION 3.5 )
 option( UNIT_TEST "Built unit tests" OFF )
 
 set ( ly_base_dir	${PROJECT_SOURCE_DIR} )
