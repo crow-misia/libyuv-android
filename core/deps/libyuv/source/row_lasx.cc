@@ -2002,11 +2002,13 @@ void NV21ToARGBRow_LASX(const uint8_t* src_y,
   }
 }
 
+#ifndef RgbConstants
 struct RgbConstants {
   uint8_t kRGBToY[4];
   uint16_t kAddY;
   uint16_t pad;
 };
+#define RgbConstants RgbConstants
 
 // RGB to JPeg coefficients
 // B * 0.1140 coefficient = 29
@@ -2032,6 +2034,7 @@ static const struct RgbConstants kRgb24I601Constants = {{25, 129, 66, 0},
 static const struct RgbConstants kRawI601Constants = {{66, 129, 25, 0},
                                                       0x1080,
                                                       0};
+#endif  // RgbConstants
 
 // ARGB expects first 3 values to contain RGB and 4th value is ignored.
 static void ARGBToYMatrixRow_LASX(const uint8_t* src_argb,
@@ -2039,7 +2042,7 @@ static void ARGBToYMatrixRow_LASX(const uint8_t* src_argb,
                                   int width,
                                   const struct RgbConstants* rgbconstants) {
   int32_t shuff[8] = {0, 4, 1, 5, 2, 6, 3, 7};
-  asm volatile (
+  asm volatile(
       "xvldrepl.b      $xr0,  %3,    0             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr1,  %3,    1             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr2,  %3,    2             \n\t"  // load rgbconstants
@@ -2101,7 +2104,7 @@ static void RGBAToYMatrixRow_LASX(const uint8_t* src_rgba,
                                   int width,
                                   const struct RgbConstants* rgbconstants) {
   int32_t shuff[8] = {0, 4, 1, 5, 2, 6, 3, 7};
-  asm volatile (
+  asm volatile(
       "xvldrepl.b      $xr0,  %3,    0             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr1,  %3,    1             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr2,  %3,    2             \n\t"  // load rgbconstants
@@ -2165,7 +2168,7 @@ static void RGBToYMatrixRow_LASX(const uint8_t* src_rgba,
       1,  0,  4,  0,  7,  0, 10, 0,  13, 0,  16, 0,  19, 0,  22, 0,
       25, 0,  28, 0,  31, 0, 2,  0,  5,  0,  8,  0,  11, 0,  14, 0,
       25, 0,  28, 0,  31, 0, 2,  0,  5,  0,  8,  0,  11, 0,  14, 0};
-  asm volatile (
+  asm volatile(
       "xvldrepl.b      $xr0,  %3,    0             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr1,  %3,    1             \n\t"  // load rgbconstants
       "xvldrepl.b      $xr2,  %3,    2             \n\t"  // load rgbconstants
@@ -2297,6 +2300,17 @@ void ARGBToUVJRow_LASX(const uint8_t* src_argb,
     next_argb += 128;
   }
 }
+
+// undef for unified sources build
+#undef ALPHA_VAL
+#undef YUVTORGB_SETUP
+#undef READYUV422_D
+#undef READYUV422
+#undef YUVTORGB_D
+#undef YUVTORGB
+#undef STOREARGB_D
+#undef STOREARGB
+#undef RGBTOUV
 
 #ifdef __cplusplus
 }  // extern "C"
