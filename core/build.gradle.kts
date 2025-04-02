@@ -132,9 +132,9 @@ mavenPublishing {
         url = "https://github.com/${Maven.GITHUB_REPOSITORY}/"
         licenses {
             license {
-                name = "The Apache License, Version 2.0"
+                name = "Apache-2.0"
                 url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "repo"
             }
         }
         developers {
