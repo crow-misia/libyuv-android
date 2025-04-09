@@ -1,7 +1,7 @@
 libyuv-anrdroid
 =================
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libyuv-android/android.yml)](https://github.com/crow-misia/libyuv-android/actions/workflows/android.yml)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libyuv-android/build.yml)](https://github.com/crow-misia/libyuv-android/actions/workflows/build.yml)
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libyuv/libyuv-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libyuv/libyuv-android)
 [![GitHub License](https://img.shields.io/github/license/crow-misia/libyuv-android)](LICENSE)
 
