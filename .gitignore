@@ -56,3 +56,7 @@ node_modules/
 core/.cxx/
 Android.mk.orig
 .kotlin
+
+# Lefthook
+lefthook-local.*
+
