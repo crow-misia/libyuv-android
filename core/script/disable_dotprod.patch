@@ -25,16 +25,22 @@ index 9baa5155cd267860235e8da938e5fb22f982f042..9840a62b9cada9f5c55bfcebaa7d2682
  #define HAS_ABGRTOYJROW_NEON_DOTPROD
  #define HAS_ABGRTOYROW_NEON_DOTPROD
  #define HAS_ARGBTOYJROW_NEON_DOTPROD
-@@ -579,10 +580,13 @@ extern "C" {
+@@ -579,16 +580,19 @@ extern "C" {
  #define HAS_RGBATOYROW_NEON_DOTPROD
  #define HAS_ARGBGRAYROW_NEON_DOTPROD
  #define HAS_ARGBSEPIAROW_NEON_DOTPROD
 +#endif // !defined(LIBYUV_DISABLE_NEON_DOTPROD)
  
 +#if !defined(LIBYUV_DISABLE_NEON_I8MM)
+ #define HAS_ABGRTOUVJROW_NEON_I8MM
+ #define HAS_ABGRTOUVROW_NEON_I8MM
  #define HAS_ARGBCOLORMATRIXROW_NEON_I8MM
  #define HAS_ARGBTOUV444ROW_NEON_I8MM
  #define HAS_ARGBTOUVJ444ROW_NEON_I8MM
+ #define HAS_ARGBTOUVJROW_NEON_I8MM
+ #define HAS_ARGBTOUVROW_NEON_I8MM
+ #define HAS_BGRATOUVROW_NEON_I8MM
+ #define HAS_RGBATOUVROW_NEON_I8MM
 +#endif // !defined(LIBYUV_DISABLE_NEON_I8MM)
  #endif
  
@@ -111,6 +117,22 @@ index 7ad54b43054049c99b1d2b9ad10e804072472213..157d755ced5a21765c2499d8fd326d33
 
  #define RGBTOUV_SETUP_REG                                                  \
    "movi       v20.8h, #112          \n" /* UB/VR coefficient  (0.875)   */ \
+@@ -3455,6 +3455,7 @@ void ARGB4444ToUVRow_NEON(const uint8_t* src_argb4444,
+ }
+
+ // Process any of ARGB, ABGR, BGRA, RGBA, by adjusting the uvconstants layout.
++#if !defined(LIBYUV_DISABLE_NEON_I8MM)
+ static void ABCDToUVMatrixRow_NEON_I8MM(const uint8_t* src,
+                                         int src_stride,
+                                         uint8_t* dst_u,
+@@ -3624,6 +3625,7 @@ void ABGRToUVJRow_NEON_I8MM(const uint8_t* src_abgr,
+   ABCDToUVMatrixRow_NEON_I8MM(src_abgr, src_stride_abgr, dst_u, dst_v, width,
+                               kABGRToUVJCoefficients);
+ }
++#endif // !defined(LIBYUV_DISABLE_NEON_I8MM)
+
+ void RGB565ToYRow_NEON(const uint8_t* src_rgb565, uint8_t* dst_y, int width) {
+   asm volatile(
 @@ -3546,6 +3550,7 @@ static void ARGBToYMatrixRow_NEON(const uint8_t* src_argb,
          "v17");
  }
