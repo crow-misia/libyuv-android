@@ -2,7 +2,7 @@
 
 [versions]
 
-android-gradle-plugin = "8.10.0"
+android-gradle-plugin = "8.10.1"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
