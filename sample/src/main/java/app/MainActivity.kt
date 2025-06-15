@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import app.databinding.ActivityMainBinding
 import io.github.crow_misia.libyuv.*
+import androidx.core.graphics.createBitmap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -38,8 +39,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val bitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888)
-        val bitmap2 = Bitmap.createBitmap(1920, 1080, Bitmap.Config.RGB_565)
+        val bitmap = createBitmap(1920, 1080)
+        val bitmap2 = createBitmap(1920, 1080, Bitmap.Config.RGB_565)
         val width = bitmap.width
         val height = bitmap.height
         val originalBuffer = AbgrBuffer.allocate(width, height)
@@ -122,6 +123,7 @@ class MainActivity : AppCompatActivity() {
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
+        nv21Buffer.cropRect = Rect(50, 50, nv21Buffer.width/2, nv21Buffer.height/2)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
         i420Buffer.convertTo(ar30Buffer)
         i420Buffer.convertTo(ab30Buffer)
