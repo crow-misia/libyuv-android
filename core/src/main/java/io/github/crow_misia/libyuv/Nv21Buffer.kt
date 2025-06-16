@@ -18,7 +18,7 @@ class Nv21Buffer private constructor(
     override fun getPlaneOffset(planeIndex: Int, rowStride: RowStride, left: Int, top: Int): Int {
         return when (planeIndex) {
             0 -> rowStride * top + left
-            else -> rowStride * top + left.and(1.inv())
+            else -> rowStride * top.shr(1) + left.and(1.inv())
         }
     }
 

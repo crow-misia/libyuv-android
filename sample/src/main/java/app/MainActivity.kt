@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         i420Buffer.convertTo(nv21Buffer)
         nv21Buffer.rotate(nv21Rotate90Buffer, RotateMode.ROTATE_90)
         nv21Rotate90Buffer.mirrorTo(nv21MirrorBuffer)
-        nv21Buffer.cropRect = Rect(50, 50, nv21Buffer.width/2, nv21Buffer.height/2)
+        nv21Buffer.cropRect = Rect(1, 20, 340, 340)
         nv21Buffer.scale(nv21ScaleBuffer, FilterMode.BILINEAR)
         i420Buffer.convertTo(ar30Buffer)
         i420Buffer.convertTo(ab30Buffer)
