@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 30
     name: Assign author to PR
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+
     steps:
       - name: Assign author to PR
         uses: toshimaru/auto-author-assign@7e15cd70c245ad136377c3fab3479815df10d844 # v2.1.1
