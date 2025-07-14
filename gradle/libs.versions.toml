@@ -28,7 +28,7 @@ dokka = "2.0.0"
 
 kotlin = "2.2.0"
 
-maven-publish = "0.33.0"
+maven-publish = "0.34.0"
 
 truth = "1.4.4"
 
