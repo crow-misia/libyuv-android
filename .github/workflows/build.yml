@@ -5,26 +5,34 @@ on:
   push:
     branches: ['main']
     paths-ignore:
-      - '.npmignore'
       - '.idea/**'
       - '.vscode/**'
+      - '.npmignore'
+      - '.npmrc'
       - 'LICENSE'
       - 'LICENSE_LIBYUV.txt'
       - '*.md'
       - 'bumpver.toml'
+      - 'commitlint.config.cjs'
+      - 'lefthook.yaml'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
   pull_request:
     paths-ignore:
-      - '.npmignore'
       - '.idea/**'
       - '.vscode/**'
+      - '.npmignore'
+      - '.npmrc'
       - 'LICENSE'
       - 'LICENSE_LIBYUV.txt'
       - '*.md'
       - 'bumpver.toml'
+      - 'commitlint.config.cjs'
+      - 'lefthook.yaml'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
 permissions:
   contents: write
