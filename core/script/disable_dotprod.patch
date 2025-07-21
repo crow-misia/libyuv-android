@@ -17,18 +17,18 @@ diff --git a/include/libyuv/row.h b/include/libyuv/row.h
 index 9baa5155cd267860235e8da938e5fb22f982f042..9840a62b9cada9f5c55bfcebaa7d26827ec49409 100644
 --- a/include/libyuv/row.h
 +++ b/include/libyuv/row.h
-@@ -570,6 +570,7 @@ extern "C" {
+@@ -570,8 +570,9 @@ extern "C" {
  #define HAS_P410TOAR30ROW_NEON
  #define HAS_P410TOARGBROW_NEON
  
 +#if !defined(LIBYUV_DISABLE_NEON_DOTPROD)
  #define HAS_ABGRTOYJROW_NEON_DOTPROD
  #define HAS_ABGRTOYROW_NEON_DOTPROD
- #define HAS_ARGBTOYJROW_NEON_DOTPROD
-@@ -579,16 +580,19 @@ extern "C" {
- #define HAS_RGBATOYROW_NEON_DOTPROD
  #define HAS_ARGBGRAYROW_NEON_DOTPROD
  #define HAS_ARGBSEPIAROW_NEON_DOTPROD
+ #define HAS_ARGBTOYJROW_NEON_DOTPROD
+@@ -579,14 +580,17 @@ extern "C" {
+ #define HAS_RGBATOYROW_NEON_DOTPROD
 +#endif // !defined(LIBYUV_DISABLE_NEON_DOTPROD)
  
 +#if !defined(LIBYUV_DISABLE_NEON_I8MM)
