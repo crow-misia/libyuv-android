@@ -72,6 +72,7 @@ android {
                 showStandardStreams = true
                 events("passed", "skipped", "failed")
             }
+            it.failOnNoDiscoveredTests = false
         }
     }
 
