@@ -6,7 +6,7 @@ android-gradle-plugin = "8.12.0"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
-androidx-camera = "1.5.0-beta02"
+androidx-camera = "1.5.0-rc01"
 
 androidx-activity = "1.10.1"
 
@@ -26,7 +26,7 @@ detekt = "1.23.8"
 
 dokka = "2.0.0"
 
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 
 maven-publish = "0.34.0"
 
