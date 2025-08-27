@@ -8,7 +8,7 @@
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "lefthook": "1.12.3",
-    "npm-check-updates": "18.0.2"
+    "npm-check-updates": "18.0.3"
   },
   "packageManager": "pnpm@10.11.0",
   "engines": {
