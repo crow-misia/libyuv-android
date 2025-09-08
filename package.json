@@ -7,8 +7,8 @@
   "dependencies": {
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
-    "lefthook": "1.12.3",
-    "npm-check-updates": "18.0.3"
+    "lefthook": "1.12.4",
+    "npm-check-updates": "18.1.0"
   },
   "packageManager": "pnpm@10.11.0",
   "engines": {
