@@ -26,7 +26,7 @@ detekt = "1.23.8"
 
 dokka = "2.0.0"
 
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 
 maven-publish = "0.34.0"
 
