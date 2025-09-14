@@ -24,7 +24,7 @@ version = Maven.VERSION
 
 android {
     namespace = "io.github.crow_misia.libyuv"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21

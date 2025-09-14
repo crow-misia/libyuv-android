@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         namespace = "app"
         applicationId = "com.github.crow_misia.libyuv"
