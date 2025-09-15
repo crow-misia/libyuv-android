@@ -11,23 +11,15 @@ plugins {
     id("signing")
 }
 
-object Maven {
-    const val GROUP_ID = "io.github.crow-misia.libyuv"
-    const val ARTIFACT_ID = "libyuv-android"
-    const val DESCRIPTION = "LibYuv for Android"
-    const val VERSION = "0.43.2"
-    const val GITHUB_REPOSITORY = "crow-misia/libyuv-android"
-}
-
 group = Maven.GROUP_ID
 version = Maven.VERSION
 
 android {
     namespace = "io.github.crow_misia.libyuv"
-    compileSdk = 35
+    compileSdk = Build.COMPILE_SDK
 
     defaultConfig {
-        minSdk = 21
+        minSdk = Build.MIN_SDK
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,7 +44,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = "28.1.13356709"
+    ndkVersion = Build.NDK_VERSION
 
     sourceSets {
         named("androidTest") {
@@ -77,8 +69,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = Build.jvmTarget
+        targetCompatibility = Build.jvmTarget
     }
 
     packaging {
@@ -91,7 +83,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_1_8
+        jvmTarget = JvmTarget.fromTarget(Build.jvmTarget.toString())
     }
 }
 

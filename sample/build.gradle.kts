@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = Build.COMPILE_SDK
     defaultConfig {
         namespace = "app"
         applicationId = "com.github.crow_misia.libyuv"
-        minSdk = 21
-        targetSdk = 35
+        minSdk = Build.MIN_SDK
+        targetSdk = Build.TARGET_SDK
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -37,14 +37,14 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = Build.jvmTarget
+        targetCompatibility = Build.jvmTarget
     }
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
+        jvmTarget = JvmTarget.fromTarget(Build.jvmTarget.toString())
     }
 }
 
