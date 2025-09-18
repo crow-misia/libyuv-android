@@ -30,7 +30,7 @@ kotlin = "2.2.20"
 
 maven-publish = "0.34.0"
 
-truth = "1.4.4"
+truth = "1.4.5"
 
 [libraries]
 
