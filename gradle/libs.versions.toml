@@ -6,7 +6,7 @@ android-gradle-plugin = "8.13.0"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
-androidx-camera = "1.5.0"
+androidx-camera = "1.5.1"
 
 androidx-activity = "1.11.0"
 
