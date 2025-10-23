@@ -8,7 +8,7 @@
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "20.0.0",
     "lefthook": "1.13.6",
-    "npm-check-updates": "19.1.0"
+    "npm-check-updates": "19.1.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["lefthook"]
