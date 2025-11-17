@@ -7,7 +7,7 @@
   "dependencies": {
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "20.0.0",
-    "lefthook": "2.0.2",
+    "lefthook": "2.0.3",
     "npm-check-updates": "19.1.2"
   },
   "pnpm": {
