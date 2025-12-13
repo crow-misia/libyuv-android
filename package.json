@@ -5,9 +5,9 @@
     "ncu": "npm-check-updates -u"
   },
   "dependencies": {
-    "@commitlint/cli": "20.1.0",
-    "@commitlint/config-conventional": "20.0.0",
-    "lefthook": "2.0.7",
+    "@commitlint/cli": "20.2.0",
+    "@commitlint/config-conventional": "20.2.0",
+    "lefthook": "2.0.8",
     "npm-check-updates": "19.1.2"
   },
   "pnpm": {
