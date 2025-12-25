@@ -8,7 +8,7 @@ android-tools-desugar_jdk_libs = "2.1.5"
 
 androidx-camera = "1.5.2"
 
-androidx-activity = "1.12.1"
+androidx-activity = "1.12.2"
 
 androidx-appcompat = "1.7.1"
 
