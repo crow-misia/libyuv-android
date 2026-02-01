@@ -7,7 +7,7 @@ updates:
         patterns:
           - "*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
   - package-ecosystem: "gradle"
@@ -17,7 +17,7 @@ updates:
         patterns:
           - "*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
   - package-ecosystem: "npm"
@@ -27,6 +27,6 @@ updates:
         patterns:
           - "*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
