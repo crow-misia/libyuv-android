@@ -1,3 +1,5 @@
 [tools]
+lefthook = "latest"
 node = "24"
-pnpm = "latest"
+"npm:@commitlint/cli" = "latest"
+"npm:@commitlint/config-conventional" = "latest"

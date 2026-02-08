@@ -4,38 +4,24 @@ on:
   workflow_dispatch:
   push:
     branches: ['main']
-    paths-ignore:
-      - '.idea/**'
-      - '.vscode/**'
-      - '.npmignore'
-      - '.npmrc'
-      - 'LICENSE'
-      - 'LICENSE_LIBYUV.txt'
-      - '*.md'
-      - 'bumpver.toml'
-      - 'commitlint.config.cjs'
-      - 'lefthook.yaml'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
+    paths:
+      - 'core/**'
+      - 'config/**'
+      - 'gradle/**'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - 'lint.xml'
   pull_request:
-    paths-ignore:
-      - '.idea/**'
-      - '.vscode/**'
-      - '.npmignore'
-      - '.npmrc'
-      - 'LICENSE'
-      - 'LICENSE_LIBYUV.txt'
-      - '*.md'
-      - 'bumpver.toml'
-      - 'commitlint.config.cjs'
-      - 'lefthook.yaml'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
+    paths:
+      - 'core/**'
+      - 'config/**'
+      - 'gradle/**'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - 'lint.xml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -59,10 +45,8 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
 
-      - name: Setup Gradle to generate and submit dependency graphs
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
-        with:
-          dependency-graph: generate-and-submit
 
       - name: Build with Gradle
         run: ./gradlew build
