@@ -34,7 +34,7 @@ truth = "1.4.5"
 
 [libraries]
 
-androidx-annotation = { group = "androidx.annotation", name = "annotation", version = "1.9.1" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version = "1.10.0" }
 
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
 
