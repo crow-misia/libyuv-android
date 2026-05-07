@@ -11,3 +11,10 @@ commit-msg:
       run: |
         CONFIG_PATH=$(mise where npm:@commitlint/config-conventional)/lib/node_modules/@commitlint/config-conventional/lib/index.js
         mise exec -- commitlint -c false --extends "$CONFIG_PATH" --edit {1}
+
+pre-commit:
+  parallel: false
+  commands:
+    gitleaks:
+      tags: security
+      run: mise exec -- gitleaks git --pre-commit --staged --no-color --no-banner --verbose
