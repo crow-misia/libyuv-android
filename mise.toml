@@ -1,4 +1,5 @@
 [tools]
+gitleaks = "latest"
 lefthook = "latest"
 node = "24"
 "npm:@commitlint/cli" = "latest"
