@@ -6,7 +6,7 @@ android-gradle-plugin = "9.2.1"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
-androidx-camera = "1.5.2"
+androidx-camera = "1.6.1"
 
 androidx-activity = "1.13.0"
 
@@ -26,7 +26,7 @@ detekt = "1.23.8"
 
 dokka = "2.2.0"
 
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 
 maven-publish = "0.36.0"
 
@@ -54,9 +54,9 @@ androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "
 
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "android-tools-desugar_jdk_libs" }
 
-kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
@@ -71,7 +71,5 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
-
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
