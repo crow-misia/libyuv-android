@@ -12,9 +12,15 @@ updates:
       default-days: 7
   - package-ecosystem: "gradle"
     directory: "/"
+    registries: "*"
     groups:
       all:
         patterns:
           - "*"
     schedule:
       interval: "monthly"
+
+registries:
+  maven-google:
+    type: maven-repository
+    url: "https://dl.google.com/dl/android/maven2/"
