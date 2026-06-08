@@ -2,13 +2,13 @@ import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.SourcesJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
     alias(libs.plugins.dokka.javadoc)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.maven.publish)
     id("signing")
 }
@@ -86,11 +86,12 @@ android {
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.fromTarget(Build.jvmTarget.toString())
+        languageVersion = KotlinVersion.KOTLIN_2_2
+        apiVersion = KotlinVersion.KOTLIN_2_2
     }
 }
 
 dependencies {
-    compileOnly(platform(libs.kotlin.bom))
     compileOnly(libs.kotlin.stdlib)
     compileOnly(libs.androidx.annotation)
     compileOnly(libs.androidx.camera.core)
