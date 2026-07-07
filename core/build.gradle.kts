@@ -1,6 +1,3 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.SourcesJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -9,19 +6,15 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
     alias(libs.plugins.dokka.javadoc)
-    alias(libs.plugins.maven.publish)
-    id("signing")
+    id("publish")
 }
-
-group = Maven.GROUP_ID
-version = Maven.VERSION
 
 android {
     namespace = "io.github.crow_misia.libyuv"
-    compileSdk = Build.COMPILE_SDK
+    compileSdk = libs.versions.android.compile.sdk.get().toInt()
 
     defaultConfig {
-        minSdk = Build.MIN_SDK
+        minSdk = libs.versions.android.min.sdk.get().toInt()
         consumerProguardFiles("consumer-proguard-rules.pro")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,7 +39,7 @@ android {
             path(File("${projectDir}/Android.mk"))
         }
     }
-    ndkVersion = Build.NDK_VERSION
+    ndkVersion = libs.versions.android.ndk.get()
 
     sourceSets {
         named("androidTest") {
@@ -71,8 +64,9 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = Build.jvmTarget
-        targetCompatibility = Build.jvmTarget
+        val javaVersion = JavaVersion.toVersion(libs.versions.java.get())
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
     packaging {
@@ -85,7 +79,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.fromTarget(Build.jvmTarget.toString())
+        jvmTarget = JvmTarget.fromTarget(libs.versions.java.get())
         languageVersion = KotlinVersion.KOTLIN_2_2
         apiVersion = KotlinVersion.KOTLIN_2_2
     }
@@ -102,48 +96,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.truth)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.truth)
-}
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
-}
-
-mavenPublishing {
-    configure(AndroidSingleVariantLibrary(
-        variant = "release",
-        javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationJavadoc"),
-        sourcesJar = SourcesJar.Sources(),
-    ))
-
-    publishToMavenCentral()
-
-    coordinates(Maven.GROUP_ID, Maven.ARTIFACT_ID, Maven.VERSION)
-
-    pom {
-        name = Maven.ARTIFACT_ID
-        description = Maven.DESCRIPTION
-        url = "https://github.com/${Maven.GITHUB_REPOSITORY}/"
-        licenses {
-            license {
-                name = "Apache-2.0"
-                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "repo"
-            }
-        }
-        developers {
-            developer {
-                id = "crow-misia"
-                name = "Zenichi Amano"
-                email = "crow.misia@gmail.com"
-            }
-        }
-        scm {
-            url = "https://github.com/${Maven.GITHUB_REPOSITORY}/"
-            connection = "scm:git:git://github.com/${Maven.GITHUB_REPOSITORY}.git"
-            developerConnection = "scm:git:ssh://git@github.com/${Maven.GITHUB_REPOSITORY}.git"
-        }
-    }
 }
 
 detekt {

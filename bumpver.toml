@@ -11,6 +11,6 @@ tag = true
 push = false
 
 [bumpver.file_patterns]
-"core/build.gradle.kts" = [
-    "    const val VERSION = \"{pep440_version}\"",
+"gradle.properties" = [
+    "VERSION_NAME={pep440_version}",
 ]
