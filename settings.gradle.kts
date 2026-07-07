@@ -1,9 +1,16 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        google()
+        google {
+            content {
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+                includeGroupAndSubgroups("androidx")
+            }
+        }
         mavenCentral()
+        gradlePluginPortal()
     }
+    includeBuild("build-logic")
 }
 
 plugins {
@@ -13,7 +20,13 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+        google {
+            content {
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+                includeGroupAndSubgroups("androidx")
+            }
+        }
         mavenCentral()
     }
 }
@@ -23,5 +36,5 @@ refreshVersions {
 }
 
 rootProject.name = "libyuv-android"
-include("core")
-include("sample")
+include(":core")
+include(":sample")

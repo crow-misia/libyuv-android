@@ -2,9 +2,21 @@
 
 [versions]
 
+java = "11"
+
+android-min-sdk = "23"
+
+android-compile-sdk = "36"
+
+android-target-sdk = "35"
+
+android-ndk = "28.1.13356709"
+
 android-gradle-plugin = "9.2.1"
 
 android-tools-desugar_jdk_libs = "2.1.5"
+
+androidx-annotation = "1.10.0"
 
 androidx-camera = "1.6.1"
 
@@ -34,7 +46,7 @@ truth = "1.4.5"
 
 [libraries]
 
-androidx-annotation = { group = "androidx.annotation", name = "annotation", version = "1.10.0" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
 
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
 
@@ -58,6 +70,8 @@ kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-p
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
+maven-publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }
+
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
 [plugins]
@@ -71,5 +85,3 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
-
-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
