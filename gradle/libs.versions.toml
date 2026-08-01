@@ -12,7 +12,7 @@ android-target-sdk = "35"
 
 android-ndk = "28.1.13356709"
 
-android-gradle-plugin = "9.2.1"
+android-gradle-plugin = "9.3.1"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
@@ -38,7 +38,7 @@ detekt = "1.23.8"
 
 dokka = "2.2.0"
 
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 
 maven-publish = "0.37.0"
 
