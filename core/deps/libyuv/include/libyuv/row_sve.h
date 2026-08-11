@@ -631,8 +631,8 @@ static inline void I422ToRGB565Row_SVE_SC(
       // Calculate a predicate for the final iteration to deal with the tail.
       "cnth     %[vl]                                   \n"
       "whilelt  p1.b, wzr, %w[width]                    \n"  //
-      READYUV422_SVE_2X I422TORGB_SVE_2X RGBTOARGB8_SVE_TOP_2X
-          RGB8TORGB565_SVE_FROM_TOP_2X
+      READYUV422_SVE_2X I422TORGB_SVE_2X
+          RGBTOARGB8_SVE_TOP_2X RGB8TORGB565_SVE_FROM_TOP_2X
       // Need to permute the data on the final iteration such that the
       // predicates (.b) line up with the 16-bit element data.
       "trn1     z20.b, z18.b, z19.b                     \n"
@@ -694,8 +694,8 @@ static inline void I422ToARGB1555Row_SVE_SC(
       // Calculate a predicate for the final iteration to deal with the tail.
       "cnth     %[vl]                                   \n"
       "whilelt  p1.b, wzr, %w[width]                    \n"  //
-      READYUV422_SVE_2X I422TORGB_SVE_2X RGBTOARGB8_SVE_TOP_2X
-          RGB8TOARGB1555_SVE_FROM_TOP_2X
+      READYUV422_SVE_2X I422TORGB_SVE_2X
+          RGBTOARGB8_SVE_TOP_2X RGB8TOARGB1555_SVE_FROM_TOP_2X
       "st2h     {z0.h, z1.h}, p1, [%[dst]] \n"
 
       "99:                                              \n"
@@ -753,8 +753,8 @@ static inline void I422ToARGB4444Row_SVE_SC(
       // Calculate a predicate for the final iteration to deal with the tail.
       "cnth     %[vl]                                   \n"
       "whilelt  p1.b, wzr, %w[width]                    \n"  //
-      READYUV422_SVE_2X I422TORGB_SVE_2X RGBTOARGB8_SVE_TOP_2X
-          RGB8TOARGB4444_SVE_FROM_TOP_2X
+      READYUV422_SVE_2X I422TORGB_SVE_2X
+          RGBTOARGB8_SVE_TOP_2X RGB8TOARGB4444_SVE_FROM_TOP_2X
       "st2h     {z0.h, z1.h}, p1, [%[dst]] \n"
 
       "99:                                              \n"
@@ -772,7 +772,7 @@ static inline void I422ToARGB4444Row_SVE_SC(
 static inline void I422ToRGBARow_SVE_SC(const uint8_t* src_y,
                                         const uint8_t* src_u,
                                         const uint8_t* src_v,
-                                        uint8_t* dst_argb,
+                                        uint8_t* dst_rgba,
                                         const struct YuvConstants* yuvconstants,
                                         int width) STREAMING_COMPATIBLE {
   uint64_t vl;
@@ -790,8 +790,8 @@ static inline void I422ToRGBARow_SVE_SC(const uint8_t* src_y,
       "1:                                               \n"  //
       READYUV422_SVE I4XXTORGB_SVE RGBTORGBA8_SVE
       "subs     %w[width], %w[width], %w[vl]            \n"
-      "st2h     {z19.h, z20.h}, p1, [%[dst_argb]]       \n"
-      "add      %[dst_argb], %[dst_argb], %[vl], lsl #2 \n"
+      "st2h     {z19.h, z20.h}, p1, [%[dst_rgba]]       \n"
+      "add      %[dst_rgba], %[dst_rgba], %[vl], lsl #2 \n"
       "b.gt     1b                                      \n"
 
       // Calculate a predicate for the final iteration to deal with the tail.
@@ -801,13 +801,13 @@ static inline void I422ToRGBARow_SVE_SC(const uint8_t* src_y,
 
       "whilelt  p1.h, wzr, %w[width]                    \n"  //
       READYUV422_SVE I4XXTORGB_SVE RGBTORGBA8_SVE
-      "st2h     {z19.h, z20.h}, p1, [%[dst_argb]]       \n"
+      "st2h     {z19.h, z20.h}, p1, [%[dst_rgba]]       \n"
 
       "99:                                              \n"
       : [src_y] "+r"(src_y),                               // %[src_y]
         [src_u] "+r"(src_u),                               // %[src_u]
         [src_v] "+r"(src_v),                               // %[src_v]
-        [dst_argb] "+r"(dst_argb),                         // %[dst_argb]
+        [dst_rgba] "+r"(dst_rgba),                         // %[dst_rgba]
         [width] "+r"(width),                               // %[width]
         [vl] "=&r"(vl)                                     // %[vl]
       : [kUVCoeff] "r"(&yuvconstants->kUVCoeff),           // %[kUVCoeff]
@@ -2019,7 +2019,7 @@ static const int8_t kABGRToUVJCoefficients[] = {
     43, 85, -128, 0, -128, 107, 21, 0,
 };
 
-#define ABCDTOUVMATRIX_SVE                                                  \
+#define ARGBTOUVMATRIX_SVE                                                  \
   "ld1d     {z0.d}, p1/z, [%[src0]]               \n" /* ABCD(bgra) */      \
   "ld1d     {z1.d}, p2/z, [%[src0], #1, mul vl]   \n" /* EFGH(bgra) */      \
   "ld1d     {z2.d}, p3/z, [%[src0], #2, mul vl]   \n" /* IJKL(bgra) */      \
@@ -2113,7 +2113,7 @@ static inline void ARGBToUVMatrixRow_SVE_SC(const uint8_t* src_argb,
       "ptrue  p4.d                                   \n"
       "ptrue  p5.h                                   \n"
       "1:                                            \n"  //
-      ABCDTOUVMATRIX_SVE
+      ARGBTOUVMATRIX_SVE
       "b.gt     1b                                   \n"
 
       "2:                                            \n"
@@ -2126,7 +2126,7 @@ static inline void ARGBToUVMatrixRow_SVE_SC(const uint8_t* src_argb,
       "whilelt  p3.d, %w[vl2], %w[width]             \n"
       "whilelt  p4.d, %w[vl3], %w[width]             \n"
       "whilelt  p5.h, wzr, %w[width]                 \n"  //
-      ABCDTOUVMATRIX_SVE
+      ARGBTOUVMATRIX_SVE
       "b.gt     3b                                   \n"
 
       "99:                                           \n"
@@ -2142,6 +2142,74 @@ static inline void ARGBToUVMatrixRow_SVE_SC(const uint8_t* src_argb,
       : "cc", "memory", "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z16",
         "z17", "z18", "z19", "z20", "z21", "z22", "z23", "z24", "z25", "z26",
         "z27", "p0", "p1", "p2", "p3", "p4", "p5");
+}
+
+#define ARGBTOYMATRIX_SVE(p1, p2, p3, p4, p5)                               \
+  "ld1w     {z0.s}, " p1 "/z, [%[src]]             \n" /* load 4*vl pixels */\
+  "ld1w     {z1.s}, " p2 "/z, [%[src], #1, mul vl] \n"                       \
+  "ld1w     {z2.s}, " p3 "/z, [%[src], #2, mul vl] \n"                       \
+  "ld1w     {z3.s}, " p4 "/z, [%[src], #3, mul vl] \n"                       \
+  "incb     %[src], all, mul #4                    \n"                       \
+  "fmov     s16, wzr                               \n"                       \
+  "fmov     s17, wzr                               \n"                       \
+  "fmov     s18, wzr                               \n"                       \
+  "fmov     s19, wzr                               \n"                       \
+  "udot     z16.s, z0.b, z24.b                     \n"                       \
+  "udot     z17.s, z1.b, z24.b                     \n"                       \
+  "udot     z18.s, z2.b, z24.b                     \n"                       \
+  "udot     z19.s, z3.b, z24.b                     \n"                       \
+  "uzp1     z16.h, z16.h, z17.h                    \n"                       \
+  "uzp1     z18.h, z18.h, z19.h                    \n"                       \
+  "addhnb   z20.b, z16.h, z25.h                    \n"                       \
+  "addhnt   z20.b, z18.h, z25.h                    \n"                       \
+  "st1b     {z20.b}, " p5 ", [%[dst_y]]            \n"                       \
+  "incb     %[dst_y]                               \n"                       \
+  "subs     %w[width], %w[width], %w[vl], lsl #2   \n"
+
+static inline void ARGBToYMatrixRow_SVE_SC(const uint8_t* src_argb,
+                                          uint8_t* dst_y,
+                                          int width,
+                                          const struct ArgbConstants* c)
+    STREAMING_COMPATIBLE {
+  uint64_t vl;
+  asm("cntw %x0" : "=r"(vl));
+
+  asm volatile(
+      "ptrue    p0.b                                 \n"
+      "ld1rw    {z24.s}, p0/z, [%[c]]                \n"
+      "ld1rh    {z25.h}, p0/z, [%[c], #48]           \n"
+
+      "subs     %w[width], %w[width], %w[vl], lsl #2 \n"
+      "b.lt     2f                                   \n"
+
+      "ptrue    p1.s                                 \n"
+      "1:                                            \n"  //
+      ARGBTOYMATRIX_SVE("p1", "p1", "p1", "p1", "p0")
+      "b.gt     1b                                   \n"
+
+      "2:                                            \n"
+      "adds     %w[width], %w[width], %w[vl], lsl #2 \n"
+      "b.eq     99f                                  \n"
+
+      "3:                                            \n"
+      "whilelt  p1.s, wzr, %w[width]                 \n"
+      "whilelt  p2.s, %w[vl], %w[width]              \n"
+      "whilelt  p3.s, %w[vl2], %w[width]             \n"
+      "whilelt  p4.s, %w[vl3], %w[width]             \n"
+      "whilelt  p5.b, wzr, %w[width]                 \n"  //
+      ARGBTOYMATRIX_SVE("p1", "p2", "p3", "p4", "p5")
+      "b.gt     3b                                   \n"
+
+      "99:                                           \n"
+      : [src] "+r"(src_argb),            // %[src]
+        [dst_y] "+r"(dst_y),             // %[dst_y]
+        [width] "+r"(width)              // %[width]
+      : [c] "r"(c),                      // %[c]
+        [vl] "r"(vl),                    // %[vl]
+        [vl2] "r"(vl * 2),               // %[vl2]
+        [vl3] "r"(vl * 3)                // %[vl3]
+      : "cc", "memory", "z0", "z1", "z2", "z3", "z16", "z17", "z18", "z19",
+        "z24", "z25", "p0", "p1", "p2", "p3", "p4", "p5");
 }
 
 #endif  // !defined(LIBYUV_DISABLE_SVE) && defined(__aarch64__)

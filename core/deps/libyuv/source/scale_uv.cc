@@ -11,6 +11,7 @@
 #include "libyuv/scale_uv.h"
 
 #include <assert.h>
+#include <limits.h>
 #include <string.h>
 
 #include "libyuv/cpu_id.h"
@@ -59,8 +60,8 @@ static void ScaleUVDown2(int src_width,
                          int src_height,
                          int dst_width,
                          int dst_height,
-                         int src_stride,
-                         int dst_stride,
+                         ptrdiff_t src_stride,
+                         ptrdiff_t dst_stride,
                          const uint8_t* src_uv,
                          uint8_t* dst_uv,
                          int x,
@@ -69,7 +70,7 @@ static void ScaleUVDown2(int src_width,
                          int dy,
                          enum FilterMode filtering) {
   int j;
-  int row_stride = src_stride * (dy >> 16);
+  ptrdiff_t row_stride = src_stride * (dy >> 16);
   void (*ScaleUVRowDown2)(const uint8_t* src_uv, ptrdiff_t src_stride,
                           uint8_t* dst_uv, int dst_width) =
       filtering == kFilterNone
@@ -83,9 +84,9 @@ static void ScaleUVDown2(int src_width,
   assert((dy & 0x1ffff) == 0);  // Test vertical scale is multiple of 2.
   // Advance to odd row, even column.
   if (filtering == kFilterBilinear) {
-    src_uv += (y >> 16) * (intptr_t)src_stride + (x >> 16) * 2;
+    src_uv += (y >> 16) * src_stride + (x >> 16) * 2;
   } else {
-    src_uv += (y >> 16) * (intptr_t)src_stride + ((x >> 16) - 1) * 2;
+    src_uv += (y >> 16) * src_stride + ((x >> 16) - 1) * 2;
   }
 
 #if defined(HAS_SCALEUVROWDOWN2BOX_SSSE3)
@@ -155,23 +156,6 @@ static void ScaleUVDown2(int src_width,
   }
 #endif
 
-#if defined(HAS_SCALEUVROWDOWN2_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVRowDown2 =
-        filtering == kFilterNone
-            ? ScaleUVRowDown2_Any_MSA
-            : (filtering == kFilterLinear ? ScaleUVRowDown2Linear_Any_MSA
-                                          : ScaleUVRowDown2Box_Any_MSA);
-    if (IS_ALIGNED(dst_width, 2)) {
-      ScaleUVRowDown2 =
-          filtering == kFilterNone
-              ? ScaleUVRowDown2_MSA
-              : (filtering == kFilterLinear ? ScaleUVRowDown2Linear_MSA
-                                            : ScaleUVRowDown2Box_MSA);
-    }
-  }
-#endif
-
   if (filtering == kFilterLinear) {
     src_stride = 0;
   }
@@ -191,8 +175,8 @@ static int ScaleUVDown4Box(int src_width,
                            int src_height,
                            int dst_width,
                            int dst_height,
-                           int src_stride,
-                           int dst_stride,
+                           ptrdiff_t src_stride,
+                           ptrdiff_t dst_stride,
                            const uint8_t* src_uv,
                            uint8_t* dst_uv,
                            int x,
@@ -205,12 +189,12 @@ static int ScaleUVDown4Box(int src_width,
   align_buffer_64(row, row_size * 2);
   if (!row)
     return 1;
-  int row_stride = src_stride * (dy >> 16);
+  ptrdiff_t row_stride = src_stride * (dy >> 16);
   void (*ScaleUVRowDown2)(const uint8_t* src_uv, ptrdiff_t src_stride,
                           uint8_t* dst_uv, int dst_width) =
       ScaleUVRowDown2Box_C;
   // Advance to odd row, even column.
-  src_uv += (y >> 16) * (intptr_t)src_stride + (x >> 16) * 2;
+  src_uv += (y >> 16) * src_stride + (x >> 16) * 2;
   (void)src_width;
   (void)src_height;
   (void)dx;
@@ -273,8 +257,8 @@ static void ScaleUVDownEven(int src_width,
                             int src_height,
                             int dst_width,
                             int dst_height,
-                            int src_stride,
-                            int dst_stride,
+                            ptrdiff_t src_stride,
+                            ptrdiff_t dst_stride,
                             const uint8_t* src_uv,
                             uint8_t* dst_uv,
                             int x,
@@ -284,7 +268,7 @@ static void ScaleUVDownEven(int src_width,
                             enum FilterMode filtering) {
   int j;
   int col_step = dx >> 16;
-  ptrdiff_t row_stride = (ptrdiff_t)((dy >> 16) * (intptr_t)src_stride);
+  ptrdiff_t row_stride = (dy >> 16) * src_stride;
   void (*ScaleUVRowDownEven)(const uint8_t* src_uv, ptrdiff_t src_stride,
                              int src_step, uint8_t* dst_uv, int dst_width) =
       filtering ? ScaleUVRowDownEvenBox_C : ScaleUVRowDownEven_C;
@@ -292,7 +276,7 @@ static void ScaleUVDownEven(int src_width,
   (void)src_height;
   assert(IS_ALIGNED(src_width, 2));
   assert(IS_ALIGNED(src_height, 2));
-  src_uv += (y >> 16) * (intptr_t)src_stride + (x >> 16) * 2;
+  src_uv += (y >> 16) * src_stride + (x >> 16) * 2;
 #if defined(HAS_SCALEUVROWDOWNEVEN_SSSE3)
   if (TestCpuFlag(kCpuHasSSSE3)) {
     ScaleUVRowDownEven = filtering ? ScaleUVRowDownEvenBox_Any_SSSE3
@@ -318,16 +302,6 @@ static void ScaleUVDownEven(int src_width,
     if (IS_ALIGNED(dst_width, 4)) {
       ScaleUVRowDownEven =
           filtering ? ScaleUVRowDownEvenBox_NEON : ScaleUVRowDownEven_NEON;
-    }
-  }
-#endif
-#if defined(HAS_SCALEUVROWDOWNEVEN_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVRowDownEven =
-        filtering ? ScaleUVRowDownEvenBox_Any_MSA : ScaleUVRowDownEven_Any_MSA;
-    if (IS_ALIGNED(dst_width, 4)) {
-      ScaleUVRowDownEven =
-          filtering ? ScaleUVRowDownEvenBox_MSA : ScaleUVRowDownEven_MSA;
     }
   }
 #endif
@@ -361,8 +335,8 @@ static int ScaleUVBilinearDown(int src_width,
                                int src_height,
                                int dst_width,
                                int dst_height,
-                               int src_stride,
-                               int dst_stride,
+                               ptrdiff_t src_stride,
+                               ptrdiff_t dst_stride,
                                const uint8_t* src_uv,
                                uint8_t* dst_uv,
                                int x,
@@ -390,14 +364,6 @@ static int ScaleUVBilinearDown(int src_width,
   clip_src_width = (int)(xr - xl) * 2;  // Width aligned to 2.
   src_uv += xl * 2;
   x -= (int)(xl << 16);
-#if defined(HAS_INTERPOLATEROW_SSSE3)
-  if (TestCpuFlag(kCpuHasSSSE3)) {
-    InterpolateRow = InterpolateRow_Any_SSSE3;
-    if (IS_ALIGNED(clip_src_width, 16)) {
-      InterpolateRow = InterpolateRow_SSSE3;
-    }
-  }
-#endif
 #if defined(HAS_INTERPOLATEROW_AVX2)
   if (TestCpuFlag(kCpuHasAVX2)) {
     InterpolateRow = InterpolateRow_Any_AVX2;
@@ -414,17 +380,14 @@ static int ScaleUVBilinearDown(int src_width,
     }
   }
 #endif
+#if defined(HAS_INTERPOLATEROW_SVE2)
+  if (TestCpuFlag(kCpuHasSVE2)) {
+    InterpolateRow = InterpolateRow_SVE2;
+  }
+#endif
 #if defined(HAS_INTERPOLATEROW_SME)
   if (TestCpuFlag(kCpuHasSME)) {
     InterpolateRow = InterpolateRow_SME;
-  }
-#endif
-#if defined(HAS_INTERPOLATEROW_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    InterpolateRow = InterpolateRow_Any_MSA;
-    if (IS_ALIGNED(clip_src_width, 32)) {
-      InterpolateRow = InterpolateRow_MSA;
-    }
   }
 #endif
 #if defined(HAS_INTERPOLATEROW_LSX)
@@ -453,14 +416,6 @@ static int ScaleUVBilinearDown(int src_width,
     }
   }
 #endif
-#if defined(HAS_SCALEUVFILTERCOLS_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVFilterCols = ScaleUVFilterCols_Any_MSA;
-    if (IS_ALIGNED(dst_width, 8)) {
-      ScaleUVFilterCols = ScaleUVFilterCols_MSA;
-    }
-  }
-#endif
   // TODO(fbarchard): Consider not allocating row buffer for kFilterLinear.
   // Allocate a row of UV.
   {
@@ -473,7 +428,7 @@ static int ScaleUVBilinearDown(int src_width,
     }
     for (j = 0; j < dst_height; ++j) {
       int yi = y >> 16;
-      const uint8_t* src = src_uv + yi * (intptr_t)src_stride;
+      const uint8_t* src = src_uv + yi * src_stride;
       if (filtering == kFilterLinear) {
         ScaleUVFilterCols(dst_uv, src, dst_width, x, dx);
       } else {
@@ -499,8 +454,8 @@ static int ScaleUVBilinearUp(int src_width,
                              int src_height,
                              int dst_width,
                              int dst_height,
-                             int src_stride,
-                             int dst_stride,
+                             ptrdiff_t src_stride,
+                             ptrdiff_t dst_stride,
                              const uint8_t* src_uv,
                              uint8_t* dst_uv,
                              int x,
@@ -516,14 +471,6 @@ static int ScaleUVBilinearUp(int src_width,
                             int dst_width, int x, int dx) =
       filtering ? ScaleUVFilterCols_C : ScaleUVCols_C;
   const int max_y = (src_height - 1) << 16;
-#if defined(HAS_INTERPOLATEROW_SSSE3)
-  if (TestCpuFlag(kCpuHasSSSE3)) {
-    InterpolateRow = InterpolateRow_Any_SSSE3;
-    if (IS_ALIGNED(dst_width, 8)) {
-      InterpolateRow = InterpolateRow_SSSE3;
-    }
-  }
-#endif
 #if defined(HAS_INTERPOLATEROW_AVX2)
   if (TestCpuFlag(kCpuHasAVX2)) {
     InterpolateRow = InterpolateRow_Any_AVX2;
@@ -540,17 +487,14 @@ static int ScaleUVBilinearUp(int src_width,
     }
   }
 #endif
+#if defined(HAS_INTERPOLATEROW_SVE2)
+  if (TestCpuFlag(kCpuHasSVE2)) {
+    InterpolateRow = InterpolateRow_SVE2;
+  }
+#endif
 #if defined(HAS_INTERPOLATEROW_SME)
   if (TestCpuFlag(kCpuHasSME)) {
     InterpolateRow = InterpolateRow_SME;
-  }
-#endif
-#if defined(HAS_INTERPOLATEROW_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    InterpolateRow = InterpolateRow_Any_MSA;
-    if (IS_ALIGNED(dst_width, 16)) {
-      InterpolateRow = InterpolateRow_MSA;
-    }
   }
 #endif
 #if defined(HAS_INTERPOLATEROW_LSX)
@@ -582,14 +526,6 @@ static int ScaleUVBilinearUp(int src_width,
     }
   }
 #endif
-#if defined(HAS_SCALEUVFILTERCOLS_MSA)
-  if (filtering && TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVFilterCols = ScaleUVFilterCols_Any_MSA;
-    if (IS_ALIGNED(dst_width, 16)) {
-      ScaleUVFilterCols = ScaleUVFilterCols_MSA;
-    }
-  }
-#endif
 #if defined(HAS_SCALEUVCOLS_SSSE3)
   if (!filtering && TestCpuFlag(kCpuHasSSSE3) && src_width < 32768) {
     ScaleUVFilterCols = ScaleUVCols_SSSE3;
@@ -600,14 +536,6 @@ static int ScaleUVBilinearUp(int src_width,
     ScaleUVFilterCols = ScaleUVCols_Any_NEON;
     if (IS_ALIGNED(dst_width, 16)) {
       ScaleUVFilterCols = ScaleUVCols_NEON;
-    }
-  }
-#endif
-#if defined(HAS_SCALEUVCOLS_MSA)
-  if (!filtering && TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVFilterCols = ScaleUVCols_Any_MSA;
-    if (IS_ALIGNED(dst_width, 8)) {
-      ScaleUVFilterCols = ScaleUVCols_MSA;
     }
   }
 #endif
@@ -626,7 +554,7 @@ static int ScaleUVBilinearUp(int src_width,
 
   {
     int yi = y >> 16;
-    const uint8_t* src = src_uv + yi * (intptr_t)src_stride;
+    const uint8_t* src = src_uv + yi * src_stride;
 
     // Allocate 2 rows of UV.
     const int row_size = (dst_width * 2 + 15) & ~15;
@@ -635,7 +563,7 @@ static int ScaleUVBilinearUp(int src_width,
       return 1;
 
     uint8_t* rowptr = row;
-    int rowstride = row_size;
+    ptrdiff_t rowstride = row_size;
     int lasty = yi;
 
     ScaleUVFilterCols(rowptr, src, dst_width, x, dx);
@@ -653,7 +581,7 @@ static int ScaleUVBilinearUp(int src_width,
         if (y > max_y) {
           y = max_y;
           yi = y >> 16;
-          src = src_uv + yi * (intptr_t)src_stride;
+          src = src_uv + yi * src_stride;
         }
         if (yi != lasty) {
           ScaleUVFilterCols(rowptr, src, dst_width, x, dx);
@@ -689,8 +617,8 @@ static void ScaleUVLinearUp2(int src_width,
                              int src_height,
                              int dst_width,
                              int dst_height,
-                             int src_stride,
-                             int dst_stride,
+                             ptrdiff_t src_stride,
+                             ptrdiff_t dst_stride,
                              const uint8_t* src_uv,
                              uint8_t* dst_uv) {
   void (*ScaleRowUp)(const uint8_t* src_uv, uint8_t* dst_uv, int dst_width) =
@@ -728,13 +656,12 @@ static void ScaleUVLinearUp2(int src_width,
 #endif
 
   if (dst_height == 1) {
-    ScaleRowUp(src_uv + ((src_height - 1) / 2) * (intptr_t)src_stride, dst_uv,
-               dst_width);
+    ScaleRowUp(src_uv + ((src_height - 1) / 2) * src_stride, dst_uv, dst_width);
   } else {
     dy = FixedDiv(src_height - 1, dst_height - 1);
     y = (1 << 15) - 1;
     for (i = 0; i < dst_height; ++i) {
-      ScaleRowUp(src_uv + (y >> 16) * (intptr_t)src_stride, dst_uv, dst_width);
+      ScaleRowUp(src_uv + (y >> 16) * src_stride, dst_uv, dst_width);
       dst_uv += dst_stride;
       y += dy;
     }
@@ -810,8 +737,8 @@ static void ScaleUVLinearUp2_16(int src_width,
                                 int src_height,
                                 int dst_width,
                                 int dst_height,
-                                int src_stride,
-                                int dst_stride,
+                                ptrdiff_t src_stride,
+                                ptrdiff_t dst_stride,
                                 const uint16_t* src_uv,
                                 uint16_t* dst_uv) {
   void (*ScaleRowUp)(const uint16_t* src_uv, uint16_t* dst_uv, int dst_width) =
@@ -843,13 +770,12 @@ static void ScaleUVLinearUp2_16(int src_width,
 #endif
 
   if (dst_height == 1) {
-    ScaleRowUp(src_uv + ((src_height - 1) / 2) * (intptr_t)src_stride, dst_uv,
-               dst_width);
+    ScaleRowUp(src_uv + ((src_height - 1) / 2) * src_stride, dst_uv, dst_width);
   } else {
     dy = FixedDiv(src_height - 1, dst_height - 1);
     y = (1 << 15) - 1;
     for (i = 0; i < dst_height; ++i) {
-      ScaleRowUp(src_uv + (y >> 16) * (intptr_t)src_stride, dst_uv, dst_width);
+      ScaleRowUp(src_uv + (y >> 16) * src_stride, dst_uv, dst_width);
       dst_uv += dst_stride;
       y += dy;
     }
@@ -919,8 +845,8 @@ static void ScaleUVSimple(int src_width,
                           int src_height,
                           int dst_width,
                           int dst_height,
-                          int src_stride,
-                          int dst_stride,
+                          ptrdiff_t src_stride,
+                          ptrdiff_t dst_stride,
                           const uint8_t* src_uv,
                           uint8_t* dst_uv,
                           int x,
@@ -945,14 +871,6 @@ static void ScaleUVSimple(int src_width,
     }
   }
 #endif
-#if defined(HAS_SCALEUVCOLS_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    ScaleUVCols = ScaleUVCols_Any_MSA;
-    if (IS_ALIGNED(dst_width, 4)) {
-      ScaleUVCols = ScaleUVCols_MSA;
-    }
-  }
-#endif
   if (src_width * 2 == dst_width && x < 0x8000) {
     ScaleUVCols = ScaleUVColsUp2_C;
 #if defined(HAS_SCALEUVCOLSUP2_SSSE3)
@@ -963,8 +881,7 @@ static void ScaleUVSimple(int src_width,
   }
 
   for (j = 0; j < dst_height; ++j) {
-    ScaleUVCols(dst_uv, src_uv + (y >> 16) * (intptr_t)src_stride, dst_width, x,
-                dx);
+    ScaleUVCols(dst_uv, src_uv + (y >> 16) * src_stride, dst_width, x, dx);
     dst_uv += dst_stride;
     y += dy;
   }
@@ -978,13 +895,13 @@ static int UVCopy(const uint8_t* src_uv,
                   int dst_stride_uv,
                   int width,
                   int height) {
-  if (!src_uv || !dst_uv || width <= 0 || height == 0) {
+  if (!src_uv || !dst_uv || width <= 0 || height == 0 || height == INT_MIN) {
     return -1;
   }
   // Negative height means invert the image.
   if (height < 0) {
     height = -height;
-    src_uv = src_uv + (height - 1) * (intptr_t)src_stride_uv;
+    src_uv = src_uv + (height - 1) * (ptrdiff_t)src_stride_uv;
     src_stride_uv = -src_stride_uv;
   }
 
@@ -998,13 +915,13 @@ static int UVCopy_16(const uint16_t* src_uv,
                      int dst_stride_uv,
                      int width,
                      int height) {
-  if (!src_uv || !dst_uv || width <= 0 || height == 0) {
+  if (!src_uv || !dst_uv || width <= 0 || height == 0 || height == INT_MIN) {
     return -1;
   }
   // Negative height means invert the image.
   if (height < 0) {
     height = -height;
-    src_uv = src_uv + (height - 1) * (intptr_t)src_stride_uv;
+    src_uv = src_uv + (height - 1) * (ptrdiff_t)src_stride_uv;
     src_stride_uv = -src_stride_uv;
   }
 
@@ -1042,7 +959,7 @@ static int ScaleUV(const uint8_t* src,
   // Negative src_height means invert the image.
   if (src_height < 0) {
     src_height = -src_height;
-    src = src + (src_height - 1) * (intptr_t)src_stride;
+    src = src + (src_height - 1) * (ptrdiff_t)src_stride;
     src_stride = -src_stride;
   }
   ScaleSlope(src_width, src_height, dst_width, dst_height, filtering, &x, &y,
@@ -1057,8 +974,8 @@ static int ScaleUV(const uint8_t* src,
   if (clip_y) {
     int64_t clipf = (int64_t)(clip_y)*dy;
     y += (clipf & 0xffff);
-    src += (clipf >> 16) * (intptr_t)src_stride;
-    dst += clip_y * dst_stride;
+    src += (clipf >> 16) * (ptrdiff_t)src_stride;
+    dst += clip_y * (ptrdiff_t)dst_stride;
   }
 
   // Special case for integer step values.
@@ -1098,9 +1015,8 @@ static int ScaleUV(const uint8_t* src,
 #ifdef HAS_UVCOPY
         if (dx == 0x10000 && dy == 0x10000) {
           // Straight copy.
-          UVCopy(src + (y >> 16) * (intptr_t)src_stride + (x >> 16) * 2,
-                 src_stride, dst, dst_stride, clip_width, clip_height);
-          return 0;
+          return UVCopy(src + (y >> 16) * (ptrdiff_t)src_stride + (x >> 16) * 2,
+                        src_stride, dst, dst_stride, clip_width, clip_height);
         }
 #endif
       }
@@ -1156,7 +1072,8 @@ int UVScale(const uint8_t* src_uv,
             int dst_height,
             enum FilterMode filtering) {
   if (!src_uv || src_width <= 0 || src_height == 0 || src_width > 32768 ||
-      src_height > 32768 || !dst_uv || dst_width <= 0 || dst_height <= 0) {
+      src_height < -32768 || src_height > 32768 || !dst_uv || dst_width <= 0 ||
+      dst_height <= 0) {
     return -1;
   }
   return ScaleUV(src_uv, src_stride_uv, src_width, src_height, dst_uv,
@@ -1178,8 +1095,9 @@ int UVScale_16(const uint16_t* src_uv,
                enum FilterMode filtering) {
   int dy = 0;
 
-  if (!src_uv || src_width <= 0 || src_height == 0 || src_width > 32768 ||
-      src_height > 32768 || !dst_uv || dst_width <= 0 || dst_height <= 0) {
+  if (!src_uv || src_width <= 0 || src_height == 0 || src_height == INT_MIN ||
+      src_width > 32768 || src_height > 32768 || !dst_uv || dst_width <= 0 ||
+      dst_height <= 0) {
     return -1;
   }
 
@@ -1191,7 +1109,7 @@ int UVScale_16(const uint16_t* src_uv,
   // Negative src_height means invert the image.
   if (src_height < 0) {
     src_height = -src_height;
-    src_uv = src_uv + (src_height - 1) * (intptr_t)src_stride_uv;
+    src_uv = src_uv + (src_height - 1) * (ptrdiff_t)src_stride_uv;
     src_stride_uv = -src_stride_uv;
   }
   src_width = Abs(src_width);
@@ -1199,16 +1117,17 @@ int UVScale_16(const uint16_t* src_uv,
 #ifdef HAS_UVCOPY
   if (!filtering && src_width == dst_width && (src_height % dst_height == 0)) {
     if (dst_height == 1) {
-      UVCopy_16(src_uv + ((src_height - 1) / 2) * (intptr_t)src_stride_uv,
-                src_stride_uv, dst_uv, dst_stride_uv, dst_width, dst_height);
-    } else {
-      dy = src_height / dst_height;
-      UVCopy_16(src_uv + ((dy - 1) / 2) * (intptr_t)src_stride_uv,
-                (int)(dy * (intptr_t)src_stride_uv), dst_uv, dst_stride_uv,
-                dst_width, dst_height);
+      return UVCopy_16(
+          src_uv + ((src_height - 1) / 2) * (ptrdiff_t)src_stride_uv,
+          src_stride_uv, dst_uv, dst_stride_uv, dst_width, dst_height);
     }
-
-    return 0;
+    dy = src_height / dst_height;
+    if (src_stride_uv > INT_MAX / dy) {
+      return -1;
+    }
+    return UVCopy_16(src_uv + ((dy - 1) / 2) * (ptrdiff_t)src_stride_uv,
+                     dy * src_stride_uv, dst_uv, dst_stride_uv, dst_width,
+                     dst_height);
   }
 #endif
 

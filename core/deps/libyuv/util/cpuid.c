@@ -15,13 +15,8 @@
 #ifdef __linux__
 #include <ctype.h>
 #include <sys/utsname.h>
-#include <unistd.h>  // for sysconf
-#endif
-#if defined(_WIN32)
-#include <windows.h>  // for GetSystemInfo
-#endif
-#if defined(__APPLE__)
-#include <sys/sysctl.h>  // for sysctlbyname
+#include <signal.h>
+#include <setjmp.h>
 #endif
 
 #include "libyuv/cpu_id.h"
@@ -47,6 +42,14 @@ static void KernelVersion(int* version) {
 }
 #endif
 
+#ifdef __linux__
+static sigjmp_buf vdpphps_jmpbuf;
+static void vdpphps_sigill_handler(int sig) {
+  (void)sig;
+  siglongjmp(vdpphps_jmpbuf, 1);
+}
+#endif
+
 int main(int argc, const char* argv[]) {
   (void)argc;
   (void)argv;
@@ -58,23 +61,6 @@ int main(int argc, const char* argv[]) {
     printf("Kernel Version %d.%d\n", kernelversion[0], kernelversion[1]);
   }
 #endif  // defined(__linux__)
-#if defined(_WIN32)
-  SYSTEM_INFO sysInfo;
-  GetSystemInfo(&sysInfo);
-  int num_cpus = (int)sysInfo.dwNumberOfProcessors;
-#elif defined(__linux__)
-  int num_cpus = sysconf(_SC_NPROCESSORS_ONLN);
-#elif defined(__APPLE__)
-  int num_cpus = 0;
-  size_t num_cpus_len = sizeof(num_cpus);
-  // Get the number of logical CPU cores
-  if (sysctlbyname("hw.logicalcpu", &num_cpus, &num_cpus_len, NULL, 0) == -1) {
-    printf("sysctlbyname failed to get hw.logicalcpu\n");
-  }
-#else
-  int num_cpus = 0;  // unknown OS
-#endif
-  printf("Number of cpus: %d\n", num_cpus);
 
 #if defined(__arm__) || defined(__aarch64__)
   int has_arm = TestCpuFlag(kCpuHasARM);
@@ -84,6 +70,7 @@ int main(int argc, const char* argv[]) {
     int has_neon_i8mm = TestCpuFlag(kCpuHasNeonI8MM);
     int has_sve = TestCpuFlag(kCpuHasSVE);
     int has_sve2 = TestCpuFlag(kCpuHasSVE2);
+    int has_sve_f32mm = TestCpuFlag(kCpuHasSVEF32MM);
     int has_sme = TestCpuFlag(kCpuHasSME);
     int has_sme2 = TestCpuFlag(kCpuHasSME2);
     printf("Has Arm 0x%x\n", has_arm);
@@ -92,6 +79,7 @@ int main(int argc, const char* argv[]) {
     printf("Has Neon I8MM 0x%x\n", has_neon_i8mm);
     printf("Has SVE 0x%x\n", has_sve);
     printf("Has SVE2 0x%x\n", has_sve2);
+    printf("Has SVE F32MM 0x%x\n", has_sve_f32mm);
     printf("Has SME 0x%x\n", has_sme);
     printf("Has SME2 0x%x\n", has_sme2);
 
@@ -137,15 +125,6 @@ int main(int argc, const char* argv[]) {
   }
 #endif  // defined(__riscv)
 
-#if defined(__mips__)
-  int has_mips = TestCpuFlag(kCpuHasMIPS);
-  if (has_mips) {
-    int has_msa = TestCpuFlag(kCpuHasMSA);
-    printf("Has MIPS 0x%x\n", has_mips);
-    printf("Has MSA 0x%x\n", has_msa);
-  }
-#endif  // defined(__mips__)
-
 #if defined(__loongarch__)
   int has_loongarch = TestCpuFlag(kCpuHasLOONGARCH);
   if (has_loongarch) {
@@ -178,13 +157,6 @@ int main(int argc, const char* argv[]) {
     cpu_info[1] = cpu_info[3];
     cpu_info[3] = 0;
     printf("Cpu Vendor: %s\n", (char*)(&cpu_info[0]));
-
-    for (int n = 0; n < num_cpus; ++n) {
-      // Check EDX bit 15 for hybrid design indication
-      CpuId(7, n, &cpu_info[0]);
-      int hybrid = (cpu_info[3] >> 15) & 1;
-      printf("  Cpu %d Hybrid %d\n", n, hybrid);
-    }
 
     // CPU Family and Model
     // 3:0 - Stepping
@@ -220,6 +192,7 @@ int main(int argc, const char* argv[]) {
     int has_avxvnni = TestCpuFlag(kCpuHasAVXVNNI);
     int has_avxvnniint8 = TestCpuFlag(kCpuHasAVXVNNIINT8);
     int has_amxint8 = TestCpuFlag(kCpuHasAMXINT8);
+    int has_avx512bmm = TestCpuFlag(kCpuHasAVX512BMM);
     printf("Has X86 0x%x\n", has_x86);
     printf("Has SSE2 0x%x\n", has_sse2);
     printf("Has SSSE3 0x%x\n", has_ssse3);
@@ -242,6 +215,30 @@ int main(int argc, const char* argv[]) {
     printf("HAS AVXVNNI 0x%x\n", has_avxvnni);
     printf("Has AVXVNNIINT8 0x%x\n", has_avxvnniint8);
     printf("Has AMXINT8 0x%x\n", has_amxint8);
+    printf("Has AVX512BMM 0x%x\n", has_avx512bmm);
+
+#ifdef __linux__
+    // Test VDPPHPS instruction
+    {
+      struct sigaction act, oldact;
+      memset(&act, 0, sizeof(act));
+      act.sa_handler = vdpphps_sigill_handler;
+      sigaction(SIGILL, &act, &oldact);
+
+      printf("Testing VDPPHPS instruction... ");
+      fflush(stdout);
+
+      if (sigsetjmp(vdpphps_jmpbuf, 1) == 0) {
+        // VDPPHPS xmm0, xmm0, xmm0
+        __asm__ volatile(".byte 0x62, 0xf2, 0x7c, 0x08, 0x52, 0xc0" : : : "xmm0");
+        printf("Works!\n");
+      } else {
+        printf("Crashed (SIGILL)!\n");
+      }
+
+      sigaction(SIGILL, &oldact, NULL);
+    }
+#endif
   }
 #endif  // defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) ||
         // defined(_M_X64)

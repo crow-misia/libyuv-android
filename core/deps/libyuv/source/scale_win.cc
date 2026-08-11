@@ -104,7 +104,7 @@ __declspec(naked) void ScaleRowDown2_SSSE3(const uint8_t* src_ptr,
     movdqu     xmm0, [eax]
     movdqu     xmm1, [eax + 16]
     lea        eax,  [eax + 32]
-    psrlw      xmm0, 8          // isolate odd pixels.
+    psrlw      xmm0, 8       // isolate odd pixels.
     psrlw      xmm1, 8
     packuswb   xmm0, xmm1
     movdqu     [edx], xmm0
@@ -138,7 +138,7 @@ __declspec(naked) void ScaleRowDown2Linear_SSSE3(const uint8_t* src_ptr,
     lea        eax,  [eax + 32]
     pmaddubsw  xmm0, xmm4  // horizontal add
     pmaddubsw  xmm1, xmm4
-    pavgw      xmm0, xmm5       // (x + 1) / 2
+    pavgw      xmm0, xmm5    // (x + 1) / 2
     pavgw      xmm1, xmm5
     packuswb   xmm0, xmm1
     movdqu     [edx], xmm0
@@ -213,7 +213,7 @@ __declspec(naked) void ScaleRowDown2_AVX2(const uint8_t* src_ptr,
     vpsrlw      ymm0, ymm0, 8  // isolate odd pixels.
     vpsrlw      ymm1, ymm1, 8
     vpackuswb   ymm0, ymm0, ymm1
-    vpermq      ymm0, ymm0, 0xd8       // unmutate vpackuswb
+    vpermq      ymm0, ymm0, 0xd8    // unmutate vpackuswb
     vmovdqu     [edx], ymm0
     lea         edx, [edx + 32]
     sub         ecx, 32
@@ -249,7 +249,7 @@ __declspec(naked) void ScaleRowDown2Linear_AVX2(const uint8_t* src_ptr,
     vpavgw      ymm0, ymm0, ymm5  // (x + 1) / 2
     vpavgw      ymm1, ymm1, ymm5
     vpackuswb   ymm0, ymm0, ymm1
-    vpermq      ymm0, ymm0, 0xd8       // unmutate vpackuswb
+    vpermq      ymm0, ymm0, 0xd8    // unmutate vpackuswb
     vmovdqu     [edx], ymm0
     lea         edx, [edx + 32]
     sub         ecx, 32
@@ -319,7 +319,7 @@ __declspec(naked) void ScaleRowDown4_SSSE3(const uint8_t* src_ptr,
     // src_stride ignored
     mov        edx, [esp + 12]  // dst_ptr
     mov        ecx, [esp + 16]  // dst_width
-    pcmpeqb    xmm5, xmm5       // generate mask 0x00ff0000
+    pcmpeqb    xmm5, xmm5     // generate mask 0x00ff0000
     psrld      xmm5, 24
     pslld      xmm5, 16
 
@@ -424,7 +424,7 @@ __declspec(naked) void ScaleRowDown4_AVX2(const uint8_t* src_ptr,
     vpermq      ymm0, ymm0, 0xd8  // unmutate vpackuswb
     vpsrlw      ymm0, ymm0, 8
     vpackuswb   ymm0, ymm0, ymm0
-    vpermq      ymm0, ymm0, 0xd8       // unmutate vpackuswb
+    vpermq      ymm0, ymm0, 0xd8    // unmutate vpackuswb
     vmovdqu     [edx], xmm0
     lea         edx, [edx + 16]
     sub         ecx, 16
@@ -687,7 +687,7 @@ __declspec(naked) void ScaleRowDown38_SSSE3(const uint8_t* src_ptr,
     pshufb     xmm1, xmm5
     paddusb    xmm0, xmm1
 
-    movq       qword ptr [edx], xmm0       // write 12 pixels
+    movq       qword ptr [edx], xmm0    // write 12 pixels
     movhlps    xmm1, xmm0
     movd       [edx + 8], xmm1
     lea        edx, [edx + 12]
@@ -870,14 +870,8 @@ __declspec(naked) void ScaleAddRow_AVX2(const uint8_t* src_ptr,
 }
 #endif  // HAS_SCALEADDROW_AVX2
 
-// Constant for making pixels signed to avoid pmaddubsw
-// saturation.
-static const uvec8 kFsub80 = {0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-                              0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80};
-
-// Constant for making pixels unsigned and adding .5 for rounding.
-static const uvec16 kFadd40 = {0x4040, 0x4040, 0x4040, 0x4040,
-                               0x4040, 0x4040, 0x4040, 0x4040};
+static const uvec16 kFadd40 = {0x0040, 0x0040, 0x0040, 0x0040,
+                               0x0040, 0x0040, 0x0040, 0x0040};
 
 // Bilinear column filtering. SSSE3 version.
 __declspec(naked) void ScaleFilterCols_SSSE3(uint8_t* dst_ptr,
@@ -898,8 +892,8 @@ __declspec(naked) void ScaleFilterCols_SSSE3(uint8_t* dst_ptr,
     movd       xmm5, eax
     pcmpeqb    xmm6, xmm6  // generate 0x007f for inverting fraction.
     psrlw      xmm6, 9
-    pcmpeqb    xmm7, xmm7  // generate 0x0001
-    psrlw      xmm7, 15
+    pcmpeqb    xmm7, xmm7  // generate 0x00ff mask for extracting 'a'
+    psrlw      xmm7, 8
     pextrw     eax, xmm2, 1  // get x0 integer. preroll
     sub        ecx, 2
     jl         xloop29
@@ -922,16 +916,17 @@ __declspec(naked) void ScaleFilterCols_SSSE3(uint8_t* dst_ptr,
     movd       xmm4, ebx
     pshufb     xmm1, xmm5  // 0011
     punpcklwd  xmm0, xmm4
-    psubb      xmm0, xmmword ptr kFsub80  // make pixels signed.
     pxor       xmm1, xmm6  // 0..7f and 7f..0
-    paddusb    xmm1, xmm7  // +1 so 0..7f and 80..1
-    pmaddubsw  xmm1, xmm0  // 16 bit, 2 pixels.
+    movdqa     xmm4, xmm0  // Copy pixels.
+    pmaddubsw  xmm0, xmm1  // a * (127 - f) + b * f
+    pand       xmm4, xmm7  // Extract left pixels 'a'.
+    paddw      xmm0, xmm4  // a * 128 + f * (b - a)
     pextrw     eax, xmm2, 1  // get x0 integer. next iteration.
+    paddw      xmm0, xmmword ptr kFadd40  // add rounding bias 64.
     pextrw     edx, xmm2, 3  // get x1 integer. next iteration.
-    paddw      xmm1, xmmword ptr kFadd40  // make pixels unsigned and round.
-    psrlw      xmm1, 7  // 8.7 fixed point to low 8 bits.
-    packuswb   xmm1, xmm1  // 8 bits, 2 pixels.
-    movd       ebx, xmm1
+    psrlw      xmm0, 7  // 8.7 fixed point to low 8 bits.
+    packuswb   xmm0, xmm0  // 8 bits, 2 pixels.
+    movd       ebx, xmm0
     mov        [edi], bx
     lea        edi, [edi + 2]
     sub        ecx, 2  // 2 pixels
@@ -941,19 +936,20 @@ __declspec(naked) void ScaleFilterCols_SSSE3(uint8_t* dst_ptr,
     add        ecx, 2 - 1
     jl         xloop99
 
-            // 1 pixel remainder
+             // 1 pixel remainder
     movzx      ebx, word ptr [esi + eax]  // 2 source x0 pixels
     movd       xmm0, ebx
     psrlw      xmm2, 9  // 7 bit fractions.
     pshufb     xmm2, xmm5  // 0011
-    psubb      xmm0, xmmword ptr kFsub80  // make pixels signed.
     pxor       xmm2, xmm6  // 0..7f and 7f..0
-    paddusb    xmm2, xmm7  // +1 so 0..7f and 80..1
-    pmaddubsw  xmm2, xmm0  // 16 bit
-    paddw      xmm2, xmmword ptr kFadd40  // make pixels unsigned and round.
-    psrlw      xmm2, 7  // 8.7 fixed point to low 8 bits.
-    packuswb   xmm2, xmm2  // 8 bits
-    movd       ebx, xmm2
+    movdqa     xmm4, xmm0  // Copy pixels.
+    pmaddubsw  xmm0, xmm2  // a * (127 - f) + b * f
+    pand       xmm4, xmm7  // Extract left pixel 'a'.
+    paddw      xmm0, xmm4  // a * 128 + f * (b - a)
+    paddw      xmm0, xmmword ptr kFadd40  // add rounding bias 64.
+    psrlw      xmm0, 7  // 8.7 fixed point to low 8 bits.
+    packuswb   xmm0, xmm0  // 8 bits
+    movd       ebx, xmm0
     mov        [edi], bl
 
  xloop99:
@@ -1034,7 +1030,7 @@ __declspec(naked) void ScaleARGBRowDown2Linear_SSE2(const uint8_t* src_argb,
     lea        eax,  [eax + 32]
     movdqa     xmm2, xmm0
     shufps     xmm0, xmm1, 0x88  // even pixels
-    shufps     xmm2, xmm1, 0xdd       // odd pixels
+    shufps     xmm2, xmm1, 0xdd    // odd pixels
     pavgb      xmm0, xmm2
     movdqu     [edx], xmm0
     lea        edx, [edx + 16]
@@ -1220,7 +1216,7 @@ __declspec(naked) void ScaleARGBCols_SSE2(uint8_t* dst_argb,
     test       ecx, 2
     je         xloop29
 
-        // 2 Pixels.
+         // 2 Pixels.
     movd       xmm0, [esi + eax * 4]  // 1 source x0 pixels
     movd       xmm1, [esi + edx * 4]  // 1 source x1 pixels
     pextrw     eax, xmm2, 5  // get x2 integer.
@@ -1233,7 +1229,7 @@ __declspec(naked) void ScaleARGBCols_SSE2(uint8_t* dst_argb,
     test       ecx, 1
     je         xloop99
 
-        // 1 Pixels.
+         // 1 Pixels.
     movd       xmm0, [esi + eax * 4]  // 1 source x2 pixels
     movd       dword ptr [edi], xmm0
  xloop99:

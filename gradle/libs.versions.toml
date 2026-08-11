@@ -10,7 +10,7 @@ android-compile-sdk = "36"
 
 android-target-sdk = "35"
 
-android-ndk = "28.1.13356709"
+android-ndk = "29.0.14206865"
 
 android-gradle-plugin = "9.3.1"
 

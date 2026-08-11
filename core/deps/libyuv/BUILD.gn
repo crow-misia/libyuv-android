@@ -22,16 +22,12 @@ declare_args() {
 
 config("libyuv_config") {
   include_dirs = [ "include" ]
-  if (is_android) {
-    if (target_cpu == "arm" || target_cpu == "x86" || target_cpu == "mipsel") {
-      ldflags = [ "-Wl,--dynamic-linker,/system/bin/linker" ]
-    } else {
-      ldflags = [ "-Wl,--dynamic-linker,/system/bin/linker64" ]
-    }
-  }
 
   # Define CHROMIUM to tell cpu_id to avoid sandbox unsafe system calls.
   defines = [ "CHROMIUM" ]
+  if (libyuv_enable_rowwin) {
+    defines += [ "LIBYUV_ENABLE_ROWWIN=1" ]
+  }
   if (!libyuv_use_neon) {
     defines += [ "LIBYUV_DISABLE_NEON" ]
   }
@@ -73,7 +69,7 @@ group("libyuv") {
   all_dependent_configs = [ ":libyuv_config" ]
   deps = []
 
-  if (is_win && target_cpu == "x64") {
+  if (is_win && target_cpu == "x64" && current_toolchain == default_toolchain) {
     # Compile with clang in order to get inline assembly
     public_deps = [ ":libyuv_internal(//build/toolchain/win:win_clang_x64)" ]
   } else {
@@ -90,10 +86,6 @@ group("libyuv") {
 
   if (libyuv_use_sme) {
     deps += [ ":libyuv_sme" ]
-  }
-
-  if (libyuv_use_msa) {
-    deps += [ ":libyuv_msa" ]
   }
 
   if (libyuv_use_lsx) {
@@ -127,7 +119,6 @@ static_library("libyuv_internal") {
     "include/libyuv/convert_from_argb.h",
     "include/libyuv/cpu_id.h",
     "include/libyuv/loongson_intrinsics.h",
-    "include/libyuv/macros_msa.h",
     "include/libyuv/mjpeg_decoder.h",
     "include/libyuv/planar_functions.h",
     "include/libyuv/rotate.h",
@@ -198,9 +189,7 @@ static_library("libyuv_internal") {
     deps += [ "//third_party:jpeg_includes" ]
   }
 
-  # Always enable optimization for Release and NaCl builds (to workaround
-  # crbug.com/538243).
-  if (!is_debug || is_nacl) {
+  if (!is_debug) {
     configs -= [ "//build/config/compiler:default_optimization" ]
 
     # Enable optimize for speed (-O2) over size (-Os).
@@ -236,13 +225,12 @@ if (libyuv_use_neon) {
 
     public_configs = [ ":libyuv_config" ]
 
-    # The -march arguments below are incompatible with libc++ modules.
-    use_libcxx_modules = false
     if (current_cpu == "arm64") {
+      # The -march arguments below are incompatible with libc++ modules.
+      use_libcxx_modules = false
+
+      # TODO(thakis): Do we get this from global flags already? Is this needed?
       cflags = [ "-march=armv8-a+dotprod+i8mm" ]
-    } else {
-      configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
-      cflags = [ "-mfpu=neon" ]
     }
   }
 }
@@ -257,6 +245,7 @@ if (libyuv_use_sve) {
 
     # The -march arguments below are incompatible with libc++ modules.
     use_libcxx_modules = false
+
     # SVE2 is an Armv9-A feature.
     cflags = [ "-march=armv9-a+i8mm+sve2" ]
   }
@@ -276,24 +265,9 @@ if (libyuv_use_sme) {
 
     # The -march arguments below are incompatible with libc++ modules.
     use_libcxx_modules = false
+
     # SME is an Armv9-A feature.
     cflags = [ "-march=armv9-a+i8mm+sme" ]
-  }
-}
-
-if (libyuv_use_msa) {
-  static_library("libyuv_msa") {
-    sources = [
-      # MSA Source Files
-      "source/compare_msa.cc",
-      "source/rotate_msa.cc",
-      "source/row_msa.cc",
-      "source/scale_msa.cc",
-    ]
-
-    deps = [ ":libyuv_internal" ]
-
-    public_configs = [ ":libyuv_config" ]
   }
 }
 
@@ -416,9 +390,7 @@ if (libyuv_include_tests) {
 
     # TODO(YangZhang): These lines can be removed when high accuracy
     # YUV to RGB to Neon is ported.
-    if ((target_cpu == "armv7" || target_cpu == "armv7s" ||
-         (target_cpu == "arm" && arm_version >= 7) || target_cpu == "arm64") &&
-        (arm_use_neon || arm_optionally_use_neon)) {
+    if (target_cpu == "arm" || target_cpu == "arm64") {
       defines += [ "LIBYUV_NEON" ]
     }
 
@@ -496,12 +468,16 @@ if (libyuv_include_tests) {
 }
 
 if (!build_with_chromium) {
-  # Write debug logs to gn_logs.txt.
-  # This is also required for Siso builds.
-  import("//build/gn_logs.gni")
-  lines = [
-            "Generated during 'gn gen' by //BUILD.gn.",
-            "",
-          ] + build_gn_logs
-  write_file("$root_build_dir/gn_logs.txt", lines)
+  # GN evaluates each .gn file once per toolchain, so restricting to default
+  # toolchain will ensure write_file() is called only once.
+  if (current_toolchain == default_toolchain) {
+    # Write debug logs to gn_logs.txt.
+    # This is also required for Siso builds.
+    import("//build/gn_logs.gni")
+    lines = [
+              "Generated during 'gn gen' by //BUILD.gn.",
+              "",
+            ] + build_gn_logs
+    write_file("$root_build_dir/gn_logs.txt", lines)
+  }
 }

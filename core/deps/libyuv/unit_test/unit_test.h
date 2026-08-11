@@ -14,7 +14,7 @@
 #include <stddef.h>  // For NULL
 #ifdef _WIN32
 #include <windows.h>
-#else
+#elif !defined(__hexagon__)
 #include <sys/time.h>
 #endif
 
@@ -85,10 +85,11 @@ static inline bool SizeValid(int src_width,
 #define align_buffer_page_end_16(var, size)                                 \
   uint16_t* var = NULL;                                                     \
   uint8_t* var##_mem =                                                      \
-      reinterpret_cast<uint8_t*>(malloc(((size)*2 + 4095 + 63) & ~4095));   \
+      reinterpret_cast<uint8_t*>(malloc(((size) * 2 + 4095 + 63) & ~4095)); \
   if (var##_mem)                                                            \
   var = reinterpret_cast<uint16_t*>(                                        \
-      (intptr_t)(var##_mem + (((size)*2 + 4095 + 63) & ~4095) - (size)*2) & \
+      (intptr_t)(var##_mem + (((size) * 2 + 4095 + 63) & ~4095) -           \
+                 (size) * 2) &                                              \
       ~63)
 
 #define free_aligned_buffer_page_end_16(var) \
@@ -101,6 +102,10 @@ static inline double get_time() {
   QueryPerformanceCounter(&t);
   QueryPerformanceFrequency(&f);
   return static_cast<double>(t.QuadPart) / static_cast<double>(f.QuadPart);
+}
+#elif defined(__hexagon__)
+static inline double get_time() {
+  return 0.;
 }
 #else
 static inline double get_time() {
