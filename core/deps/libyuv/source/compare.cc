@@ -11,6 +11,7 @@
 #include "libyuv/compare.h"
 
 #include <float.h>
+#include <limits.h>
 #include <math.h>
 #ifdef _OPENMP
 #include <omp.h>
@@ -106,8 +107,11 @@ uint32_t ARGBDetect(const uint8_t* argb,
   uint32_t fourcc = 0;
   int h;
 
+  if (!argb || width <= 0 || height <= 0) {
+    return fourcc;
+  }
   // Coalesce rows.
-  if (stride_argb == width * 4) {
+  if (stride_argb == width * 4 && (ptrdiff_t)width * height <= INT_MAX) {
     width *= height;
     height = 1;
     stride_argb = 0;
@@ -157,11 +161,6 @@ uint64_t ComputeHammingDistance(const uint8_t* src_a,
 #if defined(HAS_HAMMINGDISTANCE_AVX2)
   if (TestCpuFlag(kCpuHasAVX2)) {
     HammingDistance = HammingDistance_AVX2;
-  }
-#endif
-#if defined(HAS_HAMMINGDISTANCE_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    HammingDistance = HammingDistance_MSA;
   }
 #endif
 
@@ -221,11 +220,6 @@ uint64_t ComputeSumSquareError(const uint8_t* src_a,
     SumSquareError = SumSquareError_AVX2;
   }
 #endif
-#if defined(HAS_SUMSQUAREERROR_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    SumSquareError = SumSquareError_MSA;
-  }
-#endif
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+ : sse)
 #endif
@@ -255,8 +249,12 @@ uint64_t ComputeSumSquareErrorPlane(const uint8_t* src_a,
                                     int height) {
   uint64_t sse = 0;
   int h;
+  if (!src_a || !src_b || width <= 0 || height <= 0) {
+    return sse;
+  }
   // Coalesce rows.
-  if (stride_a == width && stride_b == width) {
+  if (stride_a == width && stride_b == width &&
+      (ptrdiff_t)width * height <= INT_MAX) {
     width *= height;
     height = 1;
     stride_a = stride_b = 0;

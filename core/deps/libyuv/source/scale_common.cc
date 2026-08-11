@@ -29,19 +29,6 @@ extern "C" {
 #define STATIC_CAST(type, expr) (type)(expr)
 #endif
 
-// TODO(fbarchard): make clamp255 preserve negative values.
-static __inline int32_t clamp255(int32_t v) {
-  return (-(v >= 255) | v) & 255;
-}
-
-// Use scale to convert lsb formats to msb, depending how many bits there are:
-// 32768 = 9 bits
-// 16384 = 10 bits
-// 4096 = 12 bits
-// 256 = 16 bits
-// TODO(fbarchard): change scale to bits
-#define C16TO8(v, scale) clamp255(((v) * (scale)) >> 16)
-
 static __inline int Abs(int v) {
   return v >= 0 ? v : -v;
 }
@@ -81,49 +68,6 @@ void ScaleRowDown2_16_C(const uint16_t* src_ptr,
   }
 }
 
-void ScaleRowDown2_16To8_C(const uint16_t* src_ptr,
-                           ptrdiff_t src_stride,
-                           uint8_t* dst,
-                           int dst_width,
-                           int scale) {
-  int x;
-  (void)src_stride;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8(src_ptr[1], scale));
-    dst[1] = STATIC_CAST(uint8_t, C16TO8(src_ptr[3], scale));
-    dst += 2;
-    src_ptr += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8(src_ptr[1], scale));
-  }
-}
-
-void ScaleRowDown2_16To8_Odd_C(const uint16_t* src_ptr,
-                               ptrdiff_t src_stride,
-                               uint8_t* dst,
-                               int dst_width,
-                               int scale) {
-  int x;
-  (void)src_stride;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  dst_width -= 1;
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8(src_ptr[1], scale));
-    dst[1] = STATIC_CAST(uint8_t, C16TO8(src_ptr[3], scale));
-    dst += 2;
-    src_ptr += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8(src_ptr[1], scale));
-    dst += 1;
-    src_ptr += 2;
-  }
-  dst[0] = STATIC_CAST(uint8_t, C16TO8(src_ptr[0], scale));
-}
 
 void ScaleRowDown2Linear_C(const uint8_t* src_ptr,
                            ptrdiff_t src_stride,
@@ -161,51 +105,6 @@ void ScaleRowDown2Linear_16_C(const uint16_t* src_ptr,
   }
 }
 
-void ScaleRowDown2Linear_16To8_C(const uint16_t* src_ptr,
-                                 ptrdiff_t src_stride,
-                                 uint8_t* dst,
-                                 int dst_width,
-                                 int scale) {
-  const uint16_t* s = src_ptr;
-  int x;
-  (void)src_stride;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8((s[0] + s[1] + 1) >> 1, scale));
-    dst[1] = STATIC_CAST(uint8_t, C16TO8((s[2] + s[3] + 1) >> 1, scale));
-    dst += 2;
-    s += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8((s[0] + s[1] + 1) >> 1, scale));
-  }
-}
-
-void ScaleRowDown2Linear_16To8_Odd_C(const uint16_t* src_ptr,
-                                     ptrdiff_t src_stride,
-                                     uint8_t* dst,
-                                     int dst_width,
-                                     int scale) {
-  const uint16_t* s = src_ptr;
-  int x;
-  (void)src_stride;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  dst_width -= 1;
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8((s[0] + s[1] + 1) >> 1, scale));
-    dst[1] = STATIC_CAST(uint8_t, C16TO8((s[2] + s[3] + 1) >> 1, scale));
-    dst += 2;
-    s += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t, C16TO8((s[0] + s[1] + 1) >> 1, scale));
-    dst += 1;
-    s += 2;
-  }
-  dst[0] = STATIC_CAST(uint8_t, C16TO8(s[0], scale));
-}
 
 void ScaleRowDown2Box_C(const uint8_t* src_ptr,
                         ptrdiff_t src_stride,
@@ -269,60 +168,6 @@ void ScaleRowDown2Box_16_C(const uint16_t* src_ptr,
   }
 }
 
-void ScaleRowDown2Box_16To8_C(const uint16_t* src_ptr,
-                              ptrdiff_t src_stride,
-                              uint8_t* dst,
-                              int dst_width,
-                              int scale) {
-  const uint16_t* s = src_ptr;
-  const uint16_t* t = src_ptr + src_stride;
-  int x;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t,
-                         C16TO8((s[0] + s[1] + t[0] + t[1] + 2) >> 2, scale));
-    dst[1] = STATIC_CAST(uint8_t,
-                         C16TO8((s[2] + s[3] + t[2] + t[3] + 2) >> 2, scale));
-    dst += 2;
-    s += 4;
-    t += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t,
-                         C16TO8((s[0] + s[1] + t[0] + t[1] + 2) >> 2, scale));
-  }
-}
-
-void ScaleRowDown2Box_16To8_Odd_C(const uint16_t* src_ptr,
-                                  ptrdiff_t src_stride,
-                                  uint8_t* dst,
-                                  int dst_width,
-                                  int scale) {
-  const uint16_t* s = src_ptr;
-  const uint16_t* t = src_ptr + src_stride;
-  int x;
-  assert(scale >= 256);
-  assert(scale <= 32768);
-  dst_width -= 1;
-  for (x = 0; x < dst_width - 1; x += 2) {
-    dst[0] = STATIC_CAST(uint8_t,
-                         C16TO8((s[0] + s[1] + t[0] + t[1] + 2) >> 2, scale));
-    dst[1] = STATIC_CAST(uint8_t,
-                         C16TO8((s[2] + s[3] + t[2] + t[3] + 2) >> 2, scale));
-    dst += 2;
-    s += 4;
-    t += 4;
-  }
-  if (dst_width & 1) {
-    dst[0] = STATIC_CAST(uint8_t,
-                         C16TO8((s[0] + s[1] + t[0] + t[1] + 2) >> 2, scale));
-    dst += 1;
-    s += 2;
-    t += 2;
-  }
-  dst[0] = STATIC_CAST(uint8_t, C16TO8((s[0] + t[0] + 1) >> 1, scale));
-}
 
 void ScaleRowDown4_C(const uint8_t* src_ptr,
                      ptrdiff_t src_stride,
@@ -362,36 +207,35 @@ void ScaleRowDown4Box_C(const uint8_t* src_ptr,
                         ptrdiff_t src_stride,
                         uint8_t* dst,
                         int dst_width) {
-  intptr_t stride = src_stride;
   int x;
   for (x = 0; x < dst_width - 1; x += 2) {
     dst[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[3] +
-              src_ptr[stride + 0] + src_ptr[stride + 1] + src_ptr[stride + 2] +
-              src_ptr[stride + 3] + src_ptr[stride * 2 + 0] +
-              src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2] +
-              src_ptr[stride * 2 + 3] + src_ptr[stride * 3 + 0] +
-              src_ptr[stride * 3 + 1] + src_ptr[stride * 3 + 2] +
-              src_ptr[stride * 3 + 3] + 8) >>
+              src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+              src_ptr[src_stride + 2] + src_ptr[src_stride + 3] +
+              src_ptr[src_stride * 2 + 0] + src_ptr[src_stride * 2 + 1] +
+              src_ptr[src_stride * 2 + 2] + src_ptr[src_stride * 2 + 3] +
+              src_ptr[src_stride * 3 + 0] + src_ptr[src_stride * 3 + 1] +
+              src_ptr[src_stride * 3 + 2] + src_ptr[src_stride * 3 + 3] + 8) >>
              4;
     dst[1] = (src_ptr[4] + src_ptr[5] + src_ptr[6] + src_ptr[7] +
-              src_ptr[stride + 4] + src_ptr[stride + 5] + src_ptr[stride + 6] +
-              src_ptr[stride + 7] + src_ptr[stride * 2 + 4] +
-              src_ptr[stride * 2 + 5] + src_ptr[stride * 2 + 6] +
-              src_ptr[stride * 2 + 7] + src_ptr[stride * 3 + 4] +
-              src_ptr[stride * 3 + 5] + src_ptr[stride * 3 + 6] +
-              src_ptr[stride * 3 + 7] + 8) >>
+              src_ptr[src_stride + 4] + src_ptr[src_stride + 5] +
+              src_ptr[src_stride + 6] + src_ptr[src_stride + 7] +
+              src_ptr[src_stride * 2 + 4] + src_ptr[src_stride * 2 + 5] +
+              src_ptr[src_stride * 2 + 6] + src_ptr[src_stride * 2 + 7] +
+              src_ptr[src_stride * 3 + 4] + src_ptr[src_stride * 3 + 5] +
+              src_ptr[src_stride * 3 + 6] + src_ptr[src_stride * 3 + 7] + 8) >>
              4;
     dst += 2;
     src_ptr += 8;
   }
   if (dst_width & 1) {
     dst[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[3] +
-              src_ptr[stride + 0] + src_ptr[stride + 1] + src_ptr[stride + 2] +
-              src_ptr[stride + 3] + src_ptr[stride * 2 + 0] +
-              src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2] +
-              src_ptr[stride * 2 + 3] + src_ptr[stride * 3 + 0] +
-              src_ptr[stride * 3 + 1] + src_ptr[stride * 3 + 2] +
-              src_ptr[stride * 3 + 3] + 8) >>
+              src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+              src_ptr[src_stride + 2] + src_ptr[src_stride + 3] +
+              src_ptr[src_stride * 2 + 0] + src_ptr[src_stride * 2 + 1] +
+              src_ptr[src_stride * 2 + 2] + src_ptr[src_stride * 2 + 3] +
+              src_ptr[src_stride * 3 + 0] + src_ptr[src_stride * 3 + 1] +
+              src_ptr[src_stride * 3 + 2] + src_ptr[src_stride * 3 + 3] + 8) >>
              4;
   }
 }
@@ -400,36 +244,35 @@ void ScaleRowDown4Box_16_C(const uint16_t* src_ptr,
                            ptrdiff_t src_stride,
                            uint16_t* dst,
                            int dst_width) {
-  intptr_t stride = src_stride;
   int x;
   for (x = 0; x < dst_width - 1; x += 2) {
     dst[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[3] +
-              src_ptr[stride + 0] + src_ptr[stride + 1] + src_ptr[stride + 2] +
-              src_ptr[stride + 3] + src_ptr[stride * 2 + 0] +
-              src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2] +
-              src_ptr[stride * 2 + 3] + src_ptr[stride * 3 + 0] +
-              src_ptr[stride * 3 + 1] + src_ptr[stride * 3 + 2] +
-              src_ptr[stride * 3 + 3] + 8) >>
+              src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+              src_ptr[src_stride + 2] + src_ptr[src_stride + 3] +
+              src_ptr[src_stride * 2 + 0] + src_ptr[src_stride * 2 + 1] +
+              src_ptr[src_stride * 2 + 2] + src_ptr[src_stride * 2 + 3] +
+              src_ptr[src_stride * 3 + 0] + src_ptr[src_stride * 3 + 1] +
+              src_ptr[src_stride * 3 + 2] + src_ptr[src_stride * 3 + 3] + 8) >>
              4;
     dst[1] = (src_ptr[4] + src_ptr[5] + src_ptr[6] + src_ptr[7] +
-              src_ptr[stride + 4] + src_ptr[stride + 5] + src_ptr[stride + 6] +
-              src_ptr[stride + 7] + src_ptr[stride * 2 + 4] +
-              src_ptr[stride * 2 + 5] + src_ptr[stride * 2 + 6] +
-              src_ptr[stride * 2 + 7] + src_ptr[stride * 3 + 4] +
-              src_ptr[stride * 3 + 5] + src_ptr[stride * 3 + 6] +
-              src_ptr[stride * 3 + 7] + 8) >>
+              src_ptr[src_stride + 4] + src_ptr[src_stride + 5] +
+              src_ptr[src_stride + 6] + src_ptr[src_stride + 7] +
+              src_ptr[src_stride * 2 + 4] + src_ptr[src_stride * 2 + 5] +
+              src_ptr[src_stride * 2 + 6] + src_ptr[src_stride * 2 + 7] +
+              src_ptr[src_stride * 3 + 4] + src_ptr[src_stride * 3 + 5] +
+              src_ptr[src_stride * 3 + 6] + src_ptr[src_stride * 3 + 7] + 8) >>
              4;
     dst += 2;
     src_ptr += 8;
   }
   if (dst_width & 1) {
     dst[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[3] +
-              src_ptr[stride + 0] + src_ptr[stride + 1] + src_ptr[stride + 2] +
-              src_ptr[stride + 3] + src_ptr[stride * 2 + 0] +
-              src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2] +
-              src_ptr[stride * 2 + 3] + src_ptr[stride * 3 + 0] +
-              src_ptr[stride * 3 + 1] + src_ptr[stride * 3 + 2] +
-              src_ptr[stride * 3 + 3] + 8) >>
+              src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+              src_ptr[src_stride + 2] + src_ptr[src_stride + 3] +
+              src_ptr[src_stride * 2 + 0] + src_ptr[src_stride * 2 + 1] +
+              src_ptr[src_stride * 2 + 2] + src_ptr[src_stride * 2 + 3] +
+              src_ptr[src_stride * 3 + 0] + src_ptr[src_stride * 3 + 1] +
+              src_ptr[src_stride * 3 + 2] + src_ptr[src_stride * 3 + 3] + 8) >>
              4;
   }
 }
@@ -794,10 +637,10 @@ void ScaleFilterCols64_C(uint8_t* dst_ptr,
 #undef BLENDER
 
 // Same as 8 bit arm blender but return is cast to uint16_t
-#define BLENDER(a, b, f) \
-  (uint16_t)(            \
-      (int)(a) +         \
-      (int)((((int64_t)((f)) * ((int64_t)(b) - (int)(a))) + 0x8000) >> 16))
+#define BLENDER(a, b, f)                                                      \
+  (uint16_t)((int)(a) +                                                       \
+             (int)((((int64_t)((f)) * ((int64_t)(b) - (int)(a))) + 0x8000) >> \
+                   16))
 
 void ScaleFilterCols_16_C(uint16_t* dst_ptr,
                           const uint16_t* src_ptr,
@@ -892,27 +735,26 @@ void ScaleRowDown38_3_Box_C(const uint8_t* src_ptr,
                             ptrdiff_t src_stride,
                             uint8_t* dst_ptr,
                             int dst_width) {
-  intptr_t stride = src_stride;
   int i;
   assert((dst_width % 3 == 0) && (dst_width > 0));
   for (i = 0; i < dst_width; i += 3) {
-    dst_ptr[0] =
-        (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[stride + 0] +
-         src_ptr[stride + 1] + src_ptr[stride + 2] + src_ptr[stride * 2 + 0] +
-         src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2]) *
-            (65536 / 9) >>
-        16;
-    dst_ptr[1] =
-        (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[stride + 3] +
-         src_ptr[stride + 4] + src_ptr[stride + 5] + src_ptr[stride * 2 + 3] +
-         src_ptr[stride * 2 + 4] + src_ptr[stride * 2 + 5]) *
-            (65536 / 9) >>
-        16;
-    dst_ptr[2] =
-        (src_ptr[6] + src_ptr[7] + src_ptr[stride + 6] + src_ptr[stride + 7] +
-         src_ptr[stride * 2 + 6] + src_ptr[stride * 2 + 7]) *
-            (65536 / 6) >>
-        16;
+    dst_ptr[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] +
+                  src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+                  src_ptr[src_stride + 2] + src_ptr[src_stride * 2 + 0] +
+                  src_ptr[src_stride * 2 + 1] + src_ptr[src_stride * 2 + 2]) *
+                     (65536 / 9) >>
+                 16;
+    dst_ptr[1] = (src_ptr[3] + src_ptr[4] + src_ptr[5] +
+                  src_ptr[src_stride + 3] + src_ptr[src_stride + 4] +
+                  src_ptr[src_stride + 5] + src_ptr[src_stride * 2 + 3] +
+                  src_ptr[src_stride * 2 + 4] + src_ptr[src_stride * 2 + 5]) *
+                     (65536 / 9) >>
+                 16;
+    dst_ptr[2] = (src_ptr[6] + src_ptr[7] + src_ptr[src_stride + 6] +
+                  src_ptr[src_stride + 7] + src_ptr[src_stride * 2 + 6] +
+                  src_ptr[src_stride * 2 + 7]) *
+                     (65536 / 6) >>
+                 16;
     src_ptr += 8;
     dst_ptr += 3;
   }
@@ -922,27 +764,26 @@ void ScaleRowDown38_3_Box_16_C(const uint16_t* src_ptr,
                                ptrdiff_t src_stride,
                                uint16_t* dst_ptr,
                                int dst_width) {
-  intptr_t stride = src_stride;
   int i;
   assert((dst_width % 3 == 0) && (dst_width > 0));
   for (i = 0; i < dst_width; i += 3) {
-    dst_ptr[0] =
-        (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[stride + 0] +
-         src_ptr[stride + 1] + src_ptr[stride + 2] + src_ptr[stride * 2 + 0] +
-         src_ptr[stride * 2 + 1] + src_ptr[stride * 2 + 2]) *
-            (65536u / 9u) >>
-        16;
-    dst_ptr[1] =
-        (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[stride + 3] +
-         src_ptr[stride + 4] + src_ptr[stride + 5] + src_ptr[stride * 2 + 3] +
-         src_ptr[stride * 2 + 4] + src_ptr[stride * 2 + 5]) *
-            (65536u / 9u) >>
-        16;
-    dst_ptr[2] =
-        (src_ptr[6] + src_ptr[7] + src_ptr[stride + 6] + src_ptr[stride + 7] +
-         src_ptr[stride * 2 + 6] + src_ptr[stride * 2 + 7]) *
-            (65536u / 6u) >>
-        16;
+    dst_ptr[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] +
+                  src_ptr[src_stride + 0] + src_ptr[src_stride + 1] +
+                  src_ptr[src_stride + 2] + src_ptr[src_stride * 2 + 0] +
+                  src_ptr[src_stride * 2 + 1] + src_ptr[src_stride * 2 + 2]) *
+                     (65536u / 9u) >>
+                 16;
+    dst_ptr[1] = (src_ptr[3] + src_ptr[4] + src_ptr[5] +
+                  src_ptr[src_stride + 3] + src_ptr[src_stride + 4] +
+                  src_ptr[src_stride + 5] + src_ptr[src_stride * 2 + 3] +
+                  src_ptr[src_stride * 2 + 4] + src_ptr[src_stride * 2 + 5]) *
+                     (65536u / 9u) >>
+                 16;
+    dst_ptr[2] = (src_ptr[6] + src_ptr[7] + src_ptr[src_stride + 6] +
+                  src_ptr[src_stride + 7] + src_ptr[src_stride * 2 + 6] +
+                  src_ptr[src_stride * 2 + 7]) *
+                     (65536u / 6u) >>
+                 16;
     src_ptr += 8;
     dst_ptr += 3;
   }
@@ -953,22 +794,23 @@ void ScaleRowDown38_2_Box_C(const uint8_t* src_ptr,
                             ptrdiff_t src_stride,
                             uint8_t* dst_ptr,
                             int dst_width) {
-  intptr_t stride = src_stride;
   int i;
   assert((dst_width % 3 == 0) && (dst_width > 0));
   for (i = 0; i < dst_width; i += 3) {
-    dst_ptr[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[stride + 0] +
-                  src_ptr[stride + 1] + src_ptr[stride + 2]) *
-                     (65536 / 6) >>
-                 16;
-    dst_ptr[1] = (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[stride + 3] +
-                  src_ptr[stride + 4] + src_ptr[stride + 5]) *
-                     (65536 / 6) >>
-                 16;
-    dst_ptr[2] =
-        (src_ptr[6] + src_ptr[7] + src_ptr[stride + 6] + src_ptr[stride + 7]) *
-            (65536 / 4) >>
+    dst_ptr[0] =
+        (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[src_stride + 0] +
+         src_ptr[src_stride + 1] + src_ptr[src_stride + 2]) *
+            (65536 / 6) >>
         16;
+    dst_ptr[1] =
+        (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[src_stride + 3] +
+         src_ptr[src_stride + 4] + src_ptr[src_stride + 5]) *
+            (65536 / 6) >>
+        16;
+    dst_ptr[2] = (src_ptr[6] + src_ptr[7] + src_ptr[src_stride + 6] +
+                  src_ptr[src_stride + 7]) *
+                     (65536 / 4) >>
+                 16;
     src_ptr += 8;
     dst_ptr += 3;
   }
@@ -978,22 +820,23 @@ void ScaleRowDown38_2_Box_16_C(const uint16_t* src_ptr,
                                ptrdiff_t src_stride,
                                uint16_t* dst_ptr,
                                int dst_width) {
-  intptr_t stride = src_stride;
   int i;
   assert((dst_width % 3 == 0) && (dst_width > 0));
   for (i = 0; i < dst_width; i += 3) {
-    dst_ptr[0] = (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[stride + 0] +
-                  src_ptr[stride + 1] + src_ptr[stride + 2]) *
-                     (65536u / 6u) >>
-                 16;
-    dst_ptr[1] = (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[stride + 3] +
-                  src_ptr[stride + 4] + src_ptr[stride + 5]) *
-                     (65536u / 6u) >>
-                 16;
-    dst_ptr[2] =
-        (src_ptr[6] + src_ptr[7] + src_ptr[stride + 6] + src_ptr[stride + 7]) *
-            (65536u / 4u) >>
+    dst_ptr[0] =
+        (src_ptr[0] + src_ptr[1] + src_ptr[2] + src_ptr[src_stride + 0] +
+         src_ptr[src_stride + 1] + src_ptr[src_stride + 2]) *
+            (65536u / 6u) >>
         16;
+    dst_ptr[1] =
+        (src_ptr[3] + src_ptr[4] + src_ptr[5] + src_ptr[src_stride + 3] +
+         src_ptr[src_stride + 4] + src_ptr[src_stride + 5]) *
+            (65536u / 6u) >>
+        16;
+    dst_ptr[2] = (src_ptr[6] + src_ptr[7] + src_ptr[src_stride + 6] +
+                  src_ptr[src_stride + 7]) *
+                     (65536u / 4u) >>
+                 16;
     src_ptr += 8;
     dst_ptr += 3;
   }
@@ -1198,7 +1041,7 @@ void ScaleARGBColsUp2_C(uint8_t* dst_argb,
 
 // TODO(fbarchard): Replace 0x7f ^ f with 128-f.  bug=607.
 // Mimics SSSE3 blender
-#define BLENDER1(a, b, f) ((a) * (0x7f ^ f) + (b)*f) >> 7
+#define BLENDER1(a, b, f) ((a) * (0x7f ^ f) + (b) * f) >> 7
 #define BLENDERC(a, b, f, s) \
   (uint32_t)(BLENDER1(((a) >> s) & 255, ((b) >> s) & 255, f) << s)
 #define BLENDER(a, b, f)                                                 \
@@ -1538,9 +1381,9 @@ void ScaleUVColsUp2_C(uint8_t* dst_uv,
   }
 }
 
-// TODO(fbarchard): Replace 0x7f ^ f with 128-f.  bug=607.
-// Mimics SSSE3 blender
-#define BLENDER1(a, b, f) ((a) * (0x7f ^ f) + (b)*f) >> 7
+// Performs (a + ((f * (b - a) + 64) >> 7)) which is equivalent of
+// ((a * (128 - f) + b * f + 64) >> 7).
+#define BLENDER1(a, b, f) ((a) + (((f) * ((b) - (a)) + 64) >> 7))
 #define BLENDERC(a, b, f, s) \
   (uint16_t)(BLENDER1(((a) >> s) & 255, ((b) >> s) & 255, f) << s)
 #define BLENDER(a, b, f) BLENDERC(a, b, f, 8) | BLENDERC(a, b, f, 0)
@@ -1638,14 +1481,6 @@ void ScalePlaneVertical(int src_height,
   assert(dst_width > 0);
   assert(dst_height > 0);
   src_argb += (x >> 16) * bpp;
-#if defined(HAS_INTERPOLATEROW_SSSE3)
-  if (TestCpuFlag(kCpuHasSSSE3)) {
-    InterpolateRow = InterpolateRow_Any_SSSE3;
-    if (IS_ALIGNED(dst_width_bytes, 16)) {
-      InterpolateRow = InterpolateRow_SSSE3;
-    }
-  }
-#endif
 #if defined(HAS_INTERPOLATEROW_AVX2)
   if (TestCpuFlag(kCpuHasAVX2)) {
     InterpolateRow = InterpolateRow_Any_AVX2;
@@ -1662,17 +1497,14 @@ void ScalePlaneVertical(int src_height,
     }
   }
 #endif
+#if defined(HAS_INTERPOLATEROW_SVE2)
+  if (TestCpuFlag(kCpuHasSVE2)) {
+    InterpolateRow = InterpolateRow_SVE2;
+  }
+#endif
 #if defined(HAS_INTERPOLATEROW_SME)
   if (TestCpuFlag(kCpuHasSME)) {
     InterpolateRow = InterpolateRow_SME;
-  }
-#endif
-#if defined(HAS_INTERPOLATEROW_MSA)
-  if (TestCpuFlag(kCpuHasMSA)) {
-    InterpolateRow = InterpolateRow_Any_MSA;
-    if (IS_ALIGNED(dst_width_bytes, 32)) {
-      InterpolateRow = InterpolateRow_MSA;
-    }
   }
 #endif
 #if defined(HAS_INTERPOLATEROW_LSX)
@@ -1697,7 +1529,7 @@ void ScalePlaneVertical(int src_height,
     }
     yi = y >> 16;
     yf = filtering ? ((y >> 8) & 255) : 0;
-    InterpolateRow(dst_argb, src_argb + yi * src_stride, src_stride,
+    InterpolateRow(dst_argb, src_argb + yi * (ptrdiff_t)src_stride, src_stride,
                    dst_width_bytes, yf);
     dst_argb += dst_stride;
     y += dy;
@@ -1728,14 +1560,6 @@ void ScalePlaneVertical_16(int src_height,
   assert(dst_width > 0);
   assert(dst_height > 0);
   src_argb += (x >> 16) * wpp;
-#if defined(HAS_INTERPOLATEROW_16_SSE2)
-  if (TestCpuFlag(kCpuHasSSE2)) {
-    InterpolateRow = InterpolateRow_16_Any_SSE2;
-    if (IS_ALIGNED(dst_width_words, 16)) {
-      InterpolateRow = InterpolateRow_16_SSE2;
-    }
-  }
-#endif
 #if defined(HAS_INTERPOLATEROW_16_SSSE3)
   if (TestCpuFlag(kCpuHasSSSE3)) {
     InterpolateRow = InterpolateRow_16_Any_SSSE3;
@@ -1773,77 +1597,8 @@ void ScalePlaneVertical_16(int src_height,
     }
     yi = y >> 16;
     yf = filtering ? ((y >> 8) & 255) : 0;
-    InterpolateRow(dst_argb, src_argb + yi * src_stride, src_stride,
+    InterpolateRow(dst_argb, src_argb + yi * (ptrdiff_t)src_stride, src_stride,
                    dst_width_words, yf);
-    dst_argb += dst_stride;
-    y += dy;
-  }
-}
-
-// Use scale to convert lsb formats to msb, depending how many bits there are:
-// 32768 = 9 bits
-// 16384 = 10 bits
-// 4096 = 12 bits
-// 256 = 16 bits
-// TODO(fbarchard): change scale to bits
-void ScalePlaneVertical_16To8(int src_height,
-                              int dst_width,
-                              int dst_height,
-                              int src_stride,
-                              int dst_stride,
-                              const uint16_t* src_argb,
-                              uint8_t* dst_argb,
-                              int x,
-                              int y,
-                              int dy,
-                              int wpp, /* words per pixel. normally 1 */
-                              int scale,
-                              enum FilterMode filtering) {
-  // TODO(fbarchard): Allow higher wpp.
-  int dst_width_words = dst_width * wpp;
-  // TODO(https://crbug.com/libyuv/931): Add NEON 32 bit and AVX2 versions.
-  void (*InterpolateRow_16To8)(uint8_t* dst_argb, const uint16_t* src_argb,
-                               ptrdiff_t src_stride, int scale, int dst_width,
-                               int source_y_fraction) = InterpolateRow_16To8_C;
-  const int max_y = (src_height > 1) ? ((src_height - 1) << 16) - 1 : 0;
-  int j;
-  assert(wpp >= 1 && wpp <= 2);
-  assert(src_height != 0);
-  assert(dst_width > 0);
-  assert(dst_height > 0);
-  src_argb += (x >> 16) * wpp;
-
-#if defined(HAS_INTERPOLATEROW_16TO8_NEON)
-  if (TestCpuFlag(kCpuHasNEON)) {
-    InterpolateRow_16To8 = InterpolateRow_16To8_Any_NEON;
-    if (IS_ALIGNED(dst_width, 8)) {
-      InterpolateRow_16To8 = InterpolateRow_16To8_NEON;
-    }
-  }
-#endif
-#if defined(HAS_INTERPOLATEROW_16TO8_SME)
-  if (TestCpuFlag(kCpuHasSME)) {
-    InterpolateRow_16To8 = InterpolateRow_16To8_SME;
-  }
-#endif
-#if defined(HAS_INTERPOLATEROW_16TO8_AVX2)
-  if (TestCpuFlag(kCpuHasAVX2)) {
-    InterpolateRow_16To8 = InterpolateRow_16To8_Any_AVX2;
-    if (IS_ALIGNED(dst_width, 32)) {
-      InterpolateRow_16To8 = InterpolateRow_16To8_AVX2;
-    }
-  }
-#endif
-  for (j = 0; j < dst_height; ++j) {
-    int yi;
-    int yf;
-    if (y > max_y) {
-      y = max_y;
-    }
-    yi = y >> 16;
-    yf = filtering ? ((y >> 8) & 255) : 0;
-    InterpolateRow_16To8(dst_argb, src_argb + yi * src_stride, src_stride,
-                         scale, dst_width_words, yf);
     dst_argb += dst_stride;
     y += dy;
   }

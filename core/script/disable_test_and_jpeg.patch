@@ -1,10 +1,12 @@
-diff -ur a/Android.mk b/Android.mk
---- a/Android.mk	2020-06-27 10:07:20.000000000 +0900
-+++ b/Android.mk	2020-06-27 10:08:14.000000000 +0900
-@@ -54,14 +54,6 @@
+diff --git a/Android.mk b/Android.mk
+index a5fb72f63860d2755a2b6667bc2dde158e3dd6ba..4cfa2a7cf82cc7b56519cc9b852bfcc0164b9248 100644
+--- a/Android.mk
++++ b/Android.mk
+@@ -49,15 +49,7 @@ LOCAL_SRC_FILES := \
+     source/scale_win.cc         \
      source/video_common.cc
  
- common_CFLAGS := -Wall -fexceptions
+-common_CFLAGS := -Wall -fexceptions
 -ifneq ($(LIBYUV_DISABLE_JPEG), "yes")
 -LOCAL_SRC_FILES += \
 -    source/convert_jpeg.cc      \
@@ -13,11 +15,11 @@ diff -ur a/Android.mk b/Android.mk
 -common_CFLAGS += -DHAVE_JPEG
 -LOCAL_SHARED_LIBRARIES := libjpeg
 -endif
++common_CFLAGS := -Wall -fexceptions -DLIBYUV_DISABLE_SVE -DLIBYUV_DISABLE_NEON_DOTPROD -DLIBYUV_DISABLE_NEON_I8MM -DLIBYUV_DISABLE_SME
  
  LOCAL_CFLAGS += $(common_CFLAGS)
  LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
-@@ -75,39 +66,4 @@
- 
+@@ -72,39 +64,4 @@ include $(BUILD_STATIC_LIBRARY)
  include $(CLEAR_VARS)
  
  LOCAL_WHOLE_STATIC_LIBRARIES := libyuv_static
@@ -56,3 +58,4 @@ diff -ur a/Android.mk b/Android.mk
 -
 -LOCAL_MODULE := libyuv_unittest
 -include $(BUILD_NATIVE_TEST)
+ endif  # NDK_ROOT

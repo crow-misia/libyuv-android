@@ -569,7 +569,7 @@ __arm_locally_streaming void Convert16To8Row_SME(const uint16_t* src_y,
   // 15 - clz(scale), + 8 to shift result into the high half of the lane to
   // saturate, then we can just use UZP2 to narrow rather than a pair of
   // saturating narrow instructions.
-  int shift = 23 - __builtin_clz((int32_t)scale);
+  const int shift = 23 - __builtin_clz((int32_t)scale);
   int vl;
   asm volatile(
       "cntb     %x[vl]                                  \n"
@@ -907,17 +907,17 @@ __arm_locally_streaming void InterpolateRow_16_SME(uint16_t* dst_ptr,
       : "cc", "memory", "z0", "z1", "z2", "z3", "z4", "p0");
 }
 
-__arm_locally_streaming static void HalfRow_16To8_SME(uint8_t* dst_ptr,
-                                                      const uint16_t* src_ptr,
-                                                      ptrdiff_t src_stride,
-                                                      int scale,
-                                                      int width) {
+__arm_locally_streaming void HalfRow_16To8_SME(const uint16_t* src_ptr,
+                                               ptrdiff_t src_stride,
+                                               uint8_t* dst_ptr,
+                                               int scale,
+                                               int width) {
   const uint16_t* src_ptr1 = src_ptr + src_stride;
 
   // 15 - clz(scale), + 8 to shift result into the high half of the lane to
   // saturate, then we can just use UZP2 to narrow rather than a pair of
   // saturating narrow instructions.
-  int shift = 23 - __builtin_clz((int32_t)scale);
+  const int shift = 23 - __builtin_clz((int32_t)scale);
 
   int vl;
   asm volatile(
@@ -965,64 +965,38 @@ __arm_locally_streaming static void HalfRow_16To8_SME(uint8_t* dst_ptr,
       : "cc", "memory", "z0", "z1", "z2", "z3", "z31", "p0");
 }
 
-// Use scale to convert lsb formats to msb, depending how many bits there are:
-// 32768 = 9 bits
-// 16384 = 10 bits
-// 4096 = 12 bits
-// 256 = 16 bits
-// TODO(fbarchard): change scale to bits
-__arm_locally_streaming void InterpolateRow_16To8_SME(uint8_t* dst_ptr,
-                                                      const uint16_t* src_ptr,
-                                                      ptrdiff_t src_stride,
-                                                      int scale,
-                                                      int width,
-                                                      int source_y_fraction) {
-  int y1_fraction = source_y_fraction;
-  int y0_fraction = 256 - y1_fraction;
+__arm_locally_streaming void HalfWidthRow_16To8_SME(const uint16_t* src_ptr,
+                                                    ptrdiff_t src_stride,
+                                                    uint8_t* dst_ptr,
+                                                    int scale,
+                                                    int width) {
   const uint16_t* src_ptr1 = src_ptr + src_stride;
-
-  // y0_fraction == 0 is never called here.
-  if (y0_fraction == 128) {
-    HalfRow_16To8_SME(dst_ptr, src_ptr, src_stride, scale, width);
-    return;
-  }
-  if (y0_fraction == 256) {
-    Convert16To8Row_SME(src_ptr, dst_ptr, scale, width);
-    return;
-  }
-
-  // 15 - clz(scale), + 8 to shift result into the high half of the lane to
-  // saturate, then we can just use UZP2 to narrow rather than a pair of
-  // saturating narrow instructions.
-  int shift = 23 - __builtin_clz((int32_t)scale);
-
+  const int shift = 23 - __builtin_clz((int32_t)scale);
   int vl;
   asm volatile(
       "cnth     %x[vl]                                  \n"
       "dup      z31.h, %w[shift]                        \n"
-      "dup      z0.h, %w[y0_fraction]                   \n"
-      "dup      z1.h, %w[y1_fraction]                   \n"
       "subs     %w[width], %w[width], %w[vl]            \n"
       "b.lt     2f                                      \n"
 
-      // Run bulk of computation with an all-true predicate to avoid predicate
-      // generation overhead.
       "ptrue    p0.h                                    \n"
       "1:                                               \n"
-      "ld1h     {z2.h}, p0/z, [%[src_ptr]]              \n"
-      "ld1h     {z3.h}, p0/z, [%[src_ptr1]]             \n"
-      "incb     %[src_ptr]                              \n"
-      "incb     %[src_ptr1]                             \n"
-      "umullb   z4.s, z2.h, z0.h                        \n"
-      "umullt   z2.s, z2.h, z0.h                        \n"
+      "ld2h     {z0.h, z1.h}, p0/z, [%[src_ptr]]        \n"
+      "ld2h     {z2.h, z3.h}, p0/z, [%[src_ptr1]]       \n"
+      "incb     %[src_ptr], all, mul #2                 \n"
+      "incb     %[src_ptr1], all, mul #2                \n"
+      "uaddlb   z4.s, z0.h, z1.h                        \n"
+      "uaddlt   z5.s, z0.h, z1.h                        \n"
+      "uaddlb   z6.s, z2.h, z3.h                        \n"
+      "uaddlt   z7.s, z2.h, z3.h                        \n"
+      "add      z4.s, z4.s, z6.s                        \n"
+      "add      z5.s, z5.s, z7.s                        \n"
+      "rshrnb   z0.h, z4.s, #2                          \n"
+      "rshrnt   z0.h, z5.s, #2                          \n"
       "subs     %w[width], %w[width], %w[vl]            \n"
-      "umlalb   z4.s, z3.h, z1.h                        \n"
-      "umlalt   z2.s, z3.h, z1.h                        \n"
-      "rshrnb   z3.h, z4.s, #8                          \n"
-      "rshrnt   z3.h, z2.s, #8                          \n"
-      "uqshl    z3.h, p0/m, z3.h, z31.h                 \n"
-      "shrnb    z3.b, z3.h, #8                          \n"
-      "st1b     {z3.h}, p0, [%[dst_ptr]]                \n"
+      "uqshl    z0.h, p0/m, z0.h, z31.h                 \n"
+      "shrnb    z0.b, z0.h, #8                          \n"
+      "st1b     {z0.h}, p0, [%[dst_ptr]]                \n"
       "inch     %[dst_ptr]                              \n"
       "b.ge     1b                                      \n"
 
@@ -1030,30 +1004,30 @@ __arm_locally_streaming void InterpolateRow_16To8_SME(uint8_t* dst_ptr,
       "adds     %w[width], %w[width], %w[vl]            \n"
       "b.eq     99f                                     \n"
 
-      // Calculate a predicate for the final iteration to deal with the tail.
       "whilelt  p0.h, wzr, %w[width]                    \n"
-      "ld1h     {z2.h}, p0/z, [%[src_ptr]]              \n"
-      "ld1h     {z3.h}, p0/z, [%[src_ptr1]]             \n"
-      "umullb   z4.s, z2.h, z0.h                        \n"
-      "umullt   z2.s, z2.h, z0.h                        \n"
-      "umlalb   z4.s, z3.h, z1.h                        \n"
-      "umlalt   z2.s, z3.h, z1.h                        \n"
-      "rshrnb   z3.h, z4.s, #8                          \n"
-      "rshrnt   z3.h, z2.s, #8                          \n"
-      "uqshl    z3.h, p0/m, z3.h, z31.h                 \n"
-      "shrnb    z3.b, z3.h, #8                          \n"
-      "st1b     {z3.h}, p0, [%[dst_ptr]]                \n"
+      "ld2h     {z0.h, z1.h}, p0/z, [%[src_ptr]]        \n"
+      "ld2h     {z2.h, z3.h}, p0/z, [%[src_ptr1]]       \n"
+      "uaddlb   z4.s, z0.h, z1.h                        \n"
+      "uaddlt   z5.s, z0.h, z1.h                        \n"
+      "uaddlb   z6.s, z2.h, z3.h                        \n"
+      "uaddlt   z7.s, z2.h, z3.h                        \n"
+      "add      z4.s, z4.s, z6.s                        \n"
+      "add      z5.s, z5.s, z7.s                        \n"
+      "rshrnb   z0.h, z4.s, #2                          \n"
+      "rshrnt   z0.h, z5.s, #2                          \n"
+      "uqshl    z0.h, p0/m, z0.h, z31.h                 \n"
+      "shrnb    z0.b, z0.h, #8                          \n"
+      "st1b     {z0.h}, p0, [%[dst_ptr]]                \n"
 
       "99:                                              \n"
-      : [src_ptr] "+r"(src_ptr),         // %[src_ptr]
-        [src_ptr1] "+r"(src_ptr1),       // %[src_ptr1]
-        [dst_ptr] "+r"(dst_ptr),         // %[dst_ptr]
-        [width] "+r"(width),             // %[width]
-        [vl] "=&r"(vl)                   // %[vl]
-      : [y0_fraction] "r"(y0_fraction),  // %[y0_fraction]
-        [y1_fraction] "r"(y1_fraction),  // %[y1_fraction]
-        [shift] "r"(shift)               // %[shift]
-      : "cc", "memory", "z0", "z1", "z2", "z3", "z4", "z31", "p0");
+      : [src_ptr] "+r"(src_ptr),    // %[src_ptr]
+        [src_ptr1] "+r"(src_ptr1),  // %[src_ptr1]
+        [dst_ptr] "+r"(dst_ptr),    // %[dst_ptr]
+        [width] "+r"(width),        // %[width]
+        [vl] "=&r"(vl)              // %[vl]
+      : [shift] "r"(shift)          // %[shift]
+      : "cc", "memory", "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z31",
+        "p0");
 }
 
 __arm_locally_streaming void Convert8To8Row_SME(const uint8_t* src_y,
@@ -1085,7 +1059,7 @@ __arm_locally_streaming void Convert8To16Row_SME(const uint8_t* src_y,
   // (src * 0x0101 * scale) >> 16.
   // Since scale is a power of two, compute the shift to use to avoid needing
   // to widen to int32.
-  int shift = __builtin_clz(scale) - 15;
+  const int shift = __builtin_clz(scale) - 15;
 
   uint64_t vl;
   asm volatile(
@@ -1120,58 +1094,27 @@ __arm_locally_streaming void Convert8To16Row_SME(const uint8_t* src_y,
       : "cc", "memory", "z0", "z1", "z2", "p0", "p1");
 }
 
-__arm_locally_streaming void ARGBToUVRow_SME(const uint8_t* src_argb,
-                                             int src_stride_argb,
-                                             uint8_t* dst_u,
-                                             uint8_t* dst_v,
-                                             int width) {
+__arm_locally_streaming void ARGBToUVMatrixRow_SME(
+    const uint8_t* src_argb,
+    int src_stride_argb,
+    uint8_t* dst_u,
+    uint8_t* dst_v,
+    int width,
+    const struct ArgbConstants* c) {
+  int8_t uvconstants[8] = {(int8_t)c->kRGBToU[0], (int8_t)c->kRGBToU[1],
+                           (int8_t)c->kRGBToU[2], (int8_t)c->kRGBToU[3],
+                           (int8_t)c->kRGBToV[0], (int8_t)c->kRGBToV[1],
+                           (int8_t)c->kRGBToV[2], (int8_t)c->kRGBToV[3]};
   ARGBToUVMatrixRow_SVE_SC(src_argb, src_stride_argb, dst_u, dst_v, width,
-                           kARGBToUVCoefficients);
+                           uvconstants);
 }
 
-__arm_locally_streaming void ARGBToUVJRow_SME(const uint8_t* src_argb,
-                                              int src_stride_argb,
-                                              uint8_t* dst_u,
-                                              uint8_t* dst_v,
-                                              int width) {
-  ARGBToUVMatrixRow_SVE_SC(src_argb, src_stride_argb, dst_u, dst_v, width,
-                           kARGBToUVJCoefficients);
-}
-
-__arm_locally_streaming void ABGRToUVJRow_SME(const uint8_t* src_abgr,
-                                              int src_stride_abgr,
-                                              uint8_t* dst_uj,
-                                              uint8_t* dst_vj,
-                                              int width) {
-  ARGBToUVMatrixRow_SVE_SC(src_abgr, src_stride_abgr, dst_uj, dst_vj, width,
-                           kABGRToUVJCoefficients);
-}
-
-__arm_locally_streaming void BGRAToUVRow_SME(const uint8_t* src_bgra,
-                                             int src_stride_bgra,
-                                             uint8_t* dst_u,
-                                             uint8_t* dst_v,
-                                             int width) {
-  ARGBToUVMatrixRow_SVE_SC(src_bgra, src_stride_bgra, dst_u, dst_v, width,
-                           kBGRAToUVCoefficients);
-}
-
-__arm_locally_streaming void ABGRToUVRow_SME(const uint8_t* src_abgr,
-                                             int src_stride_abgr,
-                                             uint8_t* dst_u,
-                                             uint8_t* dst_v,
-                                             int width) {
-  ARGBToUVMatrixRow_SVE_SC(src_abgr, src_stride_abgr, dst_u, dst_v, width,
-                           kABGRToUVCoefficients);
-}
-
-__arm_locally_streaming void RGBAToUVRow_SME(const uint8_t* src_rgba,
-                                             int src_stride_rgba,
-                                             uint8_t* dst_u,
-                                             uint8_t* dst_v,
-                                             int width) {
-  ARGBToUVMatrixRow_SVE_SC(src_rgba, src_stride_rgba, dst_u, dst_v, width,
-                           kRGBAToUVCoefficients);
+__arm_locally_streaming void ARGBToYMatrixRow_SME(
+    const uint8_t* src_argb,
+    uint8_t* dst_y,
+    int width,
+    const struct ArgbConstants* c) {
+  ARGBToYMatrixRow_SVE_SC(src_argb, dst_y, width, c);
 }
 
 #endif  // !defined(LIBYUV_DISABLE_SME) && defined(CLANG_HAS_SME) &&

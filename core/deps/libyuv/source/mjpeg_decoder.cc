@@ -127,7 +127,7 @@ LIBYUV_BOOL MJpegDecoder::LoadFrame(const uint8_t* src, size_t src_len) {
     int scanlines_size = GetComponentScanlinesPerImcuRow(i);
     if (scanlines_sizes_[i] != scanlines_size) {
       if (scanlines_[i]) {
-        delete scanlines_[i];
+        delete[] scanlines_[i];
       }
       scanlines_[i] = new uint8_t*[scanlines_size];
       scanlines_sizes_[i] = scanlines_size;
@@ -140,10 +140,14 @@ LIBYUV_BOOL MJpegDecoder::LoadFrame(const uint8_t* src, size_t src_len) {
     // the next scanline) and will be overwritten when jpeglib writes out that
     // next scanline.
     int databuf_stride = GetComponentStride(i);
+    // Cannot overflow:
+    //  - JPEG width is stored as an u16, so `databuf_stride` (width rounded up to
+    //    DCTSIZE) is at most slightly larger than UINT16_MAX.
+    //  - Sampling factor is stored in 4 bits, so scanlines_size is < 16.
     int databuf_size = scanlines_size * databuf_stride;
     if (databuf_strides_[i] != databuf_stride) {
       if (databuf_[i]) {
-        delete databuf_[i];
+        delete[] databuf_[i];
       }
       databuf_[i] = new uint8_t[databuf_size];
       databuf_strides_[i] = databuf_stride;
