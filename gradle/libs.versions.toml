@@ -12,11 +12,11 @@ android-target-sdk = "35"
 
 android-ndk = "29.0.14206865"
 
-android-gradle-plugin = "9.3.2"
+android-gradle-plugin = "9.4.1"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
-androidx-annotation = "1.10.0"
+androidx-annotation = "1.11.0"
 
 androidx-camera = "1.6.1"
 
