@@ -12,7 +12,7 @@ android-target-sdk = "35"
 
 android-ndk = "29.0.14206865"
 
-android-gradle-plugin = "9.4.1"
+android-gradle-plugin = "9.5.0"
 
 android-tools-desugar_jdk_libs = "2.1.5"
 
